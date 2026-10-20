@@ -22,7 +22,7 @@ export default function LanguageSwitcher() {
                 lang={target}
                 hrefLang={target}
                 aria-current={active ? "true" : undefined}
-                className={`inline-flex h-11 min-w-11 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors ${
+                className={`inline-flex h-11 min-w-11 items-center justify-center rounded-md px-3 whitespace-nowrap text-sm font-medium transition-colors ${
                   active
                     ? "bg-primary text-primary-foreground"
                     : "text-text-muted hover:text-text"

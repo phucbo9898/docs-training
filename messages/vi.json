@@ -96,7 +96,50 @@
       ]
     },
     "lessons": {
-      "heading": "Lộ trình bài học"
+      "heading": "Lộ trình bài học",
+      "count": "{lessons} bài học · {exercises} bài tập",
+      "overview": "Tổng quan"
     }
+  },
+  "Common": {
+    "skipToContent": "Bỏ qua đến nội dung chính"
+  },
+  "Header": {
+    "home": "Trang chủ",
+    "openMenu": "Mở menu điều hướng",
+    "closeMenu": "Đóng menu điều hướng"
+  },
+  "Search": {
+    "label": "Tìm kiếm tài liệu",
+    "placeholder": "Tìm kiếm (sắp có)"
+  },
+  "Sidebar": {
+    "label": "Mục lục khóa học",
+    "exercise": "Bài tập",
+    "settings": "Giao diện và ngôn ngữ",
+    "overview": "Tổng quan"
+  },
+  "Lesson": {
+    "breadcrumb": "Đường dẫn",
+    "home": "Trang chủ",
+    "toc": "Trên trang này",
+    "pagination": "Điều hướng bài học",
+    "prev": "Bài trước",
+    "next": "Bài sau",
+    "exercise": "Bài tập",
+    "fallback": "Bản tiếng Anh chưa có. Đang hiển thị bản tiếng Việt."
+  },
+  "Callout": {
+    "info": "Lưu ý",
+    "tip": "Mẹo",
+    "warning": "Cảnh báo",
+    "danger": "Nguy hiểm"
+  },
+  "CodeBlock": {
+    "copy": "Sao chép mã",
+    "copied": "Đã sao chép mã"
+  },
+  "Table": {
+    "label": "Bảng dữ liệu (cuộn ngang để xem thêm)"
   }
 }

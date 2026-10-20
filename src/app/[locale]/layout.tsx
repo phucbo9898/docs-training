@@ -7,8 +7,12 @@ import {
   setRequestLocale,
 } from "next-intl/server";
 import { notFound } from "next/navigation";
+import Header from "@/components/Header";
+import Sidebar from "@/components/Sidebar";
+import SidebarProvider from "@/components/SidebarProvider";
 import ThemeProvider from "@/components/ThemeProvider";
 import { routing } from "@/i18n/routing";
+import { getNavTree } from "@/lib/navigation";
 import "@/styles/globals.css";
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -33,7 +37,11 @@ export async function generateMetadata({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) return {};
   const t = await getTranslations({ locale, namespace: "Metadata" });
-  return { title: t("siteName"), description: t("description") };
+  return {
+    title: { default: t("siteName"), template: `%s | ${t("siteName")}` },
+    description: t("description"),
+    robots: { index: false, follow: false },
+  };
 }
 
 export default async function LocaleLayout({
@@ -45,7 +53,18 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   // Chỉ gửi xuống client các chuỗi mà Client Component dùng.
-  const { ThemeToggle, LanguageSwitcher } = await getMessages();
+  const {
+    ThemeToggle,
+    LanguageSwitcher,
+    Header: header,
+    Search,
+    Sidebar: sidebar,
+    CodeBlock,
+  } = await getMessages();
+  const [tree, tc] = await Promise.all([
+    getNavTree(locale),
+    getTranslations("Common"),
+  ]);
 
   return (
     <html
@@ -60,8 +79,31 @@ export default async function LocaleLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NextIntlClientProvider messages={{ ThemeToggle, LanguageSwitcher }}>
-            {children}
+          <NextIntlClientProvider
+            messages={{
+              ThemeToggle,
+              LanguageSwitcher,
+              Header: header,
+              Search,
+              Sidebar: sidebar,
+              CodeBlock,
+            }}
+          >
+            <SidebarProvider>
+              <a
+                href="#main"
+                className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:rounded-md focus:bg-primary focus:px-4 focus:py-3 focus:text-primary-foreground"
+              >
+                {tc("skipToContent")}
+              </a>
+              <Header />
+              <div className="mx-auto flex w-full max-w-[90rem] flex-1">
+                <Sidebar tree={tree} />
+                <main id="main" className="min-w-0 flex-1">
+                  {children}
+                </main>
+              </div>
+            </SidebarProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

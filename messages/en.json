@@ -96,7 +96,50 @@
       ]
     },
     "lessons": {
-      "heading": "Lesson roadmap"
+      "heading": "Lessons",
+      "count": "{lessons, plural, one {# lesson} other {# lessons}} · {exercises, plural, one {# exercise} other {# exercises}}",
+      "overview": "Overview"
     }
+  },
+  "Common": {
+    "skipToContent": "Skip to main content"
+  },
+  "Header": {
+    "home": "Home",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu"
+  },
+  "Search": {
+    "label": "Search the documentation",
+    "placeholder": "Search (coming soon)"
+  },
+  "Sidebar": {
+    "label": "Course contents",
+    "exercise": "Exercise",
+    "settings": "Appearance and language",
+    "overview": "Overview"
+  },
+  "Lesson": {
+    "breadcrumb": "Breadcrumb",
+    "home": "Home",
+    "toc": "On this page",
+    "pagination": "Lesson navigation",
+    "prev": "Previous",
+    "next": "Next",
+    "exercise": "Exercise",
+    "fallback": "The English version is not available yet. Showing the Vietnamese version."
+  },
+  "Callout": {
+    "info": "Note",
+    "tip": "Tip",
+    "warning": "Warning",
+    "danger": "Danger"
+  },
+  "CodeBlock": {
+    "copy": "Copy code",
+    "copied": "Code copied"
+  },
+  "Table": {
+    "label": "Data table (scroll horizontally for more)"
   }
 }
