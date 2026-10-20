@@ -44,13 +44,17 @@ config/cache.php
 
 Flow:
 
-1. php artisan make create_users_table
-2. A request comes in
-3. Check the cache
-4. If it's there → return it right away
-5. If not → query the DB → store it in the cache
+1. A request comes in
+2. Check the cache by key
+3. Cache hit → return the data right away
+4. Cache miss → query the DB
+5. Store the result in the cache, then return it
 
 👉 Greatly reduces DB queries
+
+```php
+$products = Cache::remember('products', 60, fn () => Product::all());
+```
 
 ### 🗄️ 2. Cache Drivers
 
@@ -104,14 +108,14 @@ Cache::add('key', $value, 60); // Store for 60 seconds
 
 #### Delete an Item from the Cache
 
-```bash
+```php
 Cache::forget('key');
 ```
 
 #### Delete All Items from the Cache
 
 ```php
-Cache::forget('key');
+Cache::flush();
 ```
 
 #### Check Whether an Item Exists

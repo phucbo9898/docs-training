@@ -44,13 +44,17 @@ config/cache.php
 
 Flow hoạt động:
 
-1. php artisan make create_users_table
-2. Request đến
-3. Kiểm tra cache
-4. Nếu có → trả luôn
-5. Nếu không → query DB → lưu cache
+1. Request đến
+2. Kiểm tra cache theo key
+3. Cache hit → trả dữ liệu ngay
+4. Cache miss → query DB
+5. Lưu kết quả vào cache rồi trả về
 
 👉 Giảm rất nhiều query DB
+
+```php
+$products = Cache::remember('products', 60, fn () => Product::all());
+```
 
 ### 🗄️ 2. Cache Drivers
 
@@ -104,14 +108,14 @@ Cache::add('key', $value, 60); // Lưu trữ trong 60 giây
 
 #### Xóa item trong cache
 
-```bash
+```php
 Cache::forget('key');
 ```
 
 #### Xóa toàn bộ item trong cache
 
 ```php
-Cache::forget('key');
+Cache::flush();
 ```
 
 #### Kiểm tra item có tồn tại không
