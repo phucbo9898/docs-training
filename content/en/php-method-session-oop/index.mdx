@@ -1,0 +1,343 @@
+---
+title: "PHP TRAINING - Method, Session/Cookie & Basic OOP"
+slug: "index"
+module: "php-method-session-oop"
+phase: 1
+order: 0
+type: overview
+summary: "Methods in classes, superglobals, Session and Cookie, plus the 4 core principles of OOP as a foundation for Laravel."
+---
+
+## 🎯 Lesson Objectives
+
+- **Master methods:** Tell apart and confidently use the different kinds of functions in a class.
+- **Manage state:** Understand how to store user data with Session and Cookie.
+- **Think in OOP:** Get a firm grasp of the 4 core principles of object-oriented programming so you can apply them in Laravel.
+
+## 🛠️ PHP Method (Methods in a Class)
+
+### Magic Methods (\_\_construct, \_\_destruct)
+
+Run automatically when an object is created or destroyed.
+
+```php
+class MyClass
+{
+    protected $name;
+    
+    public function __construct()
+    {
+        $this->name = "Example constructor";
+    }
+
+    public function __destruct()
+    {
+        $this->name = "Example __destruct";
+    }
+}
+```
+
+### Static Method
+
+Can be called directly from the class name, without creating an object of the class.
+
+```php
+class Car {
+    public function __construct(public $brand) {} // Constructor Promotion
+
+    public static function categories() {
+        return ['Sedan', 'SUV', 'Truck'];
+    }
+}
+
+// Call the static method
+$types = Car::categories();
+```
+
+### Methods with Parameters
+
+A method can take parameters and return a value.
+
+```php
+class Calculator
+{
+    public function sum($a, $b)
+    {
+        return $a + $b;
+    }
+}
+
+$calculator = new Calculator();
+$result = $calculator->sum(5, 10);
+echo "The sum is: " . $result;
+```
+
+### Inherited Methods (Inheritance)
+
+A class can inherit methods from another class.
+
+```php
+class ParentClass
+{
+    public function parentMethod()
+    {
+        return "Hello from the parent class!";
+    }
+}
+
+class ChildClass extends ParentClass
+{
+    public function childMethod()
+    {
+        return "Hello from the child class!";
+    }
+}
+
+$child = new ChildClass();
+echo $child->parentMethod() . "\n";
+echo $child->childMethod() . "\n";
+```
+
+### HTTP Methods
+
+In PHP, HTTP methods such as **GET**, **POST**, **PUT**, **DELETE** and **PATCH** specify the action the server should perform when it receives a request from the client.
+
+| Method                                                                        | Description                                                                                               |
+| ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| GET                                                                           | Sends data as a query string appended to the URL.                                                         |
+| It is typically used for requests that are not sensitive or do not need security. |                                                                                                       |
+| POST                                                                          | Sends data in the body of the HTTP request.                                                               |
+| It is typically used for sensitive requests or when sending large amounts of data. |                                                                                                      |
+| PUT                                                                           | Data is sent in the request body (like **POST**), typically used to **fully update** a resource.          |
+| If the resource does not exist, PUT may create it.                            |                                                                                                           |
+| PATCH                                                                         | Unlike **PUT**, **PATCH** updates only a **part** of the resource instead of the whole resource.          |
+| DELETE                                                                        | This request deletes the specified resource.                                                              |
+
+## **Superglobals in PHP**
+
+- Variables that are built into PHP
+- Can be used anywhere in a PHP script
+- They include
+
+| $\_GLOBALS | This variable holds references to all global variables in the current PHP script.                                        |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------ |
+| $\_FILES   | Holds information when a user uploads a file (file name, size, type).                                                    |
+| $\_COOKIE  | Data stored on the user's machine.                                                                                       |
+| $\_SERVER  | Stores header information, paths and the location of the PHP script.                                                     |
+| $\_SESSION | Data stored on the server (gone when the browser is closed or the session expires).                                      |
+| $\_GET     | Used to get form data after it is submitted via the GET method, or data passed through the URL.                          |
+| $\_POST    | Used to get form data after it is submitted via the POST method.                                                         |
+| $\_REQUEST | Holds the data of `$_GET`, `$_POST` and `$_COOKIE` together. (Avoid it for security reasons and for code clarity.)       |
+| $\_ENV     | Holds the system's environment variables.                                                                                |
+
+- Notes on usage
+  - **Avoid $\_REQUEST:**
+    - If you expect data from a POST form, use `$_POST`.
+    - This keeps you in control of the data flow and protects you from "Request Hijacking" attacks.
+
+## 🍪 Session & Cookie
+
+This is how a web application "remembers" a user between page loads.
+
+- **Cookie:** Stored in the user's **browser** (easy to tamper with; use it for non-sensitive data such as a language preference).
+- **Session:** Stored on the **server** (safer; use it for login and the cart).
+
+## 🏗️ The 4 Principles of OOP (Extremely Important)
+
+This is the foundation for understanding how Laravel works.
+
+### What is OOP?
+
+- OOP stands for Object-Oriented Programming. It was created to solve problems that traditional programming runs into.
+- Object-oriented programming is not just new syntax and commands; it is also a new way of thinking when solving problems.
+
+### Key Terms in OOP
+
+![Illustration of a class and its objects: on the left, the Car class drawn with a dashed outline like a blueprint; on the right, three concrete objects created from that class: Audi, Nissan and Volvo](/content-images/php-method-session-oop/image.png)
+
+- A class is a general definition for an object.
+
+  - To picture it, think of a class as a blueprint, while an object is a concrete implementation of that blueprint.
+
+  👉 A class can be understood as a template.
+
+- An object is a concrete instance based on the template.
+
+### The Principles of OOP
+
+#### Encapsulation
+
+- Restricting access to (or modification of) a property's value, or the right to call a method
+- Applied through these keywords
+  - **public**: accessible from anywhere
+  - **private:** accessible (and modifiable) only within that class
+  - **protected**: accessible only inside the class and the classes that inherit from it
+- Example
+
+```php
+class Fruit
+{
+    public $name;
+    protected $color;
+    private $weight;
+}
+
+$lemon = new Fruit();
+$lemon->name = "Lemon"; // OK
+$lemon->color = "Yellow"; // ERROR: Cannot access a protected property outside the class
+$lemon->weight = 0.2; // ERROR: Cannot access a private property outside the class
+```
+
+#### Inheritance
+
+- This principle is used quite often. Inheritance lets you build a new class (the child class) that inherits and reuses the properties and methods of an existing class (the parent class).
+- A child class inherits everything from the parent class without redefining it. It can extend the inherited members or add new ones.
+
+```php
+class Animal
+{
+    protected $name;
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+
+    public function eat()
+    {
+        return $this->name . " is eating.";
+    }
+
+    public function sleep()
+    {
+        return $this->name . " is sleeping.";
+    }
+}
+
+class Dog extends Animal
+{
+    private $weight;
+    public function bark()
+    {
+        return $this->name . " is barking.";
+    }
+}
+
+$dog = new Dog('dog');
+$dog->eat();
+$dog->sleep();
+$dog->bark();
+```
+
+#### Polymorphism
+
+- "Polymorphism" means "many forms".
+- Different objects can perform the same action in different ways.
+
+```php
+interface Player
+{
+    public function play();
+}
+
+class MusicPlayer implements Player
+{
+    public function play()
+    {
+        return "Playing MP3 music...";
+    }
+}
+
+class VideoPlayer implements Player
+{
+    public function play()
+    {
+        return "Playing MP4 video...";
+    }
+}
+```
+
+#### Abstraction
+
+Removing the complex, unnecessary details of an object and focusing only on its most important characteristics.
+
+```php
+abstract class DoorLeaf
+{
+    // Every door must have an Open and a Close action
+    abstract public function open();
+    abstract public function close();
+}
+
+class RollerDoor extends DoorLeaf
+{
+    public function open()
+    {
+        return "Use the remote control to roll the door up";
+    }
+    public function close()
+    {
+        return "Press the button to lower the door";
+    }
+}
+```
+
+### Abstract Class vs. Interface
+
+| Characteristic | Abstract Class                                   | Interface                                                       |
+| -------------- | ------------------------------------------------ | --------------------------------------------------------------- |
+| Nature         | A group of closely related things                | An action that must be followed even by unrelated things        |
+| Methods        | Can have implemented methods or empty ones       | Only declares method names; no implementation code allowed      |
+| Properties     | Can contain variables (properties)               | Can only contain constants                                      |
+| Inheritance    | A class can extend only 1 abstract class         | A class can implement multiple interfaces                       |
+| Access         | Can use public, protected, private               | Everything must be public                                       |
+
+- Example
+
+```php
+abstract class Animal
+{
+    public $name;
+
+    // A regular method, shared by all child classes
+    public function sleep()
+    {
+        echo "Sleeping...";
+    }
+
+    // A method that every child class must define itself
+    abstract public function makeSound();
+}
+
+class Dog extends Animal
+{
+    public function makeSound()
+    {
+        echo "Woof woof";
+    }
+}
+```
+
+```php
+interface Flyable
+{
+    public function fly();
+}
+
+interface Swimable
+{
+    public function swim();
+}
+
+// A class can both fly and swim
+class Duck implements Flyable, Swimable
+{
+    public function fly()
+    {
+        echo "The duck is flying low";
+    }
+    public function swim()
+    {
+        echo "The duck is swimming";
+    }
+}
+```
