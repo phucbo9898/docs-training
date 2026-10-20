@@ -51,6 +51,7 @@
 
 @layer base {
   html {
+    height: 100%;
     font-size: 100%;
     -webkit-text-size-adjust: 100%;
   }
@@ -248,4 +249,18 @@
     font-size: 0.875rem;
     color: var(--text-muted);
   }
+}
+
+/* Fade ngắn khi nội dung trang xuất hiện; reduced-motion đã được rút về ~0ms ở trên. */
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-fade {
+  animation: page-fade-in 150ms ease-out;
 }

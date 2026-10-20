@@ -34,7 +34,7 @@ export default async function LessonView({ locale, lesson }: LessonViewProps) {
   crumbs.push({ label: lesson.title });
 
   return (
-    <div className="mx-auto w-full max-w-6xl gap-10 px-4 py-6 md:px-8 md:py-8 lg:grid lg:grid-cols-[minmax(0,1fr)_13rem]">
+    <div className="page-fade mx-auto w-full max-w-6xl gap-10 px-4 py-6 md:px-8 md:py-8 lg:grid lg:grid-cols-[minmax(0,1fr)_13rem]">
       <article className="w-full max-w-[75ch] min-w-0">
         <Breadcrumb label={t("breadcrumb")} items={crumbs} />
         <header className="mb-6">

@@ -22,7 +22,7 @@ export default async function HomePageContent({
   const tree = await getNavTree(locale);
 
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-12 px-4 py-8 md:px-8 md:py-12">
+    <div className="page-fade mx-auto w-full max-w-4xl space-y-12 px-4 py-8 md:px-8 md:py-12">
       <HomeWelcome />
       <HomeGoals />
       <HomeTimeline />

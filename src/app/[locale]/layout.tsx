@@ -67,12 +67,12 @@ export default async function LocaleLayout({
   ]);
 
   return (
-    <html
-      lang={locale}
-      className={`${beVietnamPro.variable} ${geistMono.variable} h-full antialiased`}
-      suppressHydrationWarning
-    >
-      <body className="flex min-h-full flex-col">
+    // Không đặt className/style cho <html>: next-themes quản lý class `dark` ở đó,
+    // nếu React ghi lại khi layout remount (đổi locale) thì theme bị nháy về sáng.
+    <html lang={locale} suppressHydrationWarning>
+      <body
+        className={`${beVietnamPro.variable} ${geistMono.variable} flex min-h-full flex-col antialiased`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
