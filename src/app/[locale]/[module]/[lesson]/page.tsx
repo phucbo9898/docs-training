@@ -1,8 +1,8 @@
 import { hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
-import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import type { Metadata } from "next";
-import LessonView from "@/components/LessonView";
+import LessonPageContent from "@/components/LessonPageContent";
+import PageSkeleton from "@/components/PageSkeleton";
 import { routing } from "@/i18n/routing";
 import { getAllLessons, getLesson, isIndexSlug } from "@/lib/content";
 
@@ -31,17 +31,12 @@ export async function generateMetadata({
   return lesson ? { title: lesson.title } : {};
 }
 
-export default async function LessonPage({
+export default function LessonPage({
   params,
 }: PageProps<"/[locale]/[module]/[lesson]">) {
-  const { locale, module, lesson: slug } = await params;
-  if (!hasLocale(routing.locales, locale)) notFound();
-  setRequestLocale(locale);
-
-  // `index` là trang tổng quan, chỉ truy cập qua /[locale]/[module].
-  if (isIndexSlug(slug)) notFound();
-  const lesson = await getLesson(locale, module, slug);
-  if (!lesson) notFound();
-
-  return <LessonView locale={locale} lesson={lesson} />;
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <LessonPageContent params={params} />
+    </Suspense>
+  );
 }

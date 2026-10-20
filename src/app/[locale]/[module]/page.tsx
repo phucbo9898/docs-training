@@ -1,8 +1,8 @@
 import { hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
-import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import type { Metadata } from "next";
-import LessonView from "@/components/LessonView";
+import ModulePageContent from "@/components/ModulePageContent";
+import PageSkeleton from "@/components/PageSkeleton";
 import { routing } from "@/i18n/routing";
 import { getAllLessons, getLesson, isIndexSlug } from "@/lib/content";
 
@@ -27,15 +27,12 @@ export async function generateMetadata({
   return lesson ? { title: lesson.title } : {};
 }
 
-export default async function ModulePage({
+export default function ModulePage({
   params,
 }: PageProps<"/[locale]/[module]">) {
-  const { locale, module } = await params;
-  if (!hasLocale(routing.locales, locale)) notFound();
-  setRequestLocale(locale);
-
-  const lesson = await getLesson(locale, module, "index");
-  if (!lesson) notFound();
-
-  return <LessonView locale={locale} lesson={lesson} />;
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <ModulePageContent params={params} />
+    </Suspense>
+  );
 }
