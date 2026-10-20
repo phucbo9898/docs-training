@@ -1,0 +1,72 @@
+---
+title: "🧩 LESSON 02 – Advanced Query (Filter, Function, Group)"
+slug: "lesson-02-advanced-query"
+module: "sql-database-overview"
+phase: 2
+order: 3
+type: lesson
+summary: "SELECT with filtering and sorting, the IN/BETWEEN/LIKE operators, DISTINCT, LIMIT/OFFSET, aggregate functions and GROUP BY."
+---
+
+## 🎯 Objectives
+
+- Write `SELECT` statements with proper filtering/sorting conditions
+- Use the operators correctly (`IN`, `BETWEEN`, `LIKE`, `AND/OR`)
+- Use `DISTINCT` and `LIMIT/OFFSET`
+- Use basic and aggregate functions: `COUNT/SUM/AVG/MIN/MAX`
+- Use `GROUP BY` + `HAVING`
+
+## 1) Standard SELECT + WHERE + ORDER BY
+
+```sql
+SELECT id, name, email
+FROM users
+WHERE id > 10
+ORDER BY id DESC;
+```
+
+## 2) Commonly Used Operators
+
+- Comparison: `=`, `>`, `<`, `>=`, `<=`, `!=`
+- Logical: `AND`, `OR`
+- Set: `IN (...)`
+- Range: `BETWEEN ... AND ...`
+- Pattern: `LIKE '%keyword%'`
+
+Example:
+
+```sql
+SELECT *
+FROM users
+WHERE email LIKE '%@gmail.com'
+  AND id BETWEEN 1 AND 100;
+```
+
+## 3) DISTINCT, LIMIT, OFFSET
+
+```sql
+SELECT DISTINCT domain
+FROM emails
+LIMIT 20 OFFSET 0;
+```
+
+## 4) NULL (IS NULL / IS NOT NULL)
+
+```sql
+SELECT *
+FROM users
+WHERE deleted_at IS NULL;
+```
+
+## 5) GROUP BY + HAVING
+
+```sql
+SELECT role, COUNT(*) AS total
+FROM users
+GROUP BY role
+HAVING COUNT(*) >= 2;
+```
+
+## 🧪 Exercises
+
+[Exercise – Advanced Query](/en/sql-database-overview/exercise-lesson-02-advanced-query)

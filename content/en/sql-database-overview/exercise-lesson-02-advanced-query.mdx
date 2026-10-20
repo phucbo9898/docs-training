@@ -1,0 +1,35 @@
+---
+title: "Exercise – Advanced Query"
+slug: "exercise-lesson-02-advanced-query"
+module: "sql-database-overview"
+phase: 2
+order: 4
+type: exercise
+summary: "Advanced query exercise: WHERE, ORDER BY, LIMIT, LIKE/IN/BETWEEN, GROUP BY and HAVING."
+---
+
+## Data Preparation
+
+- Add a `role` column (admin/user) if it doesn't exist yet
+- Insert more users so there are at least 10 rows of data
+
+## Problem 01 — WHERE + ORDER BY + LIMIT
+
+- Get the 5 newest users (by `id` descending)
+- Get the users whose email belongs to `@gmail.com`
+
+## Problem 02 — LIKE / IN / BETWEEN
+
+- Get the users whose `name` contains “an”
+- Get the users whose `role` is in `('admin', 'user')`
+- Get the users whose `id` is between 3 and 8
+
+## Problem 03 — GROUP BY + HAVING
+
+- Count the number of users by `role`
+- Only return roles with a total of >= 2 users
+
+## Bonus
+
+- Create a `products(id, name, price)` table
+- Write a query to get the average, min and max price

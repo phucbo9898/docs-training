@@ -1,0 +1,185 @@
+---
+title: "🧩 LESSON 03 – Join & Subquery"
+slug: "lesson-03-join-subquery"
+module: "sql-database-overview"
+phase: 2
+order: 5
+type: lesson
+summary: "The nature of JOIN and how to pick the right type, joining 2–3 tables, UNION, and Subquery with IN/EXISTS."
+---
+
+## 🎯 Objectives
+
+- Understand the nature of JOIN and pick the right JOIN type
+- Write JOINs across 2–3 tables using their linking keys
+- Use `UNION` in the right situations
+- Use Subquery (IN/EXISTS) for real-world problems
+- Understand `PRIMARY KEY` / `FOREIGN KEY` in practice
+
+## 1) JOIN (Core)
+
+Suppose there are 2 tables:
+
+- `users(id, name, ...)`
+- `orders(id, user_id, total, ...)`
+
+### INNER JOIN
+
+Gets the rows that “match” in both tables:
+
+```sql
+SELECT u.id, u.name, o.id AS order_id, o.total
+FROM users u
+INNER JOIN orders o ON o.user_id = u.id;
+```
+
+### LEFT JOIN
+
+Gets all users, including users who have no orders yet:
+
+```sql
+SELECT u.id, u.name, o.id AS order_id
+FROM users u
+LEFT JOIN orders o ON o.user_id = u.id;
+```
+
+### RIGHT JOIN
+
+Gets all orders, including orders that don't match any user (used less often; you can usually swap the tables and use LEFT JOIN instead):
+
+```sql
+SELECT u.id, u.name, o.id AS order_id, o.total
+FROM users u
+RIGHT JOIN orders o ON o.user_id = u.id;
+```
+
+### FULL OUTER JOIN (MySQL Note)
+
+- `FULL OUTER JOIN` is available in some DBMSs (PostgreSQL, SQL Server…)
+- **MySQL does not support it directly**; it is usually emulated with `LEFT JOIN` + `RIGHT JOIN` + `UNION`
+
+Example of emulating FULL OUTER JOIN:
+
+```sql
+SELECT u.id, u.name, o.id AS order_id, o.total
+FROM users u
+LEFT JOIN orders o ON o.user_id = u.id
+UNION
+SELECT u.id, u.name, o.id AS order_id, o.total
+FROM users u
+RIGHT JOIN orders o ON o.user_id = u.id;
+```
+
+### SELF JOIN
+
+Joins a table with itself (for example: an employees table with a `manager_id` column):
+
+```sql
+SELECT e.name AS employee_name, m.name AS manager_name
+FROM employees e
+LEFT JOIN employees m ON m.id = e.manager_id;
+```
+
+## 2) UNION
+
+Combines the results of 2 queries (same number of columns + compatible data types):
+
+```sql
+SELECT email FROM users
+UNION
+SELECT email FROM customers;
+```
+
+## 3) Subquery (IN Example)
+
+```sql
+SELECT *
+FROM users
+WHERE id IN (
+  SELECT user_id
+  FROM orders
+);
+```
+
+## 4) Constraints (Emphasis)
+
+### What Are Constraints?
+
+A **constraint** is a rule applied to a column/table to ensure **data correctness and integrity**.
+
+Main purposes:
+
+- Prevent bad data (for example: no duplicate emails, no order pointing to a user that doesn't exist)
+- Standardize how data is linked between tables
+- Make queries/joins more stable and easier to debug
+
+Common types of constraints:
+
+- `PRIMARY KEY`: uniquely identifies a record
+- `FOREIGN KEY`: enforces the relationship between a child table → parent table
+- `NOT NULL`: cannot be left empty
+- `UNIQUE`: no duplicates
+- `DEFAULT`: default value
+- `CHECK`: enforces a condition (supported by MySQL, depending on version/engine)
+
+### 5) PRIMARY KEY vs FOREIGN KEY
+
+#### 5.1) PRIMARY KEY
+
+Definition:
+
+- A column (or group of columns) that **uniquely identifies** each row in a table.
+
+Characteristics:
+
+- **No duplicates** (unique)
+- **Not null**
+- Each table has only **1 PRIMARY KEY** (but it can span several columns → composite key)
+
+Example:
+
+```sql
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL
+);
+```
+
+#### 5.2) FOREIGN KEY
+
+Definition:
+
+- A column (or group of columns) in the **child table** used to **reference** the `PRIMARY KEY` (or `UNIQUE`) of the **parent table**.
+
+Purpose:
+
+- Guarantees **referential integrity**: you cannot create `orders.user_id = 999` if `users.id = 999` does not exist.
+
+Example:
+
+```sql
+CREATE TABLE orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  total DECIMAL(10,2) NOT NULL,
+  CONSTRAINT fk_orders_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+```
+
+#### Quick Illustration
+
+- `users.id` = **PK** (identifies the user)
+- `orders.user_id` = **FK** (which user the order belongs to)
+
+### Practical Notes (Important)
+
+- Index your FK columns (MySQL often requires this, or creates the index automatically, depending on the case)
+- You can configure what happens when a record in the parent table is deleted/updated:
+  - `ON DELETE CASCADE`: delete a user → their orders are deleted too
+  - `ON DELETE RESTRICT`/`NO ACTION`: deletion is blocked while orders still exist
+  - `ON DELETE SET NULL`: delete a user → set `user_id` = NULL (the column must allow NULL)
+
+## 🧪 Exercises
+
+[Exercise – Join & Subquery](/en/sql-database-overview/exercise-lesson-03-join-subquery)

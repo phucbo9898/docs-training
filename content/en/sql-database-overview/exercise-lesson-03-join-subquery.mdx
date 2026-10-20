@@ -1,0 +1,42 @@
+---
+title: "Exercise – Join & Subquery"
+slug: "exercise-lesson-03-join-subquery"
+module: "sql-database-overview"
+phase: 2
+order: 6
+type: exercise
+summary: "JOIN and Subquery exercise on the users and orders tables: INNER JOIN, LEFT JOIN and Subquery."
+---
+
+## Schema Preparation
+
+Create an additional `orders` table:
+
+```sql
+CREATE TABLE orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  total DECIMAL(10,2) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_orders_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+```
+
+Insert at least 5 orders for several users (some users should have no orders).
+
+## Problem 01 — INNER JOIN
+
+- Get the list of orders together with user information (`user_name`, `email`, `total`)
+
+## Problem 02 — LEFT JOIN
+
+- Get the list of users and their number of orders (users without orders must still appear)
+
+## Problem 03 — Subquery
+
+- Get the list of users who have ever placed an order (use `IN` or `EXISTS`)
+
+## Bonus
+
+- Find the user with the largest total order amount

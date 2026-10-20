@@ -1,0 +1,88 @@
+---
+title: "🧩 LESSON 01 – Database + SQL Basic"
+slug: "lesson-01-database-sql-basic"
+module: "sql-database-overview"
+phase: 2
+order: 1
+type: lesson
+summary: "Databases, DBMS and the categories of SQL statements, creating a database/table, CRUD with SELECT/INSERT/UPDATE/DELETE and basic constraints."
+---
+
+## 🎯 Objectives
+
+- Understand Database, DBMS, SQL and the categories of SQL statements
+- Create a basic database/table and declare data types
+- Practice CRUD with `SELECT/INSERT/UPDATE/DELETE`
+- Understand constraints (PK, NOT NULL, UNIQUE) at a basic level
+
+## 1) Database / DBMS / SQL
+
+- **Database**: a collection of related data, stored systematically
+- **DBMS**: software that manages databases (MySQL, PostgreSQL, SQL Server…)
+- **SQL**: a language used to define and manipulate data
+
+## 2) MySQL Data Types (Commonly Used)
+
+- Number: `INT`, `BIGINT`, `DECIMAL`
+- String: `VARCHAR`, `TEXT`
+- Date/Time: `DATE`, `DATETIME`, `TIMESTAMP`
+- Boolean: `TINYINT(1)` (commonly used)
+
+## 3) Constraints (Basic)
+
+- `PRIMARY KEY`: uniquely identifies each row
+- `NOT NULL`: cannot be left empty
+- `UNIQUE`: no duplicates
+- `DEFAULT`: default value
+- (Lesson 03 covers `FOREIGN KEY` in more depth)
+
+## 4) Quick Practice: Create a Schema + CRUD
+
+### 4.1 Create a Database and Table
+
+```sql
+CREATE DATABASE training_sql
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE training_sql;
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### 4.2 INSERT
+
+```sql
+INSERT INTO users (name, email)
+VALUES ('John', 'john@example.com');
+```
+
+### 4.3 SELECT
+
+```sql
+SELECT * FROM users;
+SELECT id, name FROM users WHERE id = 1;
+```
+
+### 4.4 UPDATE
+
+```sql
+UPDATE users
+SET name = 'Jane'
+WHERE id = 1;
+```
+
+### 4.5 DELETE
+
+```sql
+DELETE FROM users WHERE id = 1;
+```
+
+## 🧪 Exercises
+
+[Exercise – SQL Basic](/en/sql-database-overview/exercise-lesson-01-database-sql-basic)

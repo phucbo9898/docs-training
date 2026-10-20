@@ -1,0 +1,46 @@
+---
+title: "Exercise – SQL Basic"
+slug: "exercise-lesson-01-database-sql-basic"
+module: "sql-database-overview"
+phase: 2
+order: 2
+type: exercise
+summary: "Basic SQL exercise: create a database and table, insert, select with conditions, update and delete."
+---
+
+## General Requirements
+
+- Create the `training_sql` database (if it doesn't exist yet)
+- Create the `users` table as shown in the lesson
+- For each problem: write the SQL + capture the result (or copy the output)
+
+## Problem 01 — Create a Database & Table
+
+1. Create the `training_sql` database
+
+2. Create the `users` table with: `id`, `name`, `email`, `created_at`
+
+- `id` auto-increment PK
+- `email` unique
+- `created_at` defaults to the current timestamp
+
+## Problem 02 — Insert Data
+
+- Insert at least 5 different users
+
+## Problem 03 — Select with Conditions
+
+- Get the user with `id` = 3
+- Get the list of users with `id` > 2
+
+## Problem 04 — Update
+
+- Update the name of the user with `id` = 2
+
+## Problem 05 — Delete
+
+- Delete the user with `id` = 5
+
+## Bonus
+
+- Add a `role` column (ALTER TABLE) and update the role for the users
