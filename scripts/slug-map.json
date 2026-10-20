@@ -1,0 +1,233 @@
+{
+  "👨‍💻 Intern Backend Training/🛒 PROJECT SPECIFICATION E-COMMERCE TRAINING SYSTEM.md": {
+    "module": "project-ecommerce",
+    "slug": "index",
+    "url": "/vi/project-ecommerce",
+    "type": "overview",
+    "title": "🛒 PROJECT SPECIFICATION: E-COMMERCE TRAINING SYSTEM"
+  },
+  "👨‍💻 Intern Backend Training/FRONTEND TRAINING – OVERVIEW.md": {
+    "module": "frontend-overview",
+    "slug": "index",
+    "url": "/vi/frontend-overview",
+    "type": "overview",
+    "title": "FRONTEND TRAINING – OVERVIEW"
+  },
+  "👨‍💻 Intern Backend Training/FRONTEND TRAINING – OVERVIEW/🧩 LESSON 01 – HTML Basic.md": {
+    "module": "frontend-overview",
+    "slug": "lesson-01-html-basic",
+    "url": "/vi/frontend-overview/lesson-01-html-basic",
+    "type": "lesson",
+    "title": "🧩 LESSON 01 – HTML Basic"
+  },
+  "👨‍💻 Intern Backend Training/FRONTEND TRAINING – OVERVIEW/🧩 LESSON 02 – CSS + Bootstrap.md": {
+    "module": "frontend-overview",
+    "slug": "lesson-02-css-bootstrap",
+    "url": "/vi/frontend-overview/lesson-02-css-bootstrap",
+    "type": "lesson",
+    "title": "🧩 LESSON 02 – CSS + Bootstrap"
+  },
+  "👨‍💻 Intern Backend Training/FRONTEND TRAINING – OVERVIEW/🧩 LESSON 03 – JavaScript + jQuery.md": {
+    "module": "frontend-overview",
+    "slug": "lesson-03-javascript-jquery",
+    "url": "/vi/frontend-overview/lesson-03-javascript-jquery",
+    "type": "lesson",
+    "title": "🧩 LESSON 03 – JavaScript + jQuery"
+  },
+  "👨‍💻 Intern Backend Training/FRONTEND TRAINING – OVERVIEW/🧩 LESSON 04 – Ajax (Call API).md": {
+    "module": "frontend-overview",
+    "slug": "lesson-04-ajax",
+    "url": "/vi/frontend-overview/lesson-04-ajax",
+    "type": "lesson",
+    "title": "🧩 LESSON 04 – Ajax (Call API)"
+  },
+  "👨‍💻 Intern Backend Training/LARAVEL FRAMEWORK - OVERVIEW.md": {
+    "module": "laravel-overview",
+    "slug": "index",
+    "url": "/vi/laravel-overview",
+    "type": "overview",
+    "title": "LARAVEL FRAMEWORK - OVERVIEW"
+  },
+  "👨‍💻 Intern Backend Training/LARAVEL FRAMEWORK - OVERVIEW/🧩 LESSON 01 – Laravel Overview.md": {
+    "module": "laravel-overview",
+    "slug": "lesson-01-laravel-overview",
+    "url": "/vi/laravel-overview/lesson-01-laravel-overview",
+    "type": "lesson",
+    "title": "🧩 LESSON 01 – Laravel Overview"
+  },
+  "👨‍💻 Intern Backend Training/LARAVEL FRAMEWORK - OVERVIEW/🧩 LESSON 02 – Installation & Project Structure.md": {
+    "module": "laravel-overview",
+    "slug": "lesson-02-installation-project-structure",
+    "url": "/vi/laravel-overview/lesson-02-installation-project-structure",
+    "type": "lesson",
+    "title": "🧩 LESSON 02 – Installation & Project Structure"
+  },
+  "👨‍💻 Intern Backend Training/LARAVEL FRAMEWORK - OVERVIEW/🧩 LESSON 03 — Laravel Basic (Controller, Middlewar.md": {
+    "module": "laravel-overview",
+    "slug": "lesson-03-laravel-basic",
+    "url": "/vi/laravel-overview/lesson-03-laravel-basic",
+    "type": "lesson",
+    "title": "🧩 LESSON 03 — Laravel Basic (Controller, Middleware, Request, Model, Service)"
+  },
+  "👨‍💻 Intern Backend Training/LARAVEL FRAMEWORK - OVERVIEW/🧩 LESSON 04 — Routing & Middleware.md": {
+    "module": "laravel-overview",
+    "slug": "lesson-04-routing-middleware",
+    "url": "/vi/laravel-overview/lesson-04-routing-middleware",
+    "type": "lesson",
+    "title": "🧩 LESSON 04 — Routing & Middleware"
+  },
+  "👨‍💻 Intern Backend Training/LARAVEL FRAMEWORK - OVERVIEW/🧩 LESSON 05 — Migration & Seeder (Database Managem.md": {
+    "module": "laravel-overview",
+    "slug": "lesson-05-migration-seeder",
+    "url": "/vi/laravel-overview/lesson-05-migration-seeder",
+    "type": "lesson",
+    "title": "🧩 LESSON 05 — Migration & Seeder (Database Management)"
+  },
+  "👨‍💻 Intern Backend Training/LARAVEL FRAMEWORK - OVERVIEW/🧩 LESSON 06 — Dependency Injection (DI).md": {
+    "module": "laravel-overview",
+    "slug": "lesson-06-dependency-injection",
+    "url": "/vi/laravel-overview/lesson-06-dependency-injection",
+    "type": "lesson",
+    "title": "🧩 LESSON 06 — Dependency Injection (DI)"
+  },
+  "👨‍💻 Intern Backend Training/LARAVEL FRAMEWORK - OVERVIEW/🧩 LESSON 07 — Caching & Session.md": {
+    "module": "laravel-overview",
+    "slug": "lesson-07-caching-session",
+    "url": "/vi/laravel-overview/lesson-07-caching-session",
+    "type": "lesson",
+    "title": "🧩 LESSON 07 — Caching & Session"
+  },
+  "👨‍💻 Intern Backend Training/LARAVEL FRAMEWORK - OVERVIEW/🧩 LESSON 08 — Event, Notification & Task Schedulin.md": {
+    "module": "laravel-overview",
+    "slug": "lesson-08-event-notification-task-scheduling",
+    "url": "/vi/laravel-overview/lesson-08-event-notification-task-scheduling",
+    "type": "lesson",
+    "title": "🧩 LESSON 08 — Event, Notification & Task Scheduling"
+  },
+  "👨‍💻 Intern Backend Training/LARAVEL FRAMEWORK - OVERVIEW/🧩 LESSON 09 — Interact with UI & API.md": {
+    "module": "laravel-overview",
+    "slug": "lesson-09-interact-with-ui-api",
+    "url": "/vi/laravel-overview/lesson-09-interact-with-ui-api",
+    "type": "lesson",
+    "title": "🧩 LESSON 09 — Interact with UI & API"
+  },
+  "👨‍💻 Intern Backend Training/PHP TRAINING - BASIC.md": {
+    "module": "php-basic",
+    "slug": "index",
+    "url": "/vi/php-basic",
+    "type": "overview",
+    "title": "PHP TRAINING - BASIC"
+  },
+  "👨‍💻 Intern Backend Training/PHP TRAINING - BASIC/🧩 LESSON 01 – PHP Overview.md": {
+    "module": "php-basic",
+    "slug": "lesson-01-php-overview",
+    "url": "/vi/php-basic/lesson-01-php-overview",
+    "type": "lesson",
+    "title": "🧩 LESSON 01 – PHP Overview"
+  },
+  "👨‍💻 Intern Backend Training/PHP TRAINING - BASIC/🧩 LESSON 02 – Syntax + Variable + Constant.md": {
+    "module": "php-basic",
+    "slug": "lesson-02-syntax-variable-constant",
+    "url": "/vi/php-basic/lesson-02-syntax-variable-constant",
+    "type": "lesson",
+    "title": "🧩 LESSON 02 – Syntax + Variable + Constant"
+  },
+  "👨‍💻 Intern Backend Training/PHP TRAINING - BASIC/🧩 LESSON 03 – Data Types + String + Array.md": {
+    "module": "php-basic",
+    "slug": "lesson-03-data-types-string-array",
+    "url": "/vi/php-basic/lesson-03-data-types-string-array",
+    "type": "lesson",
+    "title": "🧩 LESSON 03 – Data Types + String + Array"
+  },
+  "👨‍💻 Intern Backend Training/PHP TRAINING - BASIC/🧩 LESSON 04 – Condition (if, switch ).md": {
+    "module": "php-basic",
+    "slug": "lesson-04-condition",
+    "url": "/vi/php-basic/lesson-04-condition",
+    "type": "lesson",
+    "title": "🧩 LESSON 04 – Condition (if, switch...)"
+  },
+  "👨‍💻 Intern Backend Training/PHP TRAINING - BASIC/🧩 LESSON 05 – Loop (for, foreach ).md": {
+    "module": "php-basic",
+    "slug": "lesson-05-loop",
+    "url": "/vi/php-basic/lesson-05-loop",
+    "type": "lesson",
+    "title": "🧩 LESSON 05 – Loop (for, foreach...)"
+  },
+  "👨‍💻 Intern Backend Training/PHP TRAINING - BASIC/🧩 LESSON 06 – Function (built-in + user-defined).md": {
+    "module": "php-basic",
+    "slug": "lesson-06-function",
+    "url": "/vi/php-basic/lesson-06-function",
+    "type": "lesson",
+    "title": "🧩 LESSON 06 – Function (built-in + user-defined)"
+  },
+  "👨‍💻 Intern Backend Training/PHP TRAINING - BASIC/🧪 Bài tập tổng hợp.md": {
+    "module": "php-basic",
+    "slug": "exercise-tong-hop",
+    "url": "/vi/php-basic/exercise-tong-hop",
+    "type": "exercise",
+    "title": "🧪 Bài tập tổng hợp"
+  },
+  "👨‍💻 Intern Backend Training/PHP TRAINING - BASIC/Bài tập CRUD.md": {
+    "module": "php-basic",
+    "slug": "exercise-crud",
+    "url": "/vi/php-basic/exercise-crud",
+    "type": "exercise",
+    "title": "Bài tập CRUD"
+  },
+  "👨‍💻 Intern Backend Training/PHP TRAINING - Method, Session Cookie & OOP cơ bản.md": {
+    "module": "php-method-session-oop",
+    "slug": "index",
+    "url": "/vi/php-method-session-oop",
+    "type": "overview",
+    "title": "PHP TRAINING - Method, Session/Cookie & OOP cơ bản"
+  },
+  "👨‍💻 Intern Backend Training/SQL & DATABASE - OVERVIEW.md": {
+    "module": "sql-database-overview",
+    "slug": "index",
+    "url": "/vi/sql-database-overview",
+    "type": "overview",
+    "title": "SQL & DATABASE - OVERVIEW"
+  },
+  "👨‍💻 Intern Backend Training/SQL & DATABASE - OVERVIEW/🧩 LESSON 01 – Database + SQL Basic.md": {
+    "module": "sql-database-overview",
+    "slug": "lesson-01-database-sql-basic",
+    "url": "/vi/sql-database-overview/lesson-01-database-sql-basic",
+    "type": "lesson",
+    "title": "🧩 LESSON 01 – Database + SQL Basic"
+  },
+  "👨‍💻 Intern Backend Training/SQL & DATABASE - OVERVIEW/🧩 LESSON 01 – Database + SQL Basic/Bài tập – SQL Basic.md": {
+    "module": "sql-database-overview",
+    "slug": "exercise-lesson-01-database-sql-basic",
+    "url": "/vi/sql-database-overview/exercise-lesson-01-database-sql-basic",
+    "type": "exercise",
+    "title": "Bài tập – SQL Basic"
+  },
+  "👨‍💻 Intern Backend Training/SQL & DATABASE - OVERVIEW/🧩 LESSON 02 – Advanced Query (Filter, Function, Gr.md": {
+    "module": "sql-database-overview",
+    "slug": "lesson-02-advanced-query",
+    "url": "/vi/sql-database-overview/lesson-02-advanced-query",
+    "type": "lesson",
+    "title": "🧩 LESSON 02 – Advanced Query (Filter, Function, Group)"
+  },
+  "👨‍💻 Intern Backend Training/SQL & DATABASE - OVERVIEW/🧩 LESSON 02 – Advanced Query (Filter, Function, Gr/Bài tập – Advanced Query.md": {
+    "module": "sql-database-overview",
+    "slug": "exercise-lesson-02-advanced-query",
+    "url": "/vi/sql-database-overview/exercise-lesson-02-advanced-query",
+    "type": "exercise",
+    "title": "Bài tập – Advanced Query"
+  },
+  "👨‍💻 Intern Backend Training/SQL & DATABASE - OVERVIEW/🧩 LESSON 03 – Join & Subquery.md": {
+    "module": "sql-database-overview",
+    "slug": "lesson-03-join-subquery",
+    "url": "/vi/sql-database-overview/lesson-03-join-subquery",
+    "type": "lesson",
+    "title": "🧩 LESSON 03 – Join & Subquery"
+  },
+  "👨‍💻 Intern Backend Training/SQL & DATABASE - OVERVIEW/🧩 LESSON 03 – Join & Subquery/Bài tập – Join & Subquery.md": {
+    "module": "sql-database-overview",
+    "slug": "exercise-lesson-03-join-subquery",
+    "url": "/vi/sql-database-overview/exercise-lesson-03-join-subquery",
+    "type": "exercise",
+    "title": "Bài tập – Join & Subquery"
+  }
+}

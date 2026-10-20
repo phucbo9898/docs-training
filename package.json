@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "next typegen && tsc --noEmit"
+    "typecheck": "next typegen && tsc --noEmit",
+    "import:notion": "tsx scripts/import-notion.ts"
   },
   "dependencies": {
     "fuse.js": "^7.5.0",
@@ -27,14 +28,23 @@
     "shiki": "^4.5.0"
   },
   "devDependencies": {
+    "@mdx-js/mdx": "^3.1.1",
     "@tailwindcss/turbopack": "^4",
+    "@types/mdast": "^4.0.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
+    "mdast-util-to-string": "^4.0.0",
     "prettier": "^3.9.10",
+    "remark-mdx": "^3.1.1",
+    "remark-parse": "^11.0.0",
+    "remark-stringify": "^11.0.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "tsx": "^4.23.15",
+    "typescript": "^5",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.1.0"
   }
 }
