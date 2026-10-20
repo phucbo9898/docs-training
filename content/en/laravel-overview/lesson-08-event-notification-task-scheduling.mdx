@@ -100,7 +100,7 @@ A Notification lets you send notifications through many channels (Mail, Slack, S
 
 - Command
 
-```php
+```bash
 php artisan make:notification OrderProcessed
 ```
 
@@ -178,7 +178,7 @@ php artisan schedule:work
 
 ### Queue Config
 
-- Check the `QUEUE_CONNECTION` key in `config/queue.php` or `.env`
+- Set the `QUEUE_CONNECTION` key in the `.env` file (`config/queue.php` only reads this value via `env('QUEUE_CONNECTION')`)
 - When QUEUE_CONNECTION is “sync”, the job runs immediately
 - When QUEUE_CONNECTION is “database”, the job is inserted into the jobs table in the database and the jobs are then run sequentially
 

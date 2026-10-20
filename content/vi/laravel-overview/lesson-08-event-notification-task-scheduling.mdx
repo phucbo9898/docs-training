@@ -100,7 +100,7 @@ Notification cho phép bạn gửi thông báo qua nhiều kênh (Mail, Slack, S
 
 - Command
 
-```php
+```bash
 php artisan make:notification OrderProcessed
 ```
 
@@ -178,7 +178,7 @@ php artisan schedule:work
 
 ### Config queue
 
-- Kiểm tra key `QUEUE_CONNECTION` trong file `config/queue.php`  hoặc `.env`
+- Đặt key `QUEUE_CONNECTION` trong file `.env` (`config/queue.php` chỉ đọc lại giá trị này qua `env('QUEUE_CONNECTION')`)
 - Đối với QUEUE_CONNECTION là “sync” job sẽ được thực thi ngay lập tức
 - Đối với QUEUE_CONNECTION là “database” job sẽ được insert vào bảng jobs trong database sau đó sẽ chạy tuần tự các job đó
 
