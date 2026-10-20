@@ -1,0 +1,204 @@
+---
+title: "🛒 PROJECT SPECIFICATION: E-COMMERCE TRAINING SYSTEM"
+slug: "index"
+module: "project-ecommerce"
+phase: 4
+order: 0
+type: overview
+summary: "E-commerce project specification: an admin CMS, a backend API and a shopping site, with common rules and the list of features."
+---
+
+## 🖥️ SYSTEM OVERVIEW
+
+- **Model:** The system is split into 3 main parts:
+  1. **CMS (Admin Panel):** Manages content and orders (a traditional Laravel Web app).
+  2. **API (Backend Service):** Provides data to the Front-end (Laravel API).
+  3. **FE (Shopping Site):** The storefront for users (a Laravel Web app that uses Guzzle to fetch data from the API).
+
+## ✅ **COMMON RULES**
+
+- **Currency Format:** `100,000 VND`.
+- **Date/Time Format:** `2022/01/29 14:00`.
+- **Data handling:**
+  - Every list screen must have pagination.
+  - Default sort: `updated_at` descending (DESC).
+  - Use **Soft Delete** for all delete features.
+- **Additional techniques:**
+  - Build a common layout for each module (admin, fe)
+  - **Queue:** Use it for sending Email (Order confirmation, Status update) and for writing Logs.
+  - **Task Schedule:** Schedule a daily summary email to the Admin listing unprocessed orders.
+  - Real-time notifications
+
+## 🛠️ MODULE 1: CMS - ADMIN PANEL
+
+This module is for administrators, who manage data through a traditional Laravel Web interface.
+
+### 🔑 1.1 Login
+
+- **Details:**
+  - 🖼️ **Interface:** Simple, with an Email field and a Password field.
+  - 🛡️ **Validation:** \* Both fields are required.
+    - Show an error if the email format is wrong or the account credentials are incorrect.
+  - ⚙️ **Logic:** Check `type` in the users table (only an Admin may enter the CMS).
+
+### 📊 1.2 Dashboard
+
+- **Details:**
+  - 📦 **Statistics blocks (Widgets):**
+    - Total new orders this month (unprocessed).
+    - Total revenue from successful orders this month.
+    - Total number of customers (`type = customer`).
+    - Total number of active products (`status = active`).
+  - 📈 **Recommended addition:** A Line Chart showing revenue for the last 7 days to make the data more visual.
+
+### 👥 1.3 User Management (CRUD)
+
+- **Details:**
+  - 📋 **List:** Show No., Name, Email, User type, Created date. Support search by Name/Email.
+  - ➕ **Create/Update:** Enter Name, Email, Password, Phone number, Address, Type (Admin/Customer).
+  - 🗑️ **Delete:** Use **Soft Delete**. Show a confirmation popup: *"Are you sure you want to delete user \{\{name}}?"*.
+  - 🚀 **Recommended addition:** A **Quick password change** feature or **Lock account** (Active/Banned status).
+
+### 🗂️ 1.4 Category Management (CRUD)
+
+- **Details:**
+  - 📋 **List:** Show the Category name and the number of products currently in the category.
+  - ➕ **Create/Update:** Only the Category name field is needed (Unique).
+  - 🗑️ **Delete (logic constraint):** Never allow deletion if the category still has products. The Admin must move the products to another category or delete the products first.
+
+### 📦 1.5 Product Management (CRUD)
+
+- **Details:**
+  - 📋 **List:** Show Thumbnail (fixed size), Name, Category, Price, Quantity sold, Status.
+  - 🖼️ **Image handling:** Upload product images.
+  - ➕ **Create/Update:** Name, Category (Dropdown), Price, Description, Image, Status (Publish/UnPublish).
+  - 🚀 **Recommended addition:** A **Duplicate** product feature to quickly create similar products.
+
+### 🛒 1.6 Order Management
+
+- **Details:**
+  - 📋 **List:** Show Order ID, Customer name, Total, Status, Order date.
+  - 🔍 **Filters:** Filter by order status and date range (From Date - To Date).
+  - 📄 **Detail (View Detail):** Show each product in the order (product name, quantity, price at purchase) and the final total.
+  - 🔄 **Status updates:**
+    - `New` -> `Done` (when the order has been delivered successfully).
+    - `New` -> `Admin Cancel` (if out of stock or for other reasons).
+  - 🚀 **Recommended addition:** **Print invoice (Export PDF)** so the Admin can print it when packing the order.
+
+### ✨ RECOMMENDED ADDITIONAL FEATURES (Should-haves for the CMS)
+
+1. 🔔 **Notification System:**
+   - Show a notification bell in the Header whenever a new order arrives (real-time with Pusher, or simply a badge count).
+2. 📝 **Activity Log (System Logs):**
+   - Record which Admin edited which product, or deleted which user, for easy traceability (use Event/Listener).
+3. ⚙️ **General Settings:**
+   - Where the Admin configures the notification Email, Store name and the hotline phone number shown on the FE.
+
+## ⚙️ MODULE 2: API (BACKEND SERVICES)
+
+### 📌 Common API Rules (Standardized)
+
+- Response Format:
+
+```json
+{
+  "status": boolean,
+  "message": "A specific message",
+  "data": { ... } // Or [] for a list
+}
+```
+
+- HTTP Status Code:
+  - `200 OK`: Success.
+  - `201 Created`: Created successfully (used for Register, Order).
+  - `422 Unprocessable Entity`: Input data Validation error.
+  - `401 Unauthorized`: Wrong credentials or not logged in.
+  - `404 Not Found`: Data not found.
+
+### 🚀 Detailed Endpoint List
+
+- Account (Authentication) API group
+  - Register
+  - Login
+  - Logout
+- Category & Product API group
+  - Category list
+  - Product list
+  - Product detail
+- Order API group - Important
+  - Place-order API
+
+## 🌐 MODULE 3: FE - SHOPPING SITE
+
+### 🛠️ 3.1 Specific Technical Rules
+
+- **Data communication:**
+  - Get data through the controller
+  - Get data through the API.
+- **Cart management:** Use Laravel's `Session` to temporarily store the list of products.
+- **Security:** Only logged-in Users (`auth` middleware) may use "Add to cart" and "Checkout".
+
+### 🖼️ 3.2 Screen & Feature Details
+
+#### **🔑 A. Registration & Login (Authentication)**
+
+- **📝 Register:**
+  - **Note:** After a successful registration, redirect the user to the Login page.
+- **🔓 Login**
+- 🚀 **Forgot password**
+
+#### 🏠 B. Home Page
+
+- **🗂️ Categories:** Show the list of Categories.
+- **📦 Product list:**
+  - Show the best-selling products of the month
+    - 10 products in total; show 5 and allow horizontal sliding to see more.
+  - Show products for each category
+    - Show 5 products
+    - a "view more" button to go to the category detail screen
+- Product search area
+  - By category
+  - By name
+
+#### **📦 C. Product Search Results**
+
+- Show all products after searching (max 10 products per page)
+- Paginate the product list
+
+#### 🗂️ C. Category Detail
+
+- Product filter area
+  - By product name
+  - Price range
+  - Sort ascending/descending by product name or product price
+- Show all products in the category (max 10 products per page)
+- Paginate the product list
+
+#### 🔍 D. Product Detail
+
+- **📄 Content:** Show all the detailed information of 1 product.
+- **✨ Related products:** Show up to 8 products from the same category, newest first.
+- **🛒 "Buy Now" button:** On click, show a Modal or UI that lets the user choose the **Quantity** and click "Add to Cart".
+
+#### 🛒 E. Cart Page
+
+- **📋 Display:** The list of products currently in the Session (Image, Name, Price, Quantity, Subtotal).
+- **🔄 Actions:**
+  - Update product quantity (if the stock is insufficient, show a message on screen).
+  - Remove a product from the cart.
+  - Calculate the estimated total of the whole cart.
+
+### 💳 F. Checkout
+
+- **📝 Confirm information:** Show the product list again and the User's default information (Address, Phone number). Allow the user to change the delivery information if needed.
+- **🚀 Place order:**
+  1. Submit the information and save it to the database
+  2. If successful:
+     - Clear the cart Session.
+     - Show an "Order placed successfully" screen (Order Success).
+     - Email the order information to the user
+
+### 👤 **My Profile**
+
+- Show personal information
+- Show order history (including order information and order status, with pagination)
