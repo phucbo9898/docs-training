@@ -2,6 +2,11 @@
  * Chuyển export Notion (notion-export/) sang content/vi/<module>/<slug>.mdx.
  * Chạy: npm run import:notion. Script idempotent: mỗi lần chạy xóa và sinh lại
  * content/vi/<module> và public/content-images/<module> của 6 module.
+ *
+ * CẢNH BÁO: script chỉ dùng cho lần import đầu. content/ hiện là nguồn chính
+ * và đã được sửa tay; chạy lại sẽ GHI ĐÈ content/vi. Khi content/vi đã tồn tại,
+ * script từ chối chạy trừ khi truyền cờ --force:
+ *   npm run import:notion -- --force
  */
 import { promises as fs } from "node:fs";
 import path from "node:path";
@@ -554,7 +559,21 @@ function transformPage(page: Page, resolver: Resolver): void {
   });
 }
 
+async function assertSafeToOverwrite(): Promise<void> {
+  if (process.argv.includes("--force")) return;
+  const exists = await fs
+    .access(CONTENT_DIR)
+    .then(() => true)
+    .catch(() => false);
+  if (exists) {
+    throw new Error(
+      `${toPosix(path.relative(PROJECT_ROOT, CONTENT_DIR))} đã tồn tại; chạy script sẽ ghi đè nội dung đã sửa. Truyền --force nếu thật sự muốn tiếp tục.`,
+    );
+  }
+}
+
 async function main(): Promise<void> {
+  await assertSafeToOverwrite();
   const report: Report = {
     created: [],
     unmappedLinks: [],
