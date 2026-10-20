@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build:search": "tsx scripts/build-search-index.ts",
+    "predev": "npm run build:search",
     "dev": "next dev",
+    "prebuild": "npm run build:search",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -35,6 +38,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
+    "github-slugger": "^2.0.0",
     "mdast-util-to-string": "^4.0.0",
     "prettier": "^3.9.10",
     "remark-mdx": "^3.1.1",

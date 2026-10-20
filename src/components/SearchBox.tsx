@@ -1,11 +1,34 @@
-import { useTranslations } from "next-intl";
+"use client";
 
-/** Ô tìm kiếm tạm: chưa hoạt động, thay bằng SearchDialog ở bước tìm kiếm. */
-export default function SearchBox() {
+import { useSyncExternalStore } from "react";
+import { useTranslations } from "next-intl";
+import { useSearch } from "./SearchProvider";
+
+type SearchBoxProps = {
+  /** Hiện gợi ý phím tắt; tắt trong drawer mobile vì không có bàn phím. */
+  showShortcut?: boolean;
+};
+
+const subscribe = () => () => {};
+const isApple = () => /Mac|iPhone|iPad/.test(navigator.userAgent);
+
+/** Nút trông như ô tìm kiếm, bấm để mở SearchDialog. */
+export default function SearchBox({ showShortcut = false }: SearchBoxProps) {
   const t = useTranslations("Search");
+  const { openSearch } = useSearch();
+  // Server luôn render "Ctrl K"; client tự đổi sang ⌘K trên Apple mà không lệch hydration.
+  const apple = useSyncExternalStore(subscribe, isApple, () => false);
 
   return (
-    <div className="relative w-full">
+    <button
+      type="button"
+      data-search-trigger
+      aria-label={t("label")}
+      aria-haspopup="dialog"
+      aria-keyshortcuts="Control+K Meta+K"
+      onClick={openSearch}
+      className="flex h-11 w-full items-center gap-2 rounded-lg border border-border bg-bg-subtle px-3 text-left text-sm text-text-muted hover:border-primary"
+    >
       <svg
         width={18}
         height={18}
@@ -16,18 +39,20 @@ export default function SearchBox() {
         strokeLinecap="round"
         strokeLinejoin="round"
         aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-text-muted"
+        className="shrink-0"
       >
         <circle cx="11" cy="11" r="7" />
         <path d="m21 21-4.3-4.3" />
       </svg>
-      <input
-        type="search"
-        disabled
-        aria-label={t("label")}
-        placeholder={t("placeholder")}
-        className="h-11 w-full rounded-lg border border-border bg-bg-subtle pr-3 pl-10 text-sm text-text placeholder:text-text-muted disabled:cursor-not-allowed"
-      />
-    </div>
+      <span className="min-w-0 flex-1 truncate">{t("placeholder")}</span>
+      {showShortcut ? (
+        <kbd
+          aria-hidden="true"
+          className="hidden shrink-0 rounded border border-border bg-bg px-1.5 lg:inline py-0.5 font-sans text-xs text-text-muted"
+        >
+          {apple ? t("shortcutMac") : t("shortcutOther")}
+        </kbd>
+      ) : null}
+    </button>
   );
 }

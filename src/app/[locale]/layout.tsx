@@ -8,6 +8,7 @@ import {
 } from "next-intl/server";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
+import SearchProvider from "@/components/SearchProvider";
 import Sidebar from "@/components/Sidebar";
 import SidebarProvider from "@/components/SidebarProvider";
 import ThemeProvider from "@/components/ThemeProvider";
@@ -90,19 +91,21 @@ export default async function LocaleLayout({
             }}
           >
             <SidebarProvider>
-              <a
-                href="#main"
-                className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:rounded-md focus:bg-primary focus:px-4 focus:py-3 focus:text-primary-foreground"
-              >
-                {tc("skipToContent")}
-              </a>
-              <Header />
-              <div className="mx-auto flex w-full max-w-[90rem] flex-1">
-                <Sidebar tree={tree} />
-                <main id="main" className="min-w-0 flex-1">
-                  {children}
-                </main>
-              </div>
+              <SearchProvider>
+                <a
+                  href="#main"
+                  className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:rounded-md focus:bg-primary focus:px-4 focus:py-3 focus:text-primary-foreground"
+                >
+                  {tc("skipToContent")}
+                </a>
+                <Header />
+                <div className="mx-auto flex w-full max-w-[90rem] flex-1">
+                  <Sidebar tree={tree} />
+                  <main id="main" className="min-w-0 flex-1">
+                    {children}
+                  </main>
+                </div>
+              </SearchProvider>
             </SidebarProvider>
           </NextIntlClientProvider>
         </ThemeProvider>

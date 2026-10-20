@@ -10,9 +10,9 @@ export default function Header() {
       <div className="mx-auto flex h-16 w-full max-w-[90rem] items-center gap-3 px-4">
         <MenuButton />
         <Logo />
-        {/* Mobile: tìm kiếm, ngôn ngữ và theme nằm trong drawer. */}
+        {/* Mobile: nút tìm kiếm, ngôn ngữ và theme nằm trong drawer. */}
         <div className="ml-auto hidden min-w-0 max-w-xs flex-1 md:block">
-          <SearchBox />
+          <SearchBox showShortcut />
         </div>
         <div className="hidden shrink-0 items-center gap-3 md:flex">
           <LanguageSwitcher />

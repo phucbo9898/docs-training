@@ -111,7 +111,22 @@
   },
   "Search": {
     "label": "Tìm kiếm tài liệu",
-    "placeholder": "Tìm kiếm (sắp có)"
+    "placeholder": "Tìm kiếm tài liệu…",
+    "shortcutMac": "⌘K",
+    "shortcutOther": "Ctrl K",
+    "dialogLabel": "Tìm kiếm tài liệu",
+    "inputLabel": "Nhập từ khóa tìm kiếm",
+    "inputPlaceholder": "Tìm bài học, từ khóa…",
+    "close": "Đóng tìm kiếm",
+    "loading": "Đang tải dữ liệu tìm kiếm…",
+    "error": "Không tải được dữ liệu tìm kiếm. Hãy thử lại.",
+    "retry": "Thử lại",
+    "empty": "Không tìm thấy kết quả cho “{query}”.",
+    "hint": "Gõ để tìm trong tất cả bài học. Không cần gõ dấu tiếng Việt.",
+    "results": "Kết quả tìm kiếm",
+    "count": "{count, plural, one {# kết quả} other {# kết quả}}",
+    "phase": "Phase {phase}",
+    "navHint": "↑↓ để chọn · Enter để mở · Esc để đóng"
   },
   "Sidebar": {
     "label": "Mục lục khóa học",

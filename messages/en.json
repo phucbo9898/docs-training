@@ -111,7 +111,22 @@
   },
   "Search": {
     "label": "Search the documentation",
-    "placeholder": "Search (coming soon)"
+    "placeholder": "Search the docs…",
+    "shortcutMac": "⌘K",
+    "shortcutOther": "Ctrl K",
+    "dialogLabel": "Search the documentation",
+    "inputLabel": "Enter search keywords",
+    "inputPlaceholder": "Search lessons, keywords…",
+    "close": "Close search",
+    "loading": "Loading search data…",
+    "error": "Could not load the search data. Please try again.",
+    "retry": "Try again",
+    "empty": "No results for “{query}”.",
+    "hint": "Type to search all lessons. Accents are ignored.",
+    "results": "Search results",
+    "count": "{count, plural, one {# result} other {# results}}",
+    "phase": "Phase {phase}",
+    "navHint": "↑↓ to select · Enter to open · Esc to close"
   },
   "Sidebar": {
     "label": "Course contents",

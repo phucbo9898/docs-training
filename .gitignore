@@ -40,3 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /notion-export/*
+
+# generated search index (npm run build:search)
+/public/search-index.*.json
