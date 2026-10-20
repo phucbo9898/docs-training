@@ -45,7 +45,7 @@ database/migrations
 ### Tạo bằng command
 
 ```bash
-php artisan make create_users_table
+php artisan make:migration create_users_table
 ```
 
 ### Ví dụ
@@ -98,19 +98,19 @@ php artisan migrate
 #### Để rollback về lần chạy gần nhất, chạy command
 
 ```bash
-php artisan migrate
+php artisan migrate:rollback
 ```
 
 #### Rollback theo số lượng step
 
 ```bash
-php artisan migrate --step=5
+php artisan migrate:rollback --step=5
 ```
 
 #### Rollback toàn bộ
 
 ```bash
-php artisan migrate
+php artisan migrate:reset
 ```
 
 #### Rollback và tạo lại cơ sở dữ liệu
@@ -147,7 +147,7 @@ Vị trí:
 Command:
 
 ```bash
-php artisan make UserSeeder
+php artisan make:seeder UserSeeder
 ```
 
 Ví dụ:

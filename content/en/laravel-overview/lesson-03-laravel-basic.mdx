@@ -43,7 +43,7 @@ Laravel has these main components:
 ### How to Create a Controller
 
 ```bash
-php artisan make UserController
+php artisan make:controller UserController
 ```
 
 ### Example
@@ -87,7 +87,7 @@ Route::get('/users', [UserController::class, 'index']);
 ### How to Create Middleware
 
 ```bash
-php artisan make CheckAge
+php artisan make:middleware CheckAge
 ```
 
 ### Location
@@ -145,7 +145,7 @@ Used to validate data
 #### How to Create
 
 ```bash
-php artisan make StoreUserRequest
+php artisan make:request StoreUserRequest
 ```
 
 #### Location
@@ -201,10 +201,10 @@ To map a model to a table, name the model after the table in singular form, star
 
 ```bash
 // Create a plain model
-php artisan make User
+php artisan make:model User
 
 // Create a model and its corresponding migration
-php artisan make User --migration
+php artisan make:model User --migration
 ```
 
 ### Important Properties

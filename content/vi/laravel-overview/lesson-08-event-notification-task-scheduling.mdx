@@ -178,9 +178,9 @@ php artisan schedule:work
 
 ### Config queue
 
-- Kiểm tra key `QUEUE_CONNETION` trong file `config/queue.php`  hoặc `.env`
-- Đối với QUEUE_CONNETION là “sync” job sẽ được thực thi ngay lập tức
-- Đối với QUEUE_CONNETION là “database” job sẽ được insert vào bảng jobs trong database sau đó sẽ chạy tuần tự các job đó
+- Kiểm tra key `QUEUE_CONNECTION` trong file `config/queue.php`  hoặc `.env`
+- Đối với QUEUE_CONNECTION là “sync” job sẽ được thực thi ngay lập tức
+- Đối với QUEUE_CONNECTION là “database” job sẽ được insert vào bảng jobs trong database sau đó sẽ chạy tuần tự các job đó
 
 ## Lưu ý chung
 

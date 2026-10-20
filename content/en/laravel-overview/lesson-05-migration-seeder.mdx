@@ -45,7 +45,7 @@ database/migrations
 ### Create with a Command
 
 ```bash
-php artisan make create_users_table
+php artisan make:migration create_users_table
 ```
 
 ### Example
@@ -98,19 +98,19 @@ php artisan migrate
 #### To roll back to the most recent run, use the command
 
 ```bash
-php artisan migrate
+php artisan migrate:rollback
 ```
 
 #### Roll Back by a Number of Steps
 
 ```bash
-php artisan migrate --step=5
+php artisan migrate:rollback --step=5
 ```
 
 #### Roll Back Everything
 
 ```bash
-php artisan migrate
+php artisan migrate:reset
 ```
 
 #### Roll Back and Recreate the Database
@@ -147,7 +147,7 @@ Location:
 Command:
 
 ```bash
-php artisan make UserSeeder
+php artisan make:seeder UserSeeder
 ```
 
 Example:

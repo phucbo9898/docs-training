@@ -43,7 +43,7 @@ Laravel có các thành phần chính:
 ### Tạo controller
 
 ```bash
-php artisan make UserController
+php artisan make:controller UserController
 ```
 
 ### Ví dụ
@@ -87,7 +87,7 @@ Route::get('/users', [UserController::class, 'index']);
 ### Tạo middleware
 
 ```bash
-php artisan make CheckAge
+php artisan make:middleware CheckAge
 ```
 
 ### Vị trí
@@ -145,7 +145,7 @@ Dùng để validate dữ liệu
 #### Cách tạo
 
 ```bash
-php artisan make StoreUserRequest
+php artisan make:request StoreUserRequest
 ```
 
 #### Vị trí
@@ -201,10 +201,10 @@ Tên file phải viết hoa chữ cái đầu
 
 ```bash
 // Tạo đơn thuần
-php artisan make User
+php artisan make:model User
 
 // Tạo model và migration tương ứng
-php artisan make User --migration
+php artisan make:model User --migration
 ```
 
 ### Thuộc tính quan trọng
