@@ -1,0 +1,107 @@
+---
+title: "🧩 LESSON 01 – HTML Basic"
+slug: "lesson-01-html-basic"
+module: "frontend-overview"
+phase: 1
+order: 1
+type: lesson
+summary: "What HTML is, the standard page structure, common tags (text, link, image, list, table, form) and the basics of semantic HTML."
+---
+
+## 🎯 Objectives
+
+- Understand what HTML is and its role in the frontend
+- Learn the standard structure of an HTML page
+- Know the common tags: text, link, image, list, table, form
+- Know the basics of semantic HTML
+
+## 1) What is HTML?
+
+HTML (HyperText Markup Language) is a markup language used to **build the structure** of a website.
+
+## 2) Standard HTML Page Structure
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>My Page</title>
+</head>
+<body>
+	<h1>Hello HTML</h1>
+	<p>This is a paragraph.</p>
+</body>
+</html>
+```
+
+## 3) Basic Tags (Commonly Used)
+
+### Heading
+
+```html
+<h1>Title</h1>
+<h2>Subtitle</h2>
+```
+
+### Paragraph / Inline Text
+
+```html
+<p>Text</p>
+<strong>bold</strong>
+<em>italic</em>
+```
+
+### Link
+
+```html
+<a href="https://google.com" target="_blank" rel="noopener">Go to Google</a>
+```
+
+### Image
+
+```html
+<img src="image.jpg" alt="Description" />
+```
+
+### List
+
+```html
+<ul>
+	<li>Item 1</li>
+	<li>Item 2</li>
+</ul>
+```
+
+## 4) Semantic HTML (Suggested)
+
+- Using the right tags makes code easier to read + helps SEO + accessibility
+
+```html
+<header>Header</header>
+<nav>Menu</nav>
+<main>
+	<section>Section</section>
+	<article>Article</article>
+</main>
+<footer>Footer</footer>
+```
+
+## 5) Basic Form
+
+```html
+<form action="#" method="post">
+	<label>
+		Email
+		<input type="email" name="email" required />
+	</label>
+
+	<button type="submit">Submit</button>
+</form>
+```
+
+## 🧪 Quick Exercises
+
+- Build a simple CV page in HTML (photo, name, contact, skills)
+- Build a registration form: name/email/password + a submit button

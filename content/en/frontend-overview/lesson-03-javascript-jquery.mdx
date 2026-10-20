@@ -1,0 +1,90 @@
+---
+title: "🧩 LESSON 03 – JavaScript + jQuery"
+slug: "lesson-03-javascript-jquery"
+module: "frontend-overview"
+phase: 1
+order: 3
+type: lesson
+summary: "Basic JavaScript for building interactivity, working with the DOM and events, plus basic jQuery (selectors, events, DOM)."
+---
+
+## 🎯 Objectives
+
+- Learn the JavaScript basics for building interactivity
+- Know how to work with the DOM + events
+- Know basic jQuery (selectors, events, DOM manipulation)
+
+## 1) What is JavaScript?
+
+JavaScript lets you create **interactivity on the web** (click, form validation, calling APIs, rendering data…).
+
+## 2) How to Include JS (Recommended)
+
+```html
+<script src="./app.js"></script>
+```
+
+## 3) Variables & Data Types (Quick Look)
+
+```jsx
+let name = "Phuc";
+const age = 20;
+const isActive = true;
+```
+
+## 4) Function
+
+```jsx
+function sayHello(name) {
+	return "Hello " + name;
+}
+console.log(sayHello("Phuc"));
+```
+
+## 5) DOM + Event
+
+```html
+<button id="btn">Click</button>
+<script>
+	const btn = document.querySelector("#btn");
+	btn.addEventListener("click", function () {
+		alert("Clicked");
+	});
+</script>
+```
+
+## 6) jQuery (Introduction)
+
+### Installation (CDN)
+
+```html
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+```
+
+### Ready
+
+```jsx
+$(document).ready(function () {
+	console.log("Ready");
+});
+```
+
+### Selector + DOM Manipulation
+
+```jsx
+$("#title").text("New title");
+$(".box").addClass("active");
+```
+
+### Event
+
+```jsx
+$("#btn").on("click", function () {
+	alert("Clicked");
+});
+```
+
+## 🧪 Quick Exercises
+
+- Build a login form (email/password) and validate empty fields
+- Click a button → change the text of a `<p>` paragraph

@@ -1,0 +1,87 @@
+---
+title: "🧩 LESSON 04 – Ajax (Call API)"
+slug: "lesson-04-ajax"
+module: "frontend-overview"
+phase: 1
+order: 4
+type: lesson
+summary: "What Ajax is and when to use it, calling GET/POST APIs with jQuery without reloading the page, and rendering data in the UI."
+---
+
+## 🎯 Objectives
+
+- Understand what Ajax is and when to use it
+- Call an API without reloading the page
+- Know GET/POST with jQuery Ajax
+- Render simple data in the UI
+
+## 1) What is Ajax?
+
+Ajax lets you send requests (GET/POST/PUT/DELETE) **without reloading the page**.
+
+## 2) GET with $.get
+
+```jsx
+$(document).ready(function () {
+	$.get("/api/users", function (data) {
+		console.log(data);
+	});
+});
+```
+
+## 3) POST with $.post
+
+```jsx
+$(document).ready(function () {
+	$.post("/api/users", { name: "Phuc" }, function (res) {
+		console.log(res);
+	});
+});
+```
+
+## 4) $.ajax (More Complete Configuration)
+
+```jsx
+$(document).ready(function () {
+	$.ajax({
+		url: "/api",
+		method: "GET",
+		success: function (res) {
+			console.log(res);
+		},
+		error: function (xhr) {
+			console.log("Error", xhr.status);
+		},
+	});
+});
+```
+
+## 5) Render Data in the UI (Example)
+
+```html
+<ul id="userList"></ul>
+
+<script>
+$(document).ready(function () {
+	$.get("/api/users", function (users) {
+		const $list = $("#userList");
+		$list.empty();
+
+		users.forEach(function (u) {
+			$list.append(`<li>${u.name} - ${u.email}</li>`);
+		});
+	});
+});
+</script>
+```
+
+## 📝 Important Notes
+
+- Calling an API across domains requires CORS
+- Handle errors + loading state
+- The returned data should be JSON
+
+## 🧪 Quick Exercises
+
+- Call the `/api/products` API and render the product list
+- Add a form to create a product and call POST to create it (a mock API is fine)
