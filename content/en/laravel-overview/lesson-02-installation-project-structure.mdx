@@ -1,0 +1,134 @@
+---
+title: "🧩 LESSON 02 – Installation & Project Structure"
+slug: "lesson-02-installation-project-structure"
+module: "laravel-overview"
+phase: 3
+order: 2
+type: lesson
+summary: "Install and run a Laravel project locally, the directory structure and the role of each folder."
+---
+
+## 🎯 Lesson Objectives
+
+- Be able to install a Laravel project
+- Be able to run the project locally
+- Understand the Laravel directory structure
+- Know what each folder is for
+
+## 🛠️ 1. Environment Requirements
+
+### Minimum Requirements
+
+- XAMPP version ≥ 8.2.x
+- PHP version ≥ 8.2.x
+- Composer
+- Latest Laravel
+
+## 🚀 2. Create a Laravel Project
+
+Create the project:
+
+```bash
+composer create-project laravel/laravel your-project-name
+```
+
+Run the project
+
+- Go to the source directory
+- Run the command
+
+```bash
+php artisan serve
+```
+
+## 3. Directory Structure in Laravel
+
+| Directory | Purpose                                                                          |
+| --------- | -------------------------------------------------------------------------------- |
+| app       | Holds the application's source files: controllers, models, services, …           |
+| database  | Holds database-related files: table definitions, fake data                       |
+| resources | Holds view, css, js files, …                                                     |
+| lang      | Holds language files                                                             |
+| storage   | Holds log, cache, session, image files, …                                        |
+| config    | Holds the application's configuration files                                      |
+| routes    | Holds the files that define routes                                               |
+| public    | Holds css, js, image files, …                                                    |
+
+### 📁 app/
+
+Holds the main code of the project
+
+Includes:
+
+- Controller
+- Model
+- Service
+- …
+
+👉 This is where you will work the most
+
+### 🗄️ database/
+
+Holds database-related files
+
+- migrations → create tables
+- seeders → sample data
+
+👉 Used to manage the DB with code
+
+### 🎨 resources/
+
+Holds the user interface
+
+- views (Blade)
+- css
+- js
+
+### 🌐 routes/
+
+Defines URLs
+
+- web.php → web app
+- api.php → API
+
+👉 Every request goes through here
+
+### ⚙️ config/
+
+Configuration files
+
+Examples:
+
+- database.php
+- app.php
+
+👉 Don't hardcode configuration in your code
+
+### 📦 public/
+
+The entry point of the project
+
+- index.php
+- css, js, image
+
+👉 This is the directory served by the server
+
+### 🧾 storage/
+
+Stores temporary data
+
+- log
+- cache
+- session
+- uploaded files
+
+👉 Don't commit it to git (unless needed)
+
+### 🌍 lang/ (if present)
+
+Holds multilingual files
+
+Examples:
+
+- en.json
+- vi.json

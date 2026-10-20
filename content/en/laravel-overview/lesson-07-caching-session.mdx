@@ -1,0 +1,207 @@
+---
+title: "🧩 LESSON 07 — Caching & Session"
+slug: "lesson-07-caching-session"
+module: "laravel-overview"
+phase: 3
+order: 7
+type: lesson
+summary: "What caching is and when to use it, using Cache in Laravel, and Session: how to store and read Session data."
+---
+
+## 🎯 Lesson Objectives
+
+- Understand what Caching is and when to use it
+- Know how to use Cache in Laravel
+- Understand what a Session is
+- Store and read data from the Session
+- Apply Cache & Session in practice
+
+## ⚡ Caching
+
+### ⚡ What is Caching?
+
+Caching is used to store data temporarily
+
+Purpose
+
+- Speed up the application
+- Reduce database queries
+- Reduce system load
+
+👉 Examples:
+
+- Product list
+- Config
+- Rarely changing data
+
+Config
+
+```bash
+config/cache.php
+```
+
+### 🧠 How Does Cache Work?
+
+Flow:
+
+1. php artisan make create_users_table
+2. A request comes in
+3. Check the cache
+4. If it's there → return it right away
+5. If not → query the DB → store it in the cache
+
+👉 Greatly reduces DB queries
+
+### 🗄️ 2. Cache Drivers
+
+Laravel supports these drivers
+
+- File
+- Database
+- Redis
+- Memcached
+- Array
+
+In production, you should use
+
+- Redis
+- Memcached
+
+### 🔧 3. Basic Cache Operations
+
+#### Store an Item in the Cache
+
+```php
+Cache::put('key', 'value', 60);
+
+👉 60 = seconds
+👉 If you don't pass a duration, it is stored permanently
+```
+
+#### Get an Item from the Cache
+
+```php
+Cache::get('key');
+```
+
+#### Get an Item from the Cache and Delete It
+
+```php
+Cache::pull('key');
+```
+
+#### Store an Item in the Cache Permanently
+
+```php
+Cache::forever('key', $value);
+```
+
+#### Store in the Cache If the Item Does Not Exist
+
+```php
+Cache::add('key', $value, 60); // Store for 60 seconds
+```
+
+#### Delete an Item from the Cache
+
+```bash
+Cache::forget('key');
+```
+
+#### Delete All Items from the Cache
+
+```php
+Cache::flush('key');
+```
+
+#### Check Whether an Item Exists
+
+```php
+Cache::has('key'); // true -> exists, false -> does not exist
+```
+
+#### Cache Helper
+
+Laravel provides some helper functions for the cache
+
+```php
+cache(['key' => 'value'], 60);
+
+$value = cache('key', 'default');
+```
+
+### 🏷️ 4. Cache Tags (Advanced)
+
+Notes:
+
+- Cache tags are not supported when the cache driver is “file” or “database”
+- When using multiple tags with caches stored “forever”, performance is best with a driver that automatically purges stale entries, such as “memcached”
+
+```php
+// Store for 60 seconds
+Cache::tags(['tag1', 'tag2'])->put('key', 'value', 60);
+
+// Get a tagged item from the cache
+Cache::tags(['tag1', 'tag2'])->get('key');
+
+// Delete all items with the tags
+Cache::tags(['tag1', 'tag2'])->flush();
+```
+
+### 🎯 5. Cache Events
+
+Laravel provides these cache events:
+
+| Illuminate\Cache\Events\CacheHit     | fired when an item is retrieved from the cache.            |
+| ------------------------------------ | ---------------------------------------------------------- |
+| Illuminate\Cache\Events\CacheMissed  | fired when an item is not found in the cache.              |
+| Illuminate\Cache\Events\KeyForgotten | fired when an item is removed from the cache.              |
+| Illuminate\Cache\Events\KeyWritten   | fired when an item is written to the cache.                |
+
+👉 Use for logging / debugging
+
+## 🔐 Session
+
+### 🔐 What is a Session?
+
+HTTP is stateless (it doesn't remember anything)
+
+A session lets you store user data across requests
+
+👉 Examples:
+
+- user login
+- cart
+
+Config:
+
+- config/session.php
+
+### 🗄️ Session Drivers
+
+Laravel supports these drivers:
+
+- File
+- Cookie
+- Database
+- Redis
+- Memcached
+
+In production, you should use redis/database
+
+### 🔧 Working with the Session
+
+| Syntax 1                          | Syntax 2                          | Purpose                                                       |
+| --------------------------------- | --------------------------------- | ------------------------------------------------------------- |
+| *Session*::put('key', 'value');   | \*\*session(\['key' => 'value']); | Store data in the session                                     |
+| *Session*::get('key', 'default'); | \*\*session('key', 'default');    | Get data from the session, with a default value if it doesn't exist |
+| *Session*::forget('key');         | \*\*session()->forget('key');     | Remove data by key from the session                           |
+| *Session*::flush();               | \*\*session()->flush();           | Remove all data from the session                              |
+| *Session*::has('key');            | \*\*session()->has('key');        | Check whether a key exists in the session                     |
+
+### Cache vs. Session
+
+| Cache            | Session                  |
+| ---------------- | ------------------------ |
+| Stores shared data | Stores per-user data   |
+| Improves performance | Used for login, state |

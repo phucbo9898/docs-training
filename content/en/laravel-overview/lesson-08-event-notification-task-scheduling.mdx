@@ -1,0 +1,193 @@
+---
+title: "🧩 LESSON 08 — Event, Notification & Task Scheduling"
+slug: "lesson-08-event-notification-task-scheduling"
+module: "laravel-overview"
+phase: 3
+order: 8
+type: lesson
+summary: "Event/Listener, multi-channel Notifications, Task Scheduling and using Queues to handle heavy tasks."
+---
+
+## 🎯 Lesson Objectives
+
+- **Master Event/Listener:** Understand how to separate unrelated logic (Decoupling) so code stays clean and easy to extend.
+- **The Notification system:** Know how to send multi-channel notifications (Email, Database, SMS) professionally.
+- **Automate with Task Scheduling:** Know how to schedule recurring tasks without manually configuring complicated cron jobs.
+- **Optimize performance:** Understand the mindset of using a **Queue** to handle time-consuming tasks in the background.
+
+## 📨 Event & Listener
+
+### 📨 What are Event & Listener?
+
+An Event is something that "happens" (for example: a User registers)
+
+A Listener is the "listener" that performs the corresponding action (for example: give a voucher, send a welcome email).
+
+Purpose
+
+- Keeps the Controller from becoming "bloated" with auxiliary logic.
+
+### 🧠 Setup Steps
+
+#### Step 1: Create the Event
+
+- Command
+
+```bash
+php artisan make:event UserRegistered
+```
+
+- **Location:** `app/Events/UserRegistered.php` (Holds data about the User who just registered).
+
+#### Step 2: Create the Listener
+
+- Command
+
+```bash
+php artisan make:listener SendWelcomeGift --event=UserRegistered
+```
+
+- **Location:** `app/Listeners/SendWelcomeGift.php` (Where you write the gift-giving logic).
+
+#### Step 3: Register the Event
+
+- If the `EventServiceProvider.php` file doesn't exist yet, create it to map events to listeners
+
+```php
+namespace App\Providers;
+
+use App\Events\UserRegistered;
+use App\Listeners\SendWelcomeGift;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\ServiceProvider;
+
+class EventServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any events for your application.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Event::listen(UserRegistered::class, SendWelcomeGift::class);
+    }
+}
+```
+
+- You can also register it in `app/Providers/AppServiceProvider.php` if needed.
+
+#### Step 4: Trigger (Dispatch)
+
+```php
+// In a Controller
+use App\Events\UserRegistered;
+
+public function register(Request $request)
+{
+    $user = User::create(...);
+    event(new UserRegistered($user)); // Fire the event
+}
+```
+
+## 📢 Notification
+
+### Description
+
+A Notification lets you send notifications through many channels (Mail, Slack, SMS, Database) with just a single class.
+
+### Steps to Create a Notification
+
+- Command
+
+```php
+php artisan make:notification OrderProcessed
+```
+
+- **Location:** `app/Notifications/OrderProcessed.php`
+
+#### Configure the Delivery Channels (via)
+
+```php
+public function via(object $notifiable): array
+{
+    return ['mail', 'database']; // Send by Email and also store in the DB
+}
+
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)
+                ->subject('Your order has been completed')
+                ->line('Thank you for shopping with us.')
+                ->action('View order', url('/orders'))
+                ->line('Have a great day!');
+}
+```
+
+#### How to Send
+
+```php
+// Option 1: Use the Notifiable Trait (common)
+$user->notify(new OrderProcessed($order));
+
+// Option 2: Use the Facade
+Notification::send($users, new OrderProcessed($order));
+```
+
+## ⏰ Task Scheduling
+
+### Description
+
+- Task Scheduling in Laravel lets you schedule tasks to run automatically at specified intervals.
+- This feature is especially useful for recurring tasks such as sending emails, cleaning up the database or generating reports
+- Task scheduling is built on the Unix cron service, but it provides an API to define tasks and their schedules.
+
+### Configuration Location
+
+- `routes/console.php` (from Laravel 11 onward).
+- Explanation of the contents of console.php
+
+  ```php
+  use Illuminate\Support\Facades\Schedule;
+
+  // Run a Command every day at midnight
+  Schedule::command('emails:send-reminders')->daily();
+
+  // Run a Closure function every hour
+  Schedule::call(function () {
+      \DB::table('recent_users')->delete();
+  })->hourly();
+
+  // Run a Job every Monday
+  Schedule::job(new HeartbeatJob)->mondays();
+  ```
+
+#### How to Run in the Local Environment
+
+To test whether these tasks run, use the following command
+
+```bash
+php artisan schedule:work
+```
+
+## ⚡ Queued Jobs
+
+### Description
+
+- A queued job is a way to put a piece of work into a queue.
+
+### Queue Config
+
+- Check the `QUEUE_CONNETION` key in `config/queue.php` or `.env`
+- When QUEUE_CONNETION is “sync”, the job runs immediately
+- When QUEUE_CONNETION is “database”, the job is inserted into the jobs table in the database and the jobs are then run sequentially
+
+## Important Notes
+
+- **🚀 Use Queues:**
+  - Tasks such as sending Email or calling third-party APIs (SMS) are very slow.
+  - Always use `implements ShouldQueue` in Listeners and Notifications to push them onto a background queue, so users don't have to wait.
+- **📂 File organization:**
+  - When the project grows, split `routes/console.php` into smaller pieces or use separate Command classes to make them easier to manage.
+- **🛡️ Idempotency:**
+  - Make sure that if an Event is fired twice, the Listener doesn't cause data errors (for example: don't give a gift twice to the same user).

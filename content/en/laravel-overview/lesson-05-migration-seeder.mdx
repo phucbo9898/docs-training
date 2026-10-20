@@ -1,0 +1,193 @@
+---
+title: "🧩 LESSON 05 — Migration & Seeder (Database Management)"
+slug: "lesson-05-migration-seeder"
+module: "laravel-overview"
+phase: 3
+order: 5
+type: lesson
+summary: "What a migration is and why you need one, creating and managing a database with migrations, rollback, Seeders and sample data."
+---
+
+## 🎯 Lesson Objectives
+
+- Understand what a Migration is and why to use it
+- Create and manage a database with migrations
+- Use the migrate and rollback commands
+- Understand Seeders and how to create sample data
+- Know how to use migrations + seeders in a real project
+
+## 🧩 Migration
+
+### 🧩 What is a Migration?
+
+A migration is a way to create and manage a database using PHP code
+
+Instead of:
+
+- Creating tables manually in MySQL
+
+we use migrations to define tables and columns
+
+👉 Advantages:
+
+- Keeps the DB in sync across environments (dev, staging, production)
+- Makes database versions easy to manage
+- No manual work needed
+
+Location:
+
+```bash
+database/migrations
+```
+
+### ⚙️ Creating a Migration
+
+### Create with a Command
+
+```bash
+php artisan make create_users_table
+```
+
+### Example
+
+```php
+public function up()
+{
+    Schema::create('users', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->string('email');
+        $table->timestamps();
+    });
+}
+
+public function down()
+{
+    Schema::dropIfExists('users');
+}
+```
+
+### More Explanation of a Migration File
+
+#### The up() Function
+
+- runs when you migrate
+- creates / alters tables
+
+👉 up = apply
+
+#### The down() Function
+
+- rollback
+- drops or reverts changes
+
+👉 down = undo
+
+### How to Run Migrations
+
+Run all migrations:
+
+```bash
+php artisan migrate
+```
+
+👉 Laravel will create the tables in the database
+
+### Rolling Back Migrations
+
+#### To roll back to the most recent run, use the command
+
+```bash
+php artisan migrate
+```
+
+#### Roll Back by a Number of Steps
+
+```bash
+php artisan migrate --step=5
+```
+
+#### Roll Back Everything
+
+```bash
+php artisan migrate
+```
+
+#### Roll Back and Recreate the Database
+
+```bash
+php artisan migrate:refresh
+```
+
+#### Drop All Current Tables and Re-run the Migrations
+
+```bash
+php artisan migrate:fresh
+```
+
+### Notes When Running Migrations
+
+- A rollback deletes all existing data
+- Be careful when running in the production environment
+
+## 🧩 Seeder
+
+### 🧩 What is a Seeder?
+
+A seeder is used to create sample data
+
+Instead of running inserts manually, you use code to generate the data
+
+Location:
+
+`database/seeders`
+
+### ⚙️ 6. Creating a Seeder
+
+Command:
+
+```bash
+php artisan make UserSeeder
+```
+
+Example:
+
+```php
+public function run()
+{
+    DB::table('users')->insert([
+        'name' => 'Phuc',
+        'email' => 'phuc@gmail.com'
+    ]);
+}
+```
+
+### ▶️ 7. Running a Seeder
+
+Run a specific seeder:
+
+```bash
+php artisan db:seed --class=UserSeeder
+```
+
+Run all seeders
+
+```bash
+php artisan db:seed
+```
+
+### Notes
+
+- Don't edit old migrations that have already run in production
+- Create a new file to update the DB
+- Use clear names
+- Seeders should only be used in develop/test environments; avoid running seeders in production
+- Don't seed sensitive data
+
+```php
+Route::get('/admin', function () {
+    return "Admin";
+})->middleware('role:admin');
+
+👉 pass a parameter to the middleware
+```

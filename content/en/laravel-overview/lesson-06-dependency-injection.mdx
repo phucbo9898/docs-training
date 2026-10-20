@@ -1,0 +1,199 @@
+---
+title: "🧩 LESSON 06 — Dependency Injection (DI)"
+slug: "lesson-06-dependency-injection"
+module: "laravel-overview"
+phase: 3
+order: 6
+type: lesson
+summary: "Dependency Injection: its nature, the common injection types, Constructor Promotion and loosely coupled thinking."
+---
+
+## 🎯 Lesson Objectives
+
+- Understand the nature of **Dependency Injection** and why it matters more than manually using `new Class()`.
+- Tell apart and know how to apply the 3 common types of DI: **Constructor, Method, Interface Injection, Setter Injection**.
+- Use **Constructor Promotion** (PHP 8.x+) confidently to write cleaner code.
+- Master **Loosely Coupled** thinking to build applications that are easy to maintain and easy to unit test.
+
+## 🧠 What is Dependency Injection?
+
+In object-oriented programming, a **Dependency** occurs when Class A uses the functionality of Class B.
+
+Normally you would instantiate `new B()` inside Class A. However, this creates tight coupling.
+
+**Dependency Injection (DI)** is a technique where, instead of Class A creating its dependency itself, it "asks" for that object to be passed in from outside through the Constructor or a Setter.
+
+**💡 Best Practice:**
+
+- Always aim for "Loosely Coupled" code.
+- This lets you swap components (for example, changing the storage driver from Local to S3) without editing code in many places.
+
+## 🧩 Types of Dependency Injection in Laravel
+
+In Laravel, you don't need to pass objects in by hand (except in a few special cases).
+
+Laravel uses a mechanism called the **Service Container** to do this automatically, based on the type (Type-hint) you declare.
+
+### Constructor Injection
+
+#### Description
+
+This is the most common type and the most recommended (Best Practice).
+
+Dependencies are passed in as soon as the object is created.
+
+#### Characteristics
+
+- Ensures the class always has all the tools it needs to work from the start.
+
+#### Usage
+
+- Use *Constructor Promotion* to keep the code minimal.
+
+#### File Location and Sample Code
+
+`app/Http/Controllers/UserController.php`
+
+```php
+namespace App\Http\Controllers;
+
+use App\Services\UserService;
+
+class UserController extends Controller
+{
+    // Laravel sees the type-hint is UserService, so it automatically creates the object and passes it in here
+    public function __construct(
+        protected UserService $userService 
+    ) {}
+
+    public function show($id)
+    {
+        return $this->userService->findUser($id);
+    }
+}
+```
+
+### Method Injection
+
+#### Description
+
+Sometimes you have a class (like a Controller) with 10 methods, but **only 1 method** needs a particular Service.
+
+Putting it in the Constructor would waste memory for the other 9 methods.
+
+#### Characteristics
+
+- Only "injects" the dependency into the exact function that needs it.
+
+#### Usage
+
+- Declare it right in the function's parameters in the Controller.
+
+#### File Location and Sample Code
+
+`app/Http/Controllers/OrderController.php`
+
+```php
+namespace App\Http\Controllers;
+
+use App\Services\ExportService;
+use Illuminate\Http\Request;
+
+class OrderController extends Controller
+{
+    // ExportService is only loaded when this export function is called
+    public function export(Request $request, ExportService $exportService)
+    {
+        return $exportService->download($request->order_id);
+    }
+}
+```
+
+### Interface Injection (Dependency Inversion)
+
+#### Description
+
+This is the highest level of DI. It makes your code completely independent of any specific class (Loose Coupling).
+
+Instead of calling a class, you call an **Interface** (a blueprint).
+
+#### Characteristics
+
+- Lets you swap logic extremely quickly.
+- Example: today you use `SmsVietGuy`, tomorrow you switch to `Twilio` without changing a single line of code in the Controller.
+
+#### Usage
+
+- Requires 3 steps:
+
+  - Declare the Interface
+
+    - **Create the Interface:** `app/Contracts/SmsServiceInterface.php`
+
+    ```php
+    interface SmsServiceInterface {
+        public function send($phone, $message);
+    }
+    ```
+
+  - Register (Bind) it in a Service Provider.
+
+    - **Register in the Provider:** `app/Providers/AppServiceProvider.php`
+
+    ```php
+    public function register(): void
+    {
+        // When someone asks for the Interface, give them this specific class
+        $this->app->bind(SmsServiceInterface::class, TwilioSmsService::class);
+    }
+    ```
+
+  - Use it in the Controller
+
+  ```php
+  public function __construct(
+      protected SmsServiceInterface $smsService // Inject the Interface instead of the class
+  ) {}
+  ```
+
+### Setter Injection
+
+#### Description
+
+You create a `set...` method to pass in the dependency after the object has been created.
+
+👉 **Note:** In the Laravel ecosystem this approach is rarely used, because Laravel is stronger at automation through the Constructor/Method.
+
+#### Usage
+
+```php
+class UserService
+{
+    protected ?CacheService $cache = null;
+
+    public function setCache(CacheService $cache)
+    {
+        $this->cache = $cache;
+    }
+
+    public function getUsers()
+    {
+        if ($this->cache) {
+            return $this->cache->remember('users');
+        }
+
+        return User::all();
+    }
+}
+```
+
+## 💡 General Notes
+
+- **Why not use `new`?**
+  - If you write `$service = new UserService()`, you are "locking" the Controller to that class.
+  - Later, if you want to change `UserService`, you have to hunt down and edit every file.
+  - With DI, you only need to change it in 1 place (the Provider).
+- **Order of preference:**
+  - Always start with **Constructor Injection**.
+  - Only use **Method Injection** when the Service is very specialized and used by just 1-2 functions.
+  - Use **Interface Injection** when you know the system will need to expand or swap third parties (such as Payment, Storage, SMS).

@@ -1,0 +1,148 @@
+---
+title: "🧩 LESSON 09 — Interact with UI & API"
+slug: "lesson-09-interact-with-ui-api"
+module: "laravel-overview"
+phase: 3
+order: 9
+type: lesson
+summary: "Passing data from a Controller to Blade, building a RESTful API, calling the API with Ajax and telling Web Routes apart from API Routes."
+---
+
+## 🎯 Lesson Objectives
+
+- **Master Views:** Understand how to pass data from a Controller to the interface (Blade) in an optimal way.
+- **Build a standard RESTful API:** Know how to install and configure the API system in the latest Laravel versions.
+- **Ajax integration techniques:** Be proficient at calling an API from the interface without reloading the page.
+- **Separation of Concerns thinking:** Clearly distinguish when to use a Web Route (UI) and when to use an API Route.
+
+## 🖥️ Interacting with the UI (Web Interface)
+
+### Description
+
+- In Laravel, interaction with the interface happens mainly through **Blade Templates**.
+- The Controller prepares the data and "pours" it into the View.
+
+### How to Pass Data from a Controller to a View
+
+There are 3 common ways, but in real projects we prefer clarity.
+
+#### Option 1: Use an Array - Recommended when passing a lot of data
+
+```php
+// app/Http/Controllers/ProductController.php
+public function index()
+{
+    $products = Product::all();
+    return view('products.index', [
+        'items' => $products,
+        'pageTitle' => 'Product list'
+    ]);
+}
+```
+
+#### Option 2: Use the `compact()` function - The shortest
+
+```php
+public function show($id)
+{
+    $product = Product::findOrFail($id);
+    return view('products.detail', compact('product'));
+}
+```
+
+#### Option 3: Use the `with()` method
+
+```php
+return view('products.index')->with('status', 'Updated successfully!');
+```
+
+## 🔌 Interacting with the API (JSON Response)
+
+### Description
+
+- An API (Application Programming Interface) lets different software systems communicate with each other, making it possible to build web services and applications that interact programmatically.
+- From Laravel 11 onward (including **Laravel 12**), the API system is not installed by default, to optimize core performance. We need to install it manually.
+
+### Installing and Configuring the API
+
+- Command
+
+```php
+php artisan install:api
+```
+
+- **Result:**
+  - Laravel creates the `routes/api.php` file
+  - the `config/sanctum.php` config file and the `personal_access_tokens` table in the DB.
+- Configure the API
+  - Step 1: Define the Route
+    - **Location:** `routes/api.php`
+
+      ```php
+      use App\Http\Controllers\Api\ProductApiController;
+      use Illuminate\Support\Facades\Route;
+
+      Route::get('/products', [ProductApiController::class, 'index']);
+      ```
+
+  - Step 2: Handle it in the Controller
+
+    - **Location:** `app/Http/Controllers/Api/ProductApiController.php`
+
+    ```php
+    public function index() {
+        $products = Product::all();
+        
+        // Always return the correct HTTP Status Code (200: OK, 201: Created, 404: Not Found...)
+        return response()->json([
+            'success' => true,
+            'data' => $products,
+            'message' => 'List retrieved successfully'
+        ], 200);
+    }
+    ```
+
+## 🔄 Connecting the UI and API with Ajax
+
+### Description
+
+- This technique makes the application smoother (a Single Page Experience).
+- We will use the UI to fetch data from the API.
+
+### Example
+
+- Interface (Blade): `resources/views/products/list.blade.php`
+- sample code
+
+  ```html
+  <div id="product-list">Loading...</div>
+
+  <script>
+      // Use the Fetch API (modern) or jQuery Ajax
+      fetch('/api/products')
+          .then(response => response.json())
+          .then(res => {
+              if(res.success) {
+                  let html = '';
+                  res.data.forEach(item => {
+                      html += `<li>${item.name}</li>`;
+                  });
+                  document.getElementById('product-list').innerHTML = html;
+              }
+          })
+          .catch(error => console.error('Error:', error));
+  </script>
+  ```
+
+## Important Notes
+
+- **🛡️ Security (CSRF vs Stateless):**
+  - For the **UI (Web Routes)**: A Form must always include the `@csrf` tag to protect against forgery attacks.
+  - For **API Routes**: They are Stateless (no session is stored), so use a Token (Sanctum) for security instead of CSRF.
+- **📊 API Resources:**
+  - In real projects, don't return `$model` directly.
+  - Use `php artisan make:resource ProductResource` to define which data fields may be returned to the Client (hide sensitive fields such as `password`, `deleted_at`).
+- **🌐 API Versioning:**
+  - Always start API URLs with a version so upgrades are easier: `/api/v1/products`, `/api/v2/products`.
+- **🛠️ Testing Tools:**
+  - **Postman:** Use it to test POST, PUT and DELETE methods professionally.

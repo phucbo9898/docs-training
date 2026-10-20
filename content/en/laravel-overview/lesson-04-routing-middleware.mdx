@@ -1,0 +1,191 @@
+---
+title: "🧩 LESSON 04 — Routing & Middleware"
+slug: "lesson-04-routing-middleware"
+module: "laravel-overview"
+phase: 3
+order: 4
+type: lesson
+summary: "Routing, HTTP methods, Route Parameters, route group/prefix/name and Middleware."
+---
+
+## 🎯 Lesson Objectives
+
+- Understand clearly how Routing works
+- Know how to use the HTTP methods
+- Use Route Parameters
+- Know route group, prefix and name
+- Apply Middleware flexibly
+
+## 🌐 Routing
+
+### 🌐 1. What is Routing?
+
+Routing is used to define URLs
+
+It decides:
+
+- URL → which Controller will handle it
+
+Files
+
+- `routes/web.php` → web
+- `routes/api.php` → API
+
+👉 Every request goes through routing
+
+### 🔥 2. HTTP Methods
+
+### List of Methods
+
+- `Route::get()` → get data
+- `Route::post()` → create data
+- `Route::put()` → update
+- `Route::patch()` → partial update
+- `Route::delete()` → delete
+- `Route::options()` → preflight
+
+### Example
+
+```php
+Route::get('/users', function () {
+    return "List users";
+});
+```
+
+### 🔗 3. Route → Controller
+
+💡 Best practice: don't use closures
+
+Use a controller instead:
+
+```php
+Route::get('/users', [UserController::class, 'index']);
+```
+
+👉 Cleaner, easier to maintain
+
+### 📥 4. Route Parameters
+
+Pass data through the URL
+
+### Example
+
+```php
+Route::get('/users/{id}', function ($id) {
+    return $id;
+});
+```
+
+### Multiple parameters:
+
+```php
+/users/{id}/{name}
+```
+
+### 💡 Validate a Parameter (Advanced)
+
+```php
+Route::get('/users/{id}', function ($id) {
+    return $id;
+})->where('id', '[0-9]+');
+
+👉 Only numbers are allowed
+```
+
+### 🧩 5. Route Prefix
+
+Used to group routes that share a prefix
+
+```php
+Route::prefix('admin')->group(function () {
+    Route::get('/users', [UserController::class, 'index']);
+});
+
+👉 The URL will be:
+/admin/users
+```
+
+### 🏷️ 6. Route Name
+
+Give a route a name
+
+```php
+Route::get('/users', ...)->name('users.list');
+```
+
+Usage
+
+```php
+route('users.list');
+```
+
+👉 Avoid hardcoding URLs
+
+### 📦 7. Route Group (VERY IMPORTANT)
+
+```php
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('/dashboard', ...);
+    Route::get('/users', ...);
+});
+
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+    Route::get('/dashboard', ...);
+    Route::get('/users', ...);
+});
+```
+
+👉 Groups together:
+
+- prefix
+- middleware
+- name
+
+## 🛡️ Middleware
+
+### 🛡️ The Role of Middleware
+
+Middleware is used to:
+
+- Authenticate users
+- Check permissions
+- Log requests
+- Modify requests
+
+👉 Runs:
+
+- Before or after the controller
+
+### 🔗 Attaching Middleware
+
+Attach to a route:
+
+```php
+Route::get('/profile', ...)->middleware('auth');
+```
+
+Attach multiple:
+
+```php
+Route::get('/profile', ...)->middleware(['auth', checkRole::class]);
+```
+
+### ❌ Skipping Middleware
+
+```php
+Route::middleware(['auth'])->group(function () {
+    Route::get('/public', function () {
+        return "Public";
+    })->withoutMiddleware(['auth']);
+});
+```
+
+### 🎯 Middleware Parameters
+
+```php
+Route::get('/admin', function () {
+    return "Admin";
+})->middleware('role:admin');
+
+👉 pass a parameter to the middleware
+```

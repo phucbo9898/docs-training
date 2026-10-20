@@ -1,0 +1,94 @@
+---
+title: "🧩 LESSON 01 – Laravel Overview"
+slug: "lesson-01-laravel-overview"
+module: "laravel-overview"
+phase: 3
+order: 1
+type: lesson
+summary: "What Laravel is, what it is used for, the MVC pattern, the request lifecycle and the benefits over plain PHP."
+---
+
+## 🎯 Lesson Objectives
+
+- Understand what Laravel is
+- Know what Laravel is used for
+- Understand the MVC pattern in Laravel
+- Learn the benefits of using Laravel instead of plain PHP
+
+## 📖 1. What is Laravel?
+
+- Laravel is an open-source PHP framework developed by Taylor Otwell.
+- Laravel helps you build web applications using the MVC (Model - View - Controller) pattern.
+- Laravel provides many features out of the box:
+  - Routing
+  - Authentication
+  - Database ORM (Eloquent)
+  - Middleware
+  - Queue, Cache, API,...
+- Goal: help developers write code faster, cleaner and easier to maintain.
+
+## 🤔 2. Laravel vs. Plain PHP
+
+Plain PHP vs Laravel
+
+- Code: Laravel is cleaner
+- Development speed: Laravel is faster
+- Structure: Laravel is clearer
+- Maintenance: Laravel is easier
+
+👉 Conclusion:
+
+- Laravel saves time and reduces bugs.
+
+## 🧠 3. What is the MVC Pattern?
+
+👉 This is the most important part of the lesson
+
+MVC = Model - View - Controller
+
+1. Model
+   - Handles data
+   - Works with the database
+2. View
+   - The user interface (HTML, Blade)
+3. Controller
+   - Receives requests
+   - Handles logic
+   - Returns a response
+
+👉 Flow:
+
+- User → Route → Controller → Model → Controller → View → User
+
+## 🔁 4. An Easy MVC Example
+
+![Diagram of the request lifecycle in Laravel: the Client sends a request to public/index.php and then App/Http/Kernel.php, passes through Service providers (register and bootstrap), then the Router, Middleware, Controller/Action, followed by the View, and the response is returned to the Client](/content-images/laravel-overview/b4bce647-722e-4064-ac19-b7e9e0d0573e.png)
+
+Example: Viewing a list of posts
+
+1. The user visits the URL: /posts
+2. The route calls PostController
+3. The controller calls the Model (Post) to get the data
+4. The model queries the database
+5. The controller passes the data to the View
+6. The view displays the list of posts
+
+👉 This is the standard Laravel flow
+
+## ⚡ 5. What Problems Does Laravel Solve?
+
+▶ Better code organization
+
+▶ Less repeated code
+
+▶ Faster development
+
+▶ Easier maintenance
+
+▶ Supports effective teamwork
+
+👉 Laravel is a great fit for:
+
+- Web apps
+- REST APIs
+- SaaS systems

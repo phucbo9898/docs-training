@@ -1,0 +1,385 @@
+---
+title: "🧩 LESSON 03 — Laravel Basic (Controller, Middleware, Request, Model, Service)"
+slug: "lesson-03-laravel-basic"
+module: "laravel-overview"
+phase: 3
+order: 3
+type: lesson
+summary: "The main Laravel components: Controller, Middleware, Model, Request and Custom Request, and separating logic with Service."
+---
+
+## 🎯 Lesson Objectives
+
+- Understand the main components in Laravel
+- Know how to create a Controller, Middleware and Model
+- Understand Request & Custom Request
+- Know how to separate logic with a Service
+
+## 🧩 1. Laravel Basic Overview
+
+Laravel has these main components:
+
+- Controller → handles logic
+- Middleware → checks the request
+- Request → data from the client
+- Model → works with the DB
+- Service → handles complex logic
+
+👉 This is the standard flow:
+
+- Request → Middleware → Controller → Model → Response
+
+## 🎮 2. Controller
+
+### What is a Controller?
+
+- The place that handles the main logic
+- Receives requests and returns responses
+
+### Location
+
+`app/Http/Controllers`
+
+### How to Create a Controller
+
+```bash
+php artisan make UserController
+```
+
+### Example
+
+```php
+class UserController extends Controller
+{
+    public function index()
+    {
+        return "Hello User";
+    }
+}
+```
+
+### Route
+
+```php
+Route::get('/users', [UserController::class, 'index']);
+```
+
+### Best Practice (Controller)
+
+- Don't write complex logic in a controller
+- It should only:
+  - receive the request
+  - call a service / model
+  - return a response
+
+## 🛡️ 3. Middleware
+
+### What is Middleware?
+
+- An intermediate layer that checks the request
+- Runs before the request reaches the controller
+
+### Example
+
+- Check login
+- Check permissions
+
+### How to Create Middleware
+
+```bash
+php artisan make CheckAge
+```
+
+### Location
+
+`app/Http/Middleware`
+
+### Example
+
+```php
+public function handle($request, Closure $next)
+{
+    if ($request->age < 18) {
+        return "Access denied";
+    }
+    return $next($request);
+}
+```
+
+### 🔗 Attach Middleware to a Route
+
+```php
+Route::get('/profile', function () {
+    return "Profile";
+})->middleware(checkAge::class);
+
+👉 You can use multiple middleware
+```
+
+## 📥 4. Request
+
+### What is a Request?
+
+Represents the HTTP request from the client
+
+### What Does a Request Contain?
+
+- input data
+- header
+- method
+- cookie
+
+### Example
+
+```php
+public function store(Request $request)
+{
+    $name = $request->name;
+}
+```
+
+### Custom Request (VERY IMPORTANT)
+
+Used to validate data
+
+#### How to Create
+
+```bash
+php artisan make StoreUserRequest
+```
+
+#### Location
+
+`app/Http/Requests`
+
+#### Example
+
+```php
+public function rules()
+{
+    return [
+        'name' => 'required',
+        'email' => 'required|email'
+    ];
+}
+```
+
+#### Use in a Controller
+
+```php
+public function store(StoreUserRequest $request) {
+	// already validated
+}
+```
+
+#### 💡 Best Practice (Request)
+
+- Don't validate in the controller
+- Use a Custom Request
+- Keep validation separate
+
+👉 Cleaner code, easier to maintain
+
+## 🧱 5. Model
+
+### What is a Model?
+
+- Works with the database
+- Represents a table
+
+### Model Conventions
+
+File names must start with an uppercase letter
+
+To map a model to a table, name the model after the table in singular form, starting with an uppercase letter
+
+### Location
+
+`app/Models`
+
+### How to Create
+
+```bash
+// Create a plain model
+php artisan make User
+
+// Create a model and its corresponding migration
+php artisan make User --migration
+```
+
+### Important Properties
+
+```php
+$table → table name
+$primaryKey → primary key
+$fillable → fields allowed for insert/update
+$guarded → blocked fields
+$timestamps → enable/disable created_at
+
+Example:
+protected $fillable = ['name', 'email'];
+```
+
+### Relationships
+
+#### One to one
+
+Example: 1 user can be linked to 1 phone number
+
+```php
+public function phone()
+{
+    return $this->hasOne(Phone::class, 'foreign_key', 'local_key');
+}
+```
+
+#### One to many
+
+1 user has many posts, 1 post belongs to 1 user
+
+```php
+class User extends Authenticatable
+{
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'foreign_key', 'local_key');
+    }
+}
+
+class Post extends Model
+{
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'foreign_key', 'local_key');
+    }
+}
+```
+
+#### Many to many
+
+1 user has many roles, 1 role belongs to many users
+
+```php
+class User extends Authenticatable
+{
+    public function posts()
+    {
+        return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
+    }
+}
+
+class Role extends Model
+{
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_roles', 'role_id', 'user_id');
+    }
+}
+```
+
+### Eager Loading (Performance Optimization)
+
+👉 Avoids the N+1 query problem
+
+```php
+User::with('posts')->get();
+```
+
+#### The N+1 Query Problem
+
+Example of N+1 query code
+
+```php
+$users = User::all();
+foreach ($users as $user) {
+    $user->posts;
+}
+```
+
+👉 Queries the DB many times, which is not good for performance
+
+Use eager loading to minimize N+1 queries
+
+```php
+User::with('posts')->get();
+```
+
+### Basic Operations
+
+```php
+// Get all users
+User::all();
+
+// Get a user record by id
+User::find(1);
+
+// Get user records by condition
+User::where('status', 'active')->get();
+
+// Create a new record
+User::create([
+    'name' => 'John Doe',
+    'email' => 'john.doe@example.com',
+    'password' => bcrypt('password'),
+]);
+
+// Update a record
+User::where('id', 1)->update(['name' => 'Jane Doe']);
+
+// Delete a record
+User::where('id', 1)->delete();
+
+// Use a relationship to get a user's posts
+$user = User::find(1);
+$posts = $user->posts;
+```
+
+## 🔌 6. Service (Very Important in Real Projects)
+
+### What is a Service?
+
+- Holds complex logic
+- Kept separate from the controller
+
+### Example
+
+- calling an API
+- handling business logic
+
+### Location
+
+`app/Services`
+
+### Example
+
+```php
+class UserService
+{
+    public function createUser($data)
+    {
+        return User::create($data);
+    }
+}
+```
+
+### Using a Service in a Controller
+
+```php
+public function __construct(UserService $userService)
+{
+    $this->userService = $userService;
+}
+
+public function store(Request $request)
+{
+    $this->userService->createUser($request->all());
+}
+```
+
+### Best Practice (Service)
+
+- Big logic → move it into a service
+- The controller only calls the service
+- Easy to test, easy to reuse
+
+👉 Large projects must have a service layer
