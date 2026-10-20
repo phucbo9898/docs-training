@@ -96,3 +96,46 @@ HTTP methods: GET, POST, PUT, PATCH, DELETE.
 - Heading titles that are already English (e.g. `LESSON 01 – PHP Overview`) stay unchanged.
 - Keep Vietnamese UI-facing sample data (names, addresses) in code blocks unchanged; translate only code comments.
 - Internal links: `/vi/...` → `/en/...`; image paths unchanged; translate alt text and captions.
+
+## 5. Additions (php-method-session-oop → project-ecommerce)
+
+| Tiếng Việt                          | English                         | Note                                              |
+| ----------------------------------- | ------------------------------- | ------------------------------------------------- |
+| Mục tiêu sau khi học                | Lesson Objectives               | same as "Mục tiêu bài học"                        |
+| Mục tiêu khóa học (có số thứ tự)    | Course Objectives               | keep the "1." numbering                           |
+| Quy ước thực hành                   | Practice Conventions            |                                                   |
+| Quy tắc training                    | Training Rules                  |                                                   |
+| Output sau training                 | Outcomes After Training         |                                                   |
+| Yêu cầu chung                       | General Requirements            |                                                   |
+| Chuẩn bị dữ liệu / schema           | Data / Schema Preparation       |                                                   |
+| Tính đóng gói / kế thừa / đa hình / trừu tượng | Encapsulation / Inheritance / Polymorphism / Abstraction | |
+| Lớp / đối tượng / thuộc tính / phương thức | class / object / property / method | |
+| Lớp Cha / lớp Con                   | parent class / child class      |                                                   |
+| Phương thức HTTP                    | HTTP Methods                    |                                                   |
+| Siêu toàn cục                       | Superglobals                    | kept as an English term                           |
+| Lập trình hướng đối tượng           | Object-Oriented Programming     |                                                   |
+| Khóa chính / khóa ngoại             | PRIMARY KEY / FOREIGN KEY       | uppercase in SQL contexts                         |
+| Ràng buộc                           | Constraint                      |                                                   |
+| Tổng quan hệ thống                  | System Overview                 |                                                   |
+| Quy tắc chung                       | Common Rules                    |                                                   |
+| Hệ thống quản trị (CMS)             | Admin Panel (CMS)               |                                                   |
+| Trang bán hàng                      | Shopping Site                   |                                                   |
+| Chi tiết (màn hình)                 | Detail                          |                                                   |
+| Chức năng bổ sung cần thiết         | Recommended Additional Features |                                                   |
+| Đăng ký / Đăng nhập / Quên mật khẩu | Register / Login / Forgot password |                                                |
+| Thanh toán                          | Checkout                        |                                                   |
+| Trang cá nhân                       | My Profile                      |                                                   |
+| STT                                 | No.                             | table column                                      |
+| Tiền tệ `VNĐ`                       | `VND`                           | ISO code; avoids a Vietnamese character           |
+| Tặng / Đặt hàng thành công          | give / Order placed successfully|                                                   |
+| Lập lịch tác vụ                     | Task Scheduling                 |                                                   |
+| Hàng đợi                            | queue                           |                                                   |
+| Tăng tốc / Giảm load                | Speed up / Reduce load          |                                                   |
+| Giảm bug, dễ bảo trì                | reduce bugs, easier to maintain |                                                   |
+
+Code-block rules clarified during translation:
+
+- Vietnamese identifiers (`CanhCua`, `mo`, `dong`) → English equivalents (`DoorLeaf`, `open`, `close`).
+- Vietnamese string literals shown to end users in examples (`'Danh sách sản phẩm'`, `"Đang phát nhạc MP3..."`) → English.
+- `<html lang="vi">` in HTML samples → `lang="en"`.
+- Proper names / sample data (`Phuc`, `SmsVietGuy`, `John`) stay unchanged.
