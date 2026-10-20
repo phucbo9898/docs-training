@@ -1,0 +1,102 @@
+{
+  "Metadata": {
+    "siteName": "Intern Backend Training",
+    "description": "Tài liệu training Backend Developer: PHP, SQL, HTML/CSS/JavaScript và Laravel."
+  },
+  "ThemeToggle": {
+    "label": "Giao diện",
+    "light": "Sáng",
+    "dark": "Tối",
+    "system": "Theo hệ thống"
+  },
+  "LanguageSwitcher": {
+    "label": "Ngôn ngữ",
+    "vi": "Tiếng Việt",
+    "en": "English"
+  },
+  "Home": {
+    "title": "Intern Backend Training",
+    "welcome": {
+      "heading": "Welcome",
+      "intro": "Chào mừng bạn đến với chương trình training Backend Developer.",
+      "listIntro": "Tài liệu này sẽ giúp bạn:",
+      "items": [
+        "Nắm vững kiến thức nền tảng về lập trình web",
+        "Hiểu cách xây dựng hệ thống backend thực tế",
+        "Có thể tự implement API và xử lý logic trong dự án"
+      ]
+    },
+    "goals": {
+      "heading": "Mục tiêu sau training",
+      "listIntro": "Sau khi hoàn thành, bạn có thể:",
+      "items": [
+        "Hiểu và sử dụng <strong>PHP</strong> để xử lý logic backend",
+        "Làm việc với database bằng <strong>SQL</strong>",
+        "Nắm được nền tảng <strong>HTML / CSS / JavaScript</strong>",
+        "Xây dựng API với <strong>Laravel</strong>",
+        "Đọc hiểu và làm việc với codebase thực tế"
+      ]
+    },
+    "roadmap": {
+      "heading": "Lộ trình học",
+      "phases": [
+        {
+          "label": "Phase 1",
+          "title": "Nền tảng",
+          "topics": [
+            {
+              "title": "PHP Basic",
+              "items": [
+                "Variables, Array, Function",
+                "OOP (Class, Object, Inheritance)",
+                "Xử lý dữ liệu backend"
+              ]
+            },
+            {
+              "title": "HTML / CSS / JavaScript",
+              "items": ["Cấu trúc HTML", "Styling với CSS", "JS cơ bản + DOM"]
+            }
+          ]
+        },
+        {
+          "label": "Phase 2",
+          "title": "Database",
+          "topics": [
+            {
+              "title": "SQL & Database",
+              "items": [
+                "SELECT, INSERT, UPDATE, DELETE",
+                "JOIN, INDEX",
+                "Tối ưu query"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Phase 3",
+          "title": "Framework",
+          "topics": [
+            {
+              "title": "Laravel Framework",
+              "items": [
+                "MVC Architecture",
+                "Routing, Middleware",
+                "Eloquent ORM",
+                "Xây dựng RESTful API"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Phase 4",
+          "title": "Thực hành",
+          "topics": [],
+          "summary": "Build API + Mini Project"
+        }
+      ]
+    },
+    "lessons": {
+      "heading": "Lộ trình bài học"
+    }
+  }
+}

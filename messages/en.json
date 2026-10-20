@@ -1,0 +1,102 @@
+{
+  "Metadata": {
+    "siteName": "Intern Backend Training",
+    "description": "Backend Developer training materials: PHP, SQL, HTML/CSS/JavaScript and Laravel."
+  },
+  "ThemeToggle": {
+    "label": "Appearance",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "LanguageSwitcher": {
+    "label": "Language",
+    "vi": "Tiếng Việt",
+    "en": "English"
+  },
+  "Home": {
+    "title": "Intern Backend Training",
+    "welcome": {
+      "heading": "Welcome",
+      "intro": "Welcome to the Backend Developer training program.",
+      "listIntro": "These materials will help you:",
+      "items": [
+        "Master the fundamentals of web programming",
+        "Understand how real-world backend systems are built",
+        "Implement APIs and handle business logic in a project on your own"
+      ]
+    },
+    "goals": {
+      "heading": "Goals after the training",
+      "listIntro": "Once you finish, you will be able to:",
+      "items": [
+        "Understand and use <strong>PHP</strong> to handle backend logic",
+        "Work with databases using <strong>SQL</strong>",
+        "Know the fundamentals of <strong>HTML / CSS / JavaScript</strong>",
+        "Build APIs with <strong>Laravel</strong>",
+        "Read and work with a real-world codebase"
+      ]
+    },
+    "roadmap": {
+      "heading": "Learning roadmap",
+      "phases": [
+        {
+          "label": "Phase 1",
+          "title": "Fundamentals",
+          "topics": [
+            {
+              "title": "PHP Basic",
+              "items": [
+                "Variables, Array, Function",
+                "OOP (Class, Object, Inheritance)",
+                "Backend data handling"
+              ]
+            },
+            {
+              "title": "HTML / CSS / JavaScript",
+              "items": ["HTML structure", "Styling with CSS", "Basic JS + DOM"]
+            }
+          ]
+        },
+        {
+          "label": "Phase 2",
+          "title": "Database",
+          "topics": [
+            {
+              "title": "SQL & Database",
+              "items": [
+                "SELECT, INSERT, UPDATE, DELETE",
+                "JOIN, INDEX",
+                "Query optimization"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Phase 3",
+          "title": "Framework",
+          "topics": [
+            {
+              "title": "Laravel Framework",
+              "items": [
+                "MVC Architecture",
+                "Routing, Middleware",
+                "Eloquent ORM",
+                "Building a RESTful API"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Phase 4",
+          "title": "Hands-on practice",
+          "topics": [],
+          "summary": "Build an API + Mini Project"
+        }
+      ]
+    },
+    "lessons": {
+      "heading": "Lesson roadmap"
+    }
+  }
+}
