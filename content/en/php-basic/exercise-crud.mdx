@@ -1,0 +1,71 @@
+---
+title: "CRUD Exercise"
+slug: "exercise-crud"
+module: "php-basic"
+phase: 1
+order: 8
+type: exercise
+summary: "A CRUD exercise using plain PHP with MySQL: create, read, update and delete data in the students table."
+---
+
+## 🎯 Objectives
+
+- Get familiar with the basic CRUD flow: Create / Read / Update / Delete
+- Learn to organize a simple PHP folder structure (no framework) to understand how things work under the hood
+- Practice working with data in MySQL (recommended)
+
+## ✅ Preparation
+
+- Install XAMPP/Laragon and start MySQL
+- Create a database: `php_basic`
+- Create a table: `students` (id, name, email, created_at)
+
+SQL example:
+
+```sql
+CREATE DATABASE php_basic CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE php_basic;
+
+CREATE TABLE students (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL,
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+## 📁 Suggested Structure
+
+```text
+crud/
+  config/
+    db.php
+  students/
+    index.php      (list)
+    create.php     (form + submit)
+    edit.php       (form + submit)
+    delete.php
+```
+
+## 🧩 Tasks
+
+1. **List**: display the list of students
+
+2. **Create**: a form to add a new student
+
+3. **Update**: a form to edit a student
+
+4. **Delete**: delete a student (with a confirmation)
+
+## 🔒 Minimum Requirements
+
+- Validate: name/email must not be empty, and email must be in a valid format
+- Use prepared statements (mysqli or PDO) to prevent SQL injection
+- Keep the UI simple: a table + a form is enough
+
+## ✅ Bonus (if you have time)
+
+- Search by name/email
+- Pagination
+- Success/failure messages using session flash

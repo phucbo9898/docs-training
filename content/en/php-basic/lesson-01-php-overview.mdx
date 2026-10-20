@@ -1,0 +1,72 @@
+---
+title: "🧩 LESSON 01 – PHP Overview"
+slug: "lesson-01-php-overview"
+module: "php-basic"
+phase: 1
+order: 1
+type: lesson
+summary: "What PHP is, where it runs (server-side), how to set up your environment and run your first Hello World example."
+---
+
+## 🎯 Objectives
+
+- Understand what PHP is and where it runs (server-side)
+- Know how to set up an environment to run PHP files
+- Run your first “Hello World” example
+
+## 🧠 What is PHP?
+
+- PHP (Hypertext Preprocessor) is a **backend (server-side)** programming language
+- Commonly used to build dynamic websites, APIs, handle forms and work with databases
+- Open source, with a large community
+
+## 🌍 Common Uses
+
+- Websites & APIs (Laravel/Symfony, or plain PHP)
+- CMS: WordPress, Joomla, Drupal
+- E-commerce: Magento, OpenCart
+
+## 🖥️ Environment Setup
+
+An easy way for interns:
+
+- Windows: **XAMPP** or **Laragon**
+- macOS: Homebrew + PHP (or Docker)
+- Linux: LAMP/LEMP
+
+At a minimum you need:
+
+- PHP runtime
+- A web server (Apache/Nginx) or the PHP built-in server
+
+## 🚀 Run PHP quickly with the built-in server (recommended for learning)
+
+1. Create a project folder, for example `php-basic/`
+
+2. Create an `index.php` file:
+
+```php
+<?php
+echo "Hello World";
+```
+
+3. Open a terminal in the project folder and run:
+
+```bash
+php -S localhost:8000
+```
+
+4. Open your browser: `http://localhost:8000`
+
+## 🧱 Basic Structure of a PHP File
+
+```php
+<?php
+// PHP code goes here
+?>
+```
+
+## 📝 Notes
+
+- PHP files always have the `.php` extension
+- When using `echo`, remember the spaces and the closing `;`

@@ -1,0 +1,95 @@
+---
+title: "🧩 LESSON 03 – Data Types + String + Array"
+slug: "lesson-03-data-types-string-array"
+module: "php-basic"
+phase: 1
+order: 3
+type: lesson
+summary: "Common data types in PHP, basic string operations, and how to declare and use arrays."
+---
+
+## 🎯 Objectives
+
+- Understand the common data types in PHP
+- Perform basic operations with strings
+- Declare and use arrays
+
+## 1) Common Data Types
+
+| Type    | Example    | Notes          |
+| ------- | ---------- | -------------- |
+| String  | "Hello"    | Text           |
+| Integer | 10         | Whole number   |
+| Float   | 10.5       | Decimal number |
+| Boolean | true       | True/False     |
+| Array   | \[1, 2, 3] | A list of values |
+| NULL    | null       | No value       |
+
+## 2) String
+
+### Concatenating Strings
+
+```php
+<?php
+$name = "Phuc";
+echo "Hello " . $name;
+```
+
+### Commonly Used Functions
+
+```php
+<?php
+strlen("Hello");                // length
+strtoupper("hello");            // HELLO
+trim("  hello  ");              // "hello"
+sprintf("Hello %s", "Phuc");    // format
+```
+
+## 3) Array
+
+### 3.1 Indexed Array
+
+```php
+<?php
+$colors = ["red", "blue"];
+echo $colors[0]; // red
+```
+
+### 3.2 Associative Array
+
+```php
+<?php
+$user = [
+	"name" => "Phuc",
+	"age" => 20,
+];
+echo $user["name"];
+```
+
+### 3.3 Multidimensional Array
+
+```php
+<?php
+$data = [
+	"colors" => ["red", "blue"],
+	"users" => [
+		["name" => "A"],
+		["name" => "B"],
+	],
+];
+```
+
+### Commonly Used Array Functions
+
+```php
+<?php
+$nums = [3, 1, 2];
+sort($nums);           // [1,2,3]
+array_push($nums, 4);  // add an element
+```
+
+## 🧪 Quick Exercises
+
+- Create an array `$students` with 3 intern names
+- Create an array `$profile` with `name`, `email`, `age`
+- Print the first intern's name and the email in `$profile`

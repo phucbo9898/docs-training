@@ -1,0 +1,61 @@
+---
+title: "🧩 LESSON 05 – Loop (for, foreach...)"
+slug: "lesson-05-loop"
+module: "php-basic"
+phase: 1
+order: 5
+type: lesson
+summary: "When to use for, foreach, while and do...while, and how to iterate over an array to print data."
+---
+
+## 🎯 Objectives
+
+- Understand when to use `for`, `foreach`, `while`, `do...while`
+- Iterate over an array and print its data
+
+## 1) for
+
+```php
+<?php
+for ($i = 0; $i < 5; $i++) {
+	echo $i;
+}
+```
+
+## 2) foreach (iterating over an array)
+
+```php
+<?php
+$colors = ["red", "blue", "green"];
+
+foreach ($colors as $color) {
+	echo $color;
+}
+```
+
+## 3) while
+
+```php
+<?php
+$i = 0;
+
+while ($i < 5) {
+	$i++;
+}
+```
+
+## 4) do...while
+
+```php
+<?php
+$i = 0;
+
+do {
+	$i++;
+} while ($i < 5);
+```
+
+## 🧪 Quick Exercises
+
+- Use `for` to print the even numbers from 0 → 20
+- Use `foreach` to iterate over the `$students` array and print each name

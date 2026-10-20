@@ -1,0 +1,66 @@
+---
+title: "🧩 LESSON 04 – Condition (if, switch...)"
+slug: "lesson-04-condition"
+module: "php-basic"
+phase: 1
+order: 4
+type: lesson
+summary: "Write conditions with if/else/elseif and switch, and get familiar with shorthand operators such as ternary and null coalescing."
+---
+
+## 🎯 Objectives
+
+- Write `if / else / elseif` conditions
+- Know how to use `switch`
+- Get familiar with shorthand operators (ternary, null coalescing)
+
+## 1) if / else / elseif
+
+```php
+<?php
+$age = 20;
+
+if ($age >= 18) {
+	echo "Adult";
+} else {
+	echo "Child";
+}
+```
+
+## 2) switch
+
+```php
+<?php
+$role = "admin";
+
+switch ($role) {
+	case "admin":
+		echo "Admin";
+		break;
+	case "user":
+		echo "User";
+		break;
+	default:
+		echo "Guest";
+}
+```
+
+## 3) Ternary operator
+
+```php
+<?php
+$age = 20;
+$result = ($age >= 18) ? "Adult" : "Child";
+```
+
+## 4) Null coalescing (??)
+
+```php
+<?php
+$name = $_GET["name"] ?? "Guest";
+```
+
+## 🧪 Quick Exercises
+
+- Enter `$score` and classify it: `>= 8` Excellent, `>= 6.5` Good, otherwise Average
+- Use `switch` to map `$dayNumber` (1-7) to the name of the day of the week

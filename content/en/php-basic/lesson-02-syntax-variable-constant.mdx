@@ -1,0 +1,77 @@
+---
+title: "🧩 LESSON 02 – Syntax + Variable + Constant"
+slug: "lesson-02-syntax-variable-constant"
+module: "php-basic"
+phase: 1
+order: 2
+type: lesson
+summary: "Basic syntax and coding conventions, how to declare and name variables, and constants and when to use them."
+---
+
+## 🎯 Objectives
+
+- Learn the basic syntax and coding conventions
+- Know how to declare variables and name them correctly
+- Understand constants and when to use them
+
+## 1) Basic Syntax
+
+- PHP runs from top to bottom
+- End each statement with `;`
+- Comments:
+
+```php
+// single line
+/* multiple lines */
+```
+
+## 2) Variable
+
+A variable stores data and can change while the program runs.
+
+### Syntax
+
+```php
+<?php
+$name = "Phuc";
+$age = 20;
+$isActive = true;
+```
+
+### Naming Rules
+
+- Start with the `$` character
+- Only letters, digits and `_` (must not start with a digit)
+- Use meaningful names: `$userName`, `$totalPrice`
+- Stick to one convention (snake_case or camelCase)
+
+## 3) Constant
+
+Use a constant when a value **does not change** throughout the program (config, env, constant value).
+
+### How to Declare
+
+```php
+<?php
+define("SITE_NAME", "My Website");
+const APP_VERSION = "1.0.0";
+```
+
+### Note
+
+- Do not use `$`
+- Usually written in uppercase with `_`
+
+## 4) Basic Output
+
+```php
+<?php
+echo $name;
+var_dump($age);
+```
+
+## 🧪 Quick Exercises
+
+- Declare the variables: `$fullName`, `$birthYear`, `$email`
+- Create a constant: `COMPANY_NAME`
+- Print the sentence: `Hello <name>, your email is <email>`

@@ -1,0 +1,57 @@
+---
+title: "🧩 LESSON 06 – Function (built-in + user-defined)"
+slug: "lesson-06-function"
+module: "php-basic"
+phase: 1
+order: 6
+type: lesson
+summary: "What a function is, how to write functions with parameters and return values, and some commonly used built-in functions."
+---
+
+## 🎯 Objectives
+
+- Understand what a function is and its benefit (reusability)
+- Write functions with parameters and return values
+- Get familiar with some commonly used built-in functions
+
+## 1) What is a function?
+
+A function is a block of code that performs a specific task and can be called many times.
+
+## 2) Basic Syntax
+
+```php
+<?php
+function sayHello(): void
+{
+	echo "Hello";
+}
+
+sayHello();
+```
+
+## 3) Functions with parameters and return
+
+```php
+<?php
+function sum(int $a, int $b): int
+{
+	return $a + $b;
+}
+
+echo sum(2, 3); // 5
+```
+
+## 4) Built-in functions (examples)
+
+```php
+<?php
+strlen("Hello");
+date("Y-m-d");
+implode(",", ["a", "b"]);
+```
+
+## 🧪 Quick Exercises
+
+- Write a function `isPrime($n)` that checks for a prime number
+- Write a function `isLeapYear($year)` that checks for a leap year
