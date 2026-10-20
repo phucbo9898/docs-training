@@ -1,0 +1,77 @@
+---
+title: "🧩 LESSON 02 – Syntax + Variable + Constant"
+slug: "lesson-02-syntax-variable-constant"
+module: "php-basic"
+phase: 1
+order: 2
+type: lesson
+summary: "Cú pháp cơ bản và quy ước viết code, cách khai báo và đặt tên biến, hằng số và khi nào nên dùng."
+---
+
+## 🎯 Mục tiêu
+
+- Nắm cú pháp cơ bản và quy ước viết code
+- Biết khai báo biến, đặt tên biến đúng
+- Hiểu hằng số (constant) và khi nào nên dùng
+
+## 1) Cú pháp cơ bản
+
+- PHP chạy từ trên xuống dưới
+- Kết thúc câu lệnh bằng `;`
+- Comment:
+
+```php
+// 1 dòng
+/* nhiều dòng */
+```
+
+## 2) Biến (Variable)
+
+Biến dùng để lưu trữ dữ liệu và có thể thay đổi trong quá trình chạy chương trình.
+
+### Cú pháp
+
+```php
+<?php
+$name = "Phuc";
+$age = 20;
+$isActive = true;
+```
+
+### Quy tắc đặt tên
+
+- Bắt đầu bằng ký tự `$`
+- Chỉ gồm chữ, số, dấu `_` (không bắt đầu bằng số)
+- Nên đặt rõ nghĩa: `$userName`, `$totalPrice`
+- Thống nhất 1 convention (snake_case hoặc camelCase)
+
+## 3) Hằng số (Constant)
+
+Dùng khi giá trị **không đổi** trong suốt chương trình (config, env, constant value).
+
+### Cách khai báo
+
+```php
+<?php
+define("SITE_NAME", "My Website");
+const APP_VERSION = "1.0.0";
+```
+
+### Lưu ý
+
+- Không dùng `$`
+- Thường viết hoa + `_`
+
+## 4) In dữ liệu (output) cơ bản
+
+```php
+<?php
+echo $name;
+var_dump($age);
+```
+
+## 🧪 Bài tập nhanh
+
+- Khai báo các biến: `$fullName`, `$birthYear`, `$email`
+- Tạo hằng số: `COMPANY_NAME`
+- In ra câu: `Hello <tên>, email của bạn là <email>`

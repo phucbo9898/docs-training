@@ -1,0 +1,185 @@
+---
+title: "🧩 LESSON 03 – Join & Subquery"
+slug: "lesson-03-join-subquery"
+module: "sql-database-overview"
+phase: 2
+order: 5
+type: lesson
+summary: "Bản chất JOIN và cách chọn đúng loại, JOIN 2–3 bảng, UNION và Subquery với IN/EXISTS."
+---
+
+## 🎯 Mục tiêu
+
+- Hiểu bản chất JOIN và chọn đúng loại JOIN
+- Viết JOIN 2–3 bảng theo khóa liên kết
+- Dùng `UNION` đúng trường hợp
+- Dùng Subquery (IN/EXISTS) cho bài toán thực tế
+- Hiểu `PRIMARY KEY` / `FOREIGN KEY` ở mức thực hành
+
+## 1) JOIN (cốt lõi)
+
+Giả sử có 2 bảng:
+
+- `users(id, name, ...)`
+- `orders(id, user_id, total, ...)`
+
+### INNER JOIN
+
+Lấy các dòng “match” ở cả 2 bảng:
+
+```sql
+SELECT u.id, u.name, o.id AS order_id, o.total
+FROM users u
+INNER JOIN orders o ON o.user_id = u.id;
+```
+
+### LEFT JOIN
+
+Lấy tất cả users, kể cả users chưa có order:
+
+```sql
+SELECT u.id, u.name, o.id AS order_id
+FROM users u
+LEFT JOIN orders o ON o.user_id = u.id;
+```
+
+### RIGHT JOIN
+
+Lấy tất cả orders, kể cả orders không match user (ít dùng hơn, thường có thể đảo bảng để dùng LEFT JOIN):
+
+```sql
+SELECT u.id, u.name, o.id AS order_id, o.total
+FROM users u
+RIGHT JOIN orders o ON o.user_id = u.id;
+```
+
+### FULL OUTER JOIN (lưu ý MySQL)
+
+- `FULL OUTER JOIN` có sẵn ở một số DBMS (PostgreSQL, SQL Server…)
+- **MySQL không hỗ trợ trực tiếp**, thường mô phỏng bằng `LEFT JOIN` + `RIGHT JOIN` + `UNION`
+
+Ví dụ mô phỏng FULL OUTER JOIN:
+
+```sql
+SELECT u.id, u.name, o.id AS order_id, o.total
+FROM users u
+LEFT JOIN orders o ON o.user_id = u.id
+UNION
+SELECT u.id, u.name, o.id AS order_id, o.total
+FROM users u
+RIGHT JOIN orders o ON o.user_id = u.id;
+```
+
+### SELF JOIN
+
+Join một bảng với chính nó (ví dụ: bảng nhân sự có cột `manager_id`):
+
+```sql
+SELECT e.name AS employee_name, m.name AS manager_name
+FROM employees e
+LEFT JOIN employees m ON m.id = e.manager_id;
+```
+
+## 2) UNION
+
+Gộp kết quả 2 query (cùng số cột + kiểu dữ liệu tương thích):
+
+```sql
+SELECT email FROM users
+UNION
+SELECT email FROM customers;
+```
+
+## 3) Subquery (ví dụ IN)
+
+```sql
+SELECT *
+FROM users
+WHERE id IN (
+  SELECT user_id
+  FROM orders
+);
+```
+
+## 4) Constraints (nhấn mạnh)
+
+### Constraints là gì?
+
+**Constraint** là “ràng buộc” (rule) áp lên cột/bảng để đảm bảo **tính đúng đắn và toàn vẹn dữ liệu**.
+
+Ý nghĩa chính:
+
+- Ngăn dữ liệu sai (ví dụ: không cho email trùng, không cho order trỏ đến user không tồn tại)
+- Chuẩn hoá cách dữ liệu liên kết giữa các bảng
+- Giúp query/join ổn định hơn, dễ debug hơn
+
+Các loại constraint phổ biến:
+
+- `PRIMARY KEY`: định danh duy nhất của 1 record
+- `FOREIGN KEY`: ràng buộc quan hệ giữa bảng con → bảng cha
+- `NOT NULL`: không được để trống
+- `UNIQUE`: không được trùng
+- `DEFAULT`: giá trị mặc định
+- `CHECK`: ràng buộc điều kiện (MySQL hỗ trợ nhưng tuỳ version/engine)
+
+### 5) Phân biệt PRIMARY KEY vs FOREIGN KEY
+
+#### 5.1) PRIMARY KEY (Khóa chính)
+
+Khái niệm:
+
+- Cột (hoặc nhóm cột) **định danh duy nhất** cho mỗi dòng trong bảng.
+
+Tính chất:
+
+- **Không trùng** (unique)
+- **Không null**
+- Mỗi bảng chỉ có **1 PRIMARY KEY** (nhưng có thể gồm nhiều cột → composite key)
+
+Ví dụ:
+
+```sql
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL
+);
+```
+
+#### 5.2) FOREIGN KEY (Khóa ngoại)
+
+Khái niệm:
+
+- Cột (hoặc nhóm cột) ở **bảng con** dùng để **tham chiếu** đến `PRIMARY KEY` (hoặc `UNIQUE`) của **bảng cha**.
+
+Ý nghĩa:
+
+- Đảm bảo **toàn vẹn tham chiếu (referential integrity)**: không thể tạo `orders.user_id = 999` nếu `users.id = 999` không tồn tại.
+
+Ví dụ:
+
+```sql
+CREATE TABLE orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  total DECIMAL(10,2) NOT NULL,
+  CONSTRAINT fk_orders_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+```
+
+#### Minh hoạ nhanh
+
+- `users.id` = **PK** (định danh user)
+- `orders.user_id` = **FK** (order thuộc về user nào)
+
+### Lưu ý thực tế (quan trọng)
+
+- Nên index các cột FK (MySQL thường yêu cầu/hoặc tự tạo index tuỳ trường hợp)
+- Có thể cấu hình hành vi khi xoá/sửa bản ghi ở bảng cha:
+  - `ON DELETE CASCADE`: xoá user → xoá luôn orders
+  - `ON DELETE RESTRICT`/`NO ACTION`: không cho xoá nếu còn orders
+  - `ON DELETE SET NULL`: xoá user → set `user_id` = NULL (cột phải cho NULL)
+
+## 🧪 Bài tập
+
+[Bài tập – Join & Subquery](/vi/sql-database-overview/exercise-lesson-03-join-subquery)

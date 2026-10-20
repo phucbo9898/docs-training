@@ -1,0 +1,204 @@
+---
+title: "🛒 PROJECT SPECIFICATION: E-COMMERCE TRAINING SYSTEM"
+slug: "index"
+module: "project-ecommerce"
+phase: 4
+order: 0
+type: overview
+summary: "Đặc tả dự án E-commerce: CMS quản trị, API backend và trang bán hàng, kèm quy tắc chung và danh sách chức năng."
+---
+
+## 🖥️ TỔNG QUAN HỆ THỐNG (SYSTEM OVERVIEW)
+
+- **Mô hình:** Hệ thống tách biệt thành 3 phần chính:
+  1. **CMS (Admin Panel):** Quản trị nội dung và đơn hàng (Laravel Web truyền thống).
+  2. **API (Backend Service):** Cung cấp dữ liệu cho phía Front-end (Laravel API).
+  3. **FE (Shopping Site):** Trang bán hàng cho người dùng (Laravel Web, sử dụng Guzzle để gọi dữ liệu từ API).
+
+## ✅ **QUY TẮC CHUNG (COMMON RULES)**
+
+- **Format Tiền tệ:** `100,000 VNĐ`.
+- **Format Thời gian:** `2022/01/29 14:00`.
+- **Xử lý dữ liệu:**
+  - Tất cả các màn hình danh sách (List) phải có phân trang.
+  - Sắp xếp mặc định: `updated_at` giảm dần (DESC).
+  - Sử dụng **Soft Delete** cho tất cả các chức năng xóa.
+- **Kỹ thuật bổ sung:**
+  - Xây dựng layout common cho từng module (admin, fe)
+  - **Queue:** Sử dụng cho việc gửi Email (Order confirmation, Status update) và Ghi Log.
+  - **Task Schedule:** Lên lịch gửi email tổng hợp các đơn hàng chưa xử lý cho Admin định kỳ hàng ngày.
+  - Notification realtimett
+
+## 🛠️ MODULE 1: CMS - HỆ THỐNG QUẢN TRỊ (ADMIN PANEL)
+
+Module này dành cho người quản trị, thực hiện quản lý dữ liệu trên nền giao diện Web Laravel truyền thống.
+
+### 🔑 1.1 Chức năng Đăng nhập (Login)
+
+- **Chi tiết:**
+  - 🖼️ **Giao diện:** Đơn giản, gồm trường Email và Password.
+  - 🛡️ **Validation:** \* Bắt buộc nhập đầy đủ 2 trường.
+    - Hiển thị lỗi nếu sai định dạng email hoặc sai thông tin tài khoản.
+  - ⚙️ **Logic:** Kiểm tra `type` trong bảng users (Phải là Admin mới được vào CMS).
+
+### 📊 1.2 Dashboard (Bảng điều khiển)
+
+- **Chi tiết:**
+  - 📦 **Khối thống kê (Widgets):**
+    - Tổng đơn hàng mới trong tháng (Chưa xử lý).
+    - Tổng doanh thu từ các đơn hàng thành công trong tháng.
+    - Tổng số khách hàng (`type = customer`).
+    - Tổng số sản phẩm đang hoạt động (`status = active`).
+  - 📈 **Bổ sung cần thiết:** Biểu đồ đường (Line Chart) hiển thị doanh thu 7 ngày gần nhất để tăng tính trực quan.
+
+### 👥 1.3 Quản lý Người dùng (User Management - CRUD)
+
+- **Chi tiết:**
+  - 📋 **Danh sách (List):** Hiển thị STT, Tên, Email, Loại user, Ngày tạo. Hỗ trợ tìm kiếm theo Tên/Email.
+  - ➕ **Tạo mới/Cập nhật:** Nhập Tên, Email, Mật khẩu, Số điện thoại, Địa chỉ, Loại (Admin/Customer).
+  - 🗑️ **Xóa:** Sử dụng **Soft Delete**. Có popup xác nhận: *"Bạn có chắc chắn muốn xóa user \{\{name}}?"*.
+  - 🚀 **Bổ sung cần thiết:** Chức năng **Đổi mật khẩu nhanh** hoặc **Khóa tài khoản** (Trạng thái Active/Banned).
+
+### 🗂️ 1.4 Quản lý Danh mục (Category Management - CRUD)
+
+- **Chi tiết:**
+  - 📋 **Danh sách:** Hiển thị Tên danh mục, Số lượng sản phẩm đang có trong danh mục.
+  - ➕ **Tạo mới/Cập nhật:** Chỉ cần trường Tên danh mục (Unique).
+  - 🗑️ **Xóa (Ràng buộc logic):** Tuyệt đối không cho xóa nếu danh mục đang có sản phẩm. Phải yêu cầu Admin chuyển sản phẩm sang danh mục khác hoặc xóa sản phẩm trước.
+
+### 📦 1.5 Quản lý Sản phẩm (Product Management - CRUD)
+
+- **Chi tiết:**
+  - 📋 **Danh sách:** Hiển thị Ảnh đại diện (fixed size), Tên, Danh mục, Giá, Số lượng bán, Trạng thái.
+  - 🖼️ **Xử lý hình ảnh:** Upload ảnh sản phẩm.
+  - ➕ **Tạo mới/Cập nhật:** Tên, Danh mục (Dropdown), Giá, Mô tả, Ảnh, Trạng thái (Publish/UnPublish).
+  - 🚀 **Bổ sung cần thiết:** Chức năng **Duplicate (Nhân bản)** sản phẩm để tạo nhanh các sản phẩm tương tự.
+
+### 🛒 1.6 Quản lý Đơn hàng (Order Management)
+
+- **Chi tiết:**
+  - 📋 **Danh sách:** Hiển thị Mã đơn hàng, Tên khách hàng, Tổng tiền, Trạng thái, Ngày đặt.
+  - 🔍 **Bộ lọc:** Lọc theo trạng thái đơn hàng và khoảng thời gian (From Date - To Date).
+  - 📄 **Chi tiết (View Detail):** Hiển thị chi tiết từng sản phẩm trong đơn (Tên sp, số lượng, giá lúc mua) và tổng tiền cuối cùng.
+  - 🔄 **Cập nhật trạng thái:**
+    - `New` -> `Done` (Khi đã giao hàng thành công).
+    - `New` -> `Admin Cancel` (Nếu hết hàng hoặc lý do khác).
+  - 🚀 **Bổ sung cần thiết:** **In hóa đơn (Export PDF)** để Admin có thể in ra khi đóng gói hàng.
+
+### ✨ CÁC CHỨC NĂNG BỔ SUNG CẦN THIẾT (Nên có cho CMS)
+
+1. 🔔 **Hệ thống Thông báo (Notification):**
+   - Hiển thị chuông thông báo trên Header mỗi khi có đơn hàng mới (Real-time bằng Pusher hoặc đơn giản là badge count).
+2. 📝 **Nhật ký hoạt động (System Logs):**
+   - Ghi lại Admin nào đã sửa sản phẩm nào, hoặc xóa user nào để dễ truy vết (Sử dụng Event/Listener).
+3. ⚙️ **Cài đặt hệ thống (General Settings):**
+   - Nơi Admin cấu hình Email nhận thông báo, Tên cửa hàng, Số điện thoại hotline hiển thị trên FE.
+
+## ⚙️ MODULE 2: API (BACKEND SERVICES)
+
+### 📌 Quy tắc chung cho API (Standardized)
+
+- Response Format:
+
+```json
+{
+  "status": boolean,
+  "message": "Thông báo cụ thể",
+  "data": { ... } // Hoặc [] nếu là danh sách
+}
+```
+
+- HTTP Status Code:
+  - `200 OK`: Thành công.
+  - `201 Created`: Tạo mới thành công (dùng cho Register, Order).
+  - `422 Unprocessable Entity`: Lỗi Validation dữ liệu đầu vào.
+  - `401 Unauthorized`: Lỗi sai thông tin đăng nhập hoặc chưa login.
+  - `404 Not Found`: Không tìm thấy dữ liệu.
+
+### 🚀 Danh sách các Endpoints chi tiết
+
+- Nhóm API Tài khoản (Authentication)
+  - Register
+  - Login
+  - Logout
+- Nhóm API Danh mục & Sản phẩm
+  - Danh sách danh mục
+  - Danh sách sản phẩm
+  - Chi tiết sản phẩm
+- Nhóm API Đơn hàng (Order) - Quan trọng
+  - API đặt hàng
+
+## 🌐 MODULE 3: FE - TRANG BÁN HÀNG (SHOPPING SITE)
+
+### 🛠️ 3.1 Quy tắc kỹ thuật đặc thù
+
+- **Giao tiếp dữ liệu:**
+  - Lấy dữ liệu thông qua controller
+  - Lấy dữ liệu thông qua API.
+- **Quản lý Giỏ hàng:** Sử dụng `Session` của Laravel để lưu trữ tạm thời danh sách sản phẩm.
+- **Bảo mật:** Chỉ những User đã đăng nhập (`auth` middleware) mới được thực hiện chức năng "Thêm vào giỏ hàng" và "Thanh toán".
+
+### 🖼️ 3.2 Chi tiết các màn hình & Chức năng
+
+#### **🔑 A. Đăng ký & Đăng nhập (Authentication)**
+
+- **📝 Đăng ký (Register):**
+  - **Lưu ý:** Sau khi đăng ký thành công, điều hướng user sang trang Login.
+- **🔓 Đăng nhập (Login)**
+- 🚀 **Quên mật khẩu**
+
+#### 🏠 B. Trang chủ (Home Page)
+
+- **🗂️ Danh mục:** Hiển thị danh sách các Category.
+- **📦 Danh sách sản phẩm:**
+  - Hiển thị danh sách sản phẩm mua nhiều nhất trong tháng
+    - tổng có 10 sản phẩm, hiển thị 5 sản phẩm và có thể trượt ngang để xem thêm.
+  - Hiển thị danh sách sản phẩm theo từng category
+    - Hiển thị 5 sản phẩm
+    - có nút xem thêm để di chuyển đến màn chi tiết category
+- Vùng search sản phẩm
+  - Theo category
+  - Theo tên
+
+#### **📦 C. Kết quả search sản phẩm**
+
+- Hiển thị toàn bộ sản phẩm sau khi search (tối data 10 sản phẩm 1 page)
+- Phân trang danh sách sản phẩm
+
+#### 🗂️ C. Chi tiết danh mục
+
+- Vùng filter sản phẩm
+  - Theo tên sản phẩm
+  - Khoảng giá
+  - Sắp xếp tăng dần/giảm dần theo tên sản phẩm, giá sản phẩm
+- Hiển thị toàn bộ sản phẩm trong category (tối data 10 sản phẩm 1 page)
+- Phân trang danh sách sản phẩm
+
+#### 🔍 D. Trang chi tiết sản phẩm (Product Detail)
+
+- **📄 Nội dung:** Hiển thị toàn bộ thông tin chi tiết của 1 sản phẩm.
+- **✨ Sản phẩm liên quan:** Hiển thị tối đa 8 sản phẩm cùng danh mục, sắp xếp mới nhất.
+- **🛒 Nút "Buy Now":** Khi click, hiển thị Modal hoặc UI cho phép chọn **Số lượng (Quantity)** và nhấn "Add to Cart".
+
+#### 🛒 E. Giỏ hàng (Cart Page)
+
+- **📋 Hiển thị:** Danh sách các sản phẩm đang có trong Session (Ảnh, Tên, Giá, Số lượng, Thành tiền).
+- **🔄 Thao tác:**
+  - Cập nhật số lượng sản phẩm (Nếu hết số lượng thì thông báo message ra màn hình).
+  - Xóa sản phẩm khỏi giỏ hàng.
+  - Tính tổng tiền tạm tính của toàn bộ giỏ hàng.
+
+### 💳 F. Thanh toán (Checkout)
+
+- **📝 Xác nhận thông tin:** Hiển thị lại danh sách sản phẩm và thông tin mặc định của User (Địa chỉ, Số điện thoại). Cho phép user thay đổi thông tin giao hàng nếu cần.
+- **🚀 Đặt hàng:**
+  1. Gửi thông tin và lưu vào database
+  2. Nếu thành công:
+     - Xóa sạch Session giỏ hàng.
+     - Hiển thị màn hình thông báo "Đặt hàng thành công" (Order Success).
+     - Gửi mail thông tin đơn hàng cho user
+
+### 👤 **Trang cá nhân (My Profile)**
+
+- Hiển thị thông tin cá nhân
+- Hiển thị lịch sử đặt hàng (bao gồm thông tin đơn hàng, trạng thái đơn hàng, có phân trang)

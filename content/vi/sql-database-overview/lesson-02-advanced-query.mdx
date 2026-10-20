@@ -1,0 +1,72 @@
+---
+title: "🧩 LESSON 02 – Advanced Query (Filter, Function, Group)"
+slug: "lesson-02-advanced-query"
+module: "sql-database-overview"
+phase: 2
+order: 3
+type: lesson
+summary: "SELECT có lọc và sắp xếp, các toán tử IN/BETWEEN/LIKE, DISTINCT, LIMIT/OFFSET, hàm tổng hợp và GROUP BY."
+---
+
+## 🎯 Mục tiêu
+
+- Viết `SELECT` có điều kiện lọc/sắp xếp chuẩn
+- Dùng đúng các toán tử (`IN`, `BETWEEN`, `LIKE`, `AND/OR`)
+- Dùng `DISTINCT`, `LIMIT/OFFSET`
+- Dùng hàm cơ bản và tổng hợp: `COUNT/SUM/AVG/MIN/MAX`
+- Dùng `GROUP BY` + `HAVING`
+
+## 1) SELECT chuẩn + WHERE + ORDER BY
+
+```sql
+SELECT id, name, email
+FROM users
+WHERE id > 10
+ORDER BY id DESC;
+```
+
+## 2) Các toán tử hay dùng
+
+- So sánh: `=`, `>`, `<`, `>=`, `<=`, `!=`
+- Logic: `AND`, `OR`
+- Tập hợp: `IN (...)`
+- Khoảng: `BETWEEN ... AND ...`
+- Pattern: `LIKE '%keyword%'`
+
+Ví dụ:
+
+```sql
+SELECT *
+FROM users
+WHERE email LIKE '%@gmail.com'
+  AND id BETWEEN 1 AND 100;
+```
+
+## 3) DISTINCT, LIMIT, OFFSET
+
+```sql
+SELECT DISTINCT domain
+FROM emails
+LIMIT 20 OFFSET 0;
+```
+
+## 4) NULL (IS NULL / IS NOT NULL)
+
+```sql
+SELECT *
+FROM users
+WHERE deleted_at IS NULL;
+```
+
+## 5) GROUP BY + HAVING
+
+```sql
+SELECT role, COUNT(*) AS total
+FROM users
+GROUP BY role
+HAVING COUNT(*) >= 2;
+```
+
+## 🧪 Bài tập
+
+[Bài tập – Advanced Query](/vi/sql-database-overview/exercise-lesson-02-advanced-query)

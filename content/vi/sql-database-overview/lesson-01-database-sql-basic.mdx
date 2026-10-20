@@ -1,0 +1,88 @@
+---
+title: "🧩 LESSON 01 – Database + SQL Basic"
+slug: "lesson-01-database-sql-basic"
+module: "sql-database-overview"
+phase: 2
+order: 1
+type: lesson
+summary: "Database, DBMS và phân loại lệnh SQL, tạo database/table, CRUD với SELECT/INSERT/UPDATE/DELETE và các constraint cơ bản."
+---
+
+## 🎯 Mục tiêu
+
+- Hiểu Database, DBMS, SQL và phân loại lệnh SQL
+- Tạo được database/table cơ bản và khai báo kiểu dữ liệu
+- Thực hành CRUD với `SELECT/INSERT/UPDATE/DELETE`
+- Hiểu constraints (PK, NOT NULL, UNIQUE) ở mức cơ bản
+
+## 1) Database / DBMS / SQL
+
+- **Database**: tập hợp dữ liệu có liên quan, lưu trữ có hệ thống
+- **DBMS**: phần mềm quản lý database (MySQL, PostgreSQL, SQL Server…)
+- **SQL**: ngôn ngữ dùng để định nghĩa và thao tác dữ liệu
+
+## 2) Kiểu dữ liệu MySQL (hay dùng)
+
+- Number: `INT`, `BIGINT`, `DECIMAL`
+- String: `VARCHAR`, `TEXT`
+- Date/Time: `DATE`, `DATETIME`, `TIMESTAMP`
+- Boolean: `TINYINT(1)` (thường dùng)
+
+## 3) Constraints (cơ bản)
+
+- `PRIMARY KEY`: định danh duy nhất cho mỗi dòng
+- `NOT NULL`: không được để trống
+- `UNIQUE`: không trùng
+- `DEFAULT`: giá trị mặc định
+- (Lesson 03 sẽ học kỹ hơn `FOREIGN KEY`)
+
+## 4) Thực hành nhanh: tạo schema + CRUD
+
+### 4.1 Tạo database và table
+
+```sql
+CREATE DATABASE training_sql
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE training_sql;
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### 4.2 INSERT
+
+```sql
+INSERT INTO users (name, email)
+VALUES ('John', 'john@example.com');
+```
+
+### 4.3 SELECT
+
+```sql
+SELECT * FROM users;
+SELECT id, name FROM users WHERE id = 1;
+```
+
+### 4.4 UPDATE
+
+```sql
+UPDATE users
+SET name = 'Jane'
+WHERE id = 1;
+```
+
+### 4.5 DELETE
+
+```sql
+DELETE FROM users WHERE id = 1;
+```
+
+## 🧪 Bài tập
+
+[Bài tập – SQL Basic](/vi/sql-database-overview/exercise-lesson-01-database-sql-basic)

@@ -1,0 +1,35 @@
+---
+title: "Bài tập – Advanced Query"
+slug: "exercise-lesson-02-advanced-query"
+module: "sql-database-overview"
+phase: 2
+order: 4
+type: exercise
+summary: "Bài tập truy vấn nâng cao: WHERE, ORDER BY, LIMIT, LIKE/IN/BETWEEN, GROUP BY và HAVING."
+---
+
+## Chuẩn bị dữ liệu
+
+- Thêm cột `role` (admin/user) nếu chưa có
+- Insert thêm user để có ít nhất 10 dòng dữ liệu
+
+## Bài 01 — WHERE + ORDER BY + LIMIT
+
+- Lấy 5 user mới nhất (theo `id` giảm dần)
+- Lấy user có email thuộc `@gmail.com`
+
+## Bài 02 — LIKE / IN / BETWEEN
+
+- Lấy user có `name` chứa chữ “an”
+- Lấy user có `role` thuộc `('admin', 'user')`
+- Lấy user có `id` trong khoảng 3 → 8
+
+## Bài 03 — GROUP BY + HAVING
+
+- Đếm số lượng user theo `role`
+- Chỉ lấy các role có tổng user >= 2
+
+## Bonus
+
+- Tạo table `products(id, name, price)`
+- Viết query lấy giá trung bình, min, max

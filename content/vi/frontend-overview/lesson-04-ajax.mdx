@@ -1,0 +1,87 @@
+---
+title: "🧩 LESSON 04 – Ajax (Call API)"
+slug: "lesson-04-ajax"
+module: "frontend-overview"
+phase: 1
+order: 4
+type: lesson
+summary: "Ajax là gì và dùng khi nào, gọi API GET/POST bằng jQuery không reload trang và render dữ liệu lên UI."
+---
+
+## 🎯 Mục tiêu
+
+- Hiểu Ajax là gì và dùng khi nào
+- Gọi API không reload trang
+- Biết GET/POST bằng jQuery Ajax
+- Render dữ liệu đơn giản lên UI
+
+## 1) Ajax là gì?
+
+Ajax giúp gửi request (GET/POST/PUT/DELETE) mà **không cần reload page**.
+
+## 2) GET bằng $.get
+
+```jsx
+$(document).ready(function () {
+	$.get("/api/users", function (data) {
+		console.log(data);
+	});
+});
+```
+
+## 3) POST bằng $.post
+
+```jsx
+$(document).ready(function () {
+	$.post("/api/users", { name: "Phuc" }, function (res) {
+		console.log(res);
+	});
+});
+```
+
+## 4) $.ajax (cấu hình đầy đủ hơn)
+
+```jsx
+$(document).ready(function () {
+	$.ajax({
+		url: "/api",
+		method: "GET",
+		success: function (res) {
+			console.log(res);
+		},
+		error: function (xhr) {
+			console.log("Error", xhr.status);
+		},
+	});
+});
+```
+
+## 5) Render data lên UI (ví dụ)
+
+```html
+<ul id="userList"></ul>
+
+<script>
+$(document).ready(function () {
+	$.get("/api/users", function (users) {
+		const $list = $("#userList");
+		$list.empty();
+
+		users.forEach(function (u) {
+			$list.append(`<li>${u.name} - ${u.email}</li>`);
+		});
+	});
+});
+</script>
+```
+
+## 📝 Lưu ý quan trọng
+
+- Khi gọi API cross-domain cần CORS
+- Nên xử lý error + loading state
+- Dữ liệu trả về nên ở dạng JSON
+
+## 🧪 Bài tập nhanh
+
+- Gọi API `/api/products` và render danh sách sản phẩm
+- Thêm form tạo product và gọi POST để tạo mới (mock API cũng được)

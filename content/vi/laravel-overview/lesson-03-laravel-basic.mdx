@@ -1,0 +1,385 @@
+---
+title: "🧩 LESSON 03 — Laravel Basic (Controller, Middleware, Request, Model, Service)"
+slug: "lesson-03-laravel-basic"
+module: "laravel-overview"
+phase: 3
+order: 3
+type: lesson
+summary: "Các thành phần chính của Laravel: Controller, Middleware, Model, Request và Custom Request, tách logic bằng Service."
+---
+
+## 🎯 Mục tiêu bài học
+
+- Hiểu các thành phần chính trong Laravel
+- Biết cách tạo Controller, Middleware, Model
+- Hiểu Request & Custom Request
+- Biết cách tách logic bằng Service
+
+## 🧩 1. Tổng quan Laravel Basic
+
+Laravel có các thành phần chính:
+
+- Controller → xử lý logic
+- Middleware → kiểm tra request
+- Request → dữ liệu từ client
+- Model → làm việc với DB
+- Service → xử lý logic phức tạp
+
+👉 Đây là flow chuẩn:
+
+- Request → Middleware → Controller → Model → Response
+
+## 🎮 2. Controller
+
+### Controller là gì?
+
+- Nơi xử lý logic chính
+- Nhận request và trả response
+
+### Vị trí
+
+`app/Http/Controllers`
+
+### Tạo controller
+
+```bash
+php artisan make UserController
+```
+
+### Ví dụ
+
+```php
+class UserController extends Controller
+{
+    public function index()
+    {
+        return "Hello User";
+    }
+}
+```
+
+### Route
+
+```php
+Route::get('/users', [UserController::class, 'index']);
+```
+
+### Best Practice (Controller)
+
+- Không viết logic phức tạp trong controller
+- Chỉ nên:
+  - nhận request
+  - gọi service / model
+  - return response
+
+## 🛡️ 3. Middleware
+
+### Middleware là gì?
+
+- Lớp trung gian kiểm tra request
+- Chạy trước khi vào controller
+
+### Ví dụ
+
+- Check login
+- Check quyền
+
+### Tạo middleware
+
+```bash
+php artisan make CheckAge
+```
+
+### Vị trí
+
+`app/Http/Middleware`
+
+### Ví dụ
+
+```php
+public function handle($request, Closure $next)
+{
+    if ($request->age < 18) {
+        return "Access denied";
+    }
+    return $next($request);
+}
+```
+
+### 🔗 Gán Middleware vào Route
+
+```php
+Route::get('/profile', function () {
+    return "Profile";
+})->middleware(checkAge::class);
+
+👉 Có thể dùng nhiều middleware
+```
+
+## 📥 4. Request
+
+### Request là gì?
+
+Đại diện cho HTTP request từ client
+
+### Request sẽ chứa các thông tin gì?
+
+- input data
+- header
+- method
+- cookie
+
+### Ví dụ
+
+```php
+public function store(Request $request)
+{
+    $name = $request->name;
+}
+```
+
+### Custom Request (RẤT QUAN TRỌNG)
+
+Dùng để validate dữ liệu
+
+#### Cách tạo
+
+```bash
+php artisan make StoreUserRequest
+```
+
+#### Vị trí
+
+`app/Http/Requests`
+
+#### Ví dụ
+
+```php
+public function rules()
+{
+    return [
+        'name' => 'required',
+        'email' => 'required|email'
+    ];
+}
+```
+
+#### Dùng trong controller
+
+```php
+public function store(StoreUserRequest $request) {
+	// đã validate sẵn
+}
+```
+
+#### 💡 Best Practice (Request)
+
+- Không validate trong controller
+- Dùng Custom Request
+- Tách validation ra riêng
+
+👉 Code sạch hơn, dễ maintain
+
+## 🧱 5. Model
+
+### Model là gì?
+
+- Làm việc với database
+- Đại diện cho 1 bảng
+
+### Quy ước trong model
+
+Tên file phải viết hoa chữ cái đầu
+
+Để mapping model với bảng thì sẽ đặt tên model là tên bảng dạng số ít và viết hoa chữ cái đầu
+
+### Vị trí
+
+`app/Models`
+
+### Cách tạo
+
+```bash
+// Tạo đơn thuần
+php artisan make User
+
+// Tạo model và migration tương ứng
+php artisan make User --migration
+```
+
+### Thuộc tính quan trọng
+
+```php
+$table → tên bảng
+$primaryKey → khóa chính
+$fillable → field cho phép insert/update
+$guarded → field bị chặn
+$timestamps → bật/tắt created_at
+
+Ví dụ:
+protected $fillable = ['name', 'email'];
+```
+
+### Relationships
+
+#### One to one
+
+Ví dụ: 1 user có thể liên kết với 1 số điện thoại
+
+```php
+public function phone()
+{
+    return $this->hasOne(Phone::class, 'foreign_key', 'local_key');
+}
+```
+
+#### One to many
+
+1 user có nhiều bài post, 1 bài post thuộc về 1 user
+
+```php
+class User extends Authenticatable
+{
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'foreign_key', 'local_key');
+    }
+}
+
+class Post extends Model
+{
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'foreign_key', 'local_key');
+    }
+}
+```
+
+#### Many to many
+
+1 user có nhiều role, 1 role thuộc về nhiều user
+
+```php
+class User extends Authenticatable
+{
+    public function posts()
+    {
+        return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
+    }
+}
+
+class Role extends Model
+{
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_roles', 'role_id', 'user_id');
+    }
+}
+```
+
+### Eager Loading (Tối ưu performance)
+
+👉 Tránh N+1 query problem
+
+```php
+User::with('posts')->get();
+```
+
+#### N+1 query problem
+
+Ví dụ đoạn code N+1 query
+
+```php
+$users = User::all();
+foreach ($users as $user) {
+    $user->posts;
+}
+```
+
+👉 Query DB nhiều lần, không tối ưu performance
+
+Nên sử dụng Eager loading để giảm thiểu N+1 query
+
+```php
+User::with('posts')->get();
+```
+
+### Các thao tác cơ bản
+
+```php
+// Lấy toàn bộ user
+User::all();
+
+// Lấy bản ghi user theo id
+User::find(1);
+
+// Lấy bản ghi user theo điều kiện
+User::where('status', 'active')->get();
+
+// Tạo mới bản ghi
+User::create([
+    'name' => 'John Doe',
+    'email' => 'john.doe@example.com',
+    'password' => bcrypt('password'),
+]);
+
+// Cập nhật bản ghi
+User::where('id', 1)->update(['name' => 'Jane Doe']);
+
+// Xóa bản ghi
+User::where('id', 1)->delete();
+
+// Sử dụng relationship để lấy bài viết của user
+$user = User::find(1);
+$posts = $user->posts;
+```
+
+## 🔌 6. Service (Rất quan trọng khi làm project thật)
+
+### Service là gì?
+
+- Chứa logic phức tạp
+- Tách khỏi controller
+
+### Ví dụ
+
+- gọi API
+- xử lý business logic
+
+### Vị trí
+
+`app/Services`
+
+### Ví dụ minh họa
+
+```php
+class UserService
+{
+    public function createUser($data)
+    {
+        return User::create($data);
+    }
+}
+```
+
+### Sử dụng Service trong Controller
+
+```php
+public function __construct(UserService $userService)
+{
+    $this->userService = $userService;
+}
+
+public function store(Request $request)
+{
+    $this->userService->createUser($request->all());
+}
+```
+
+### Best Practice (Service)
+
+- Logic lớn → đưa vào service
+- Controller chỉ gọi service
+- Dễ test, dễ reuse
+
+👉 Project lớn bắt buộc phải có service layer

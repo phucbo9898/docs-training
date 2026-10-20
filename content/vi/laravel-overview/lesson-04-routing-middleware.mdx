@@ -1,0 +1,191 @@
+---
+title: "🧩 LESSON 04 — Routing & Middleware"
+slug: "lesson-04-routing-middleware"
+module: "laravel-overview"
+phase: 3
+order: 4
+type: lesson
+summary: "Routing, HTTP method, Route Parameters, group/prefix/name route và Middleware."
+---
+
+## 🎯 Mục tiêu bài học
+
+- Hiểu rõ cách hoạt động của Routing
+- Biết dùng các HTTP method
+- Sử dụng Route Parameters
+- Biết group, prefix, name route
+- Áp dụng Middleware linh hoạt
+
+## 🌐 Routing
+
+### 🌐 1. Routing là gì?
+
+Routing dùng để định nghĩa URL
+
+Nó quyết định:
+
+- URL → Controller nào sẽ xử lý
+
+File
+
+- `routes/web.php` → web
+- `routes/api.php` → API
+
+👉 Mọi request đều đi qua routing
+
+### 🔥 2. Các HTTP Method
+
+### Danh sách các method
+
+- `Route::get()` → lấy dữ liệu
+- `Route::post()` → tạo dữ liệu
+- `Route::put()` → update
+- `Route::patch()` → update 1 phần
+- `Route::delete()` → xóa
+- `Route::options()` → preflight
+
+### Ví dụ
+
+```php
+Route::get('/users', function () {
+    return "List users";
+});
+```
+
+### 🔗 3. Route → Controller
+
+💡 Best practice: không dùng closure
+
+Nên dùng controller:
+
+```php
+Route::get('/users', [UserController::class, 'index']);
+```
+
+👉 Clean hơn, dễ maintain
+
+### 📥 4. Route Parameters
+
+Truyền dữ liệu qua URL
+
+### Ví dụ
+
+```php
+Route::get('/users/{id}', function ($id) {
+    return $id;
+});
+```
+
+### Nhiều param:
+
+```php
+/users/{id}/{name}
+```
+
+### 💡 Validate Parameter (nâng cao)
+
+```php
+Route::get('/users/{id}', function ($id) {
+    return $id;
+})->where('id', '[0-9]+');
+
+👉 Chỉ cho phép số
+```
+
+### 🧩 5. Route Prefix
+
+Dùng để nhóm route có chung prefix
+
+```php
+Route::prefix('admin')->group(function () {
+    Route::get('/users', [UserController::class, 'index']);
+});
+
+👉 URL sẽ là:
+/admin/users
+```
+
+### 🏷️ 6. Route Name
+
+Đặt tên cho route
+
+```php
+Route::get('/users', ...)->name('users.list');
+```
+
+Cách sử dụng
+
+```php
+route('users.list');
+```
+
+👉 Tránh hardcode URL
+
+### 📦 7. Route Group (RẤT QUAN TRỌNG)
+
+```php
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('/dashboard', ...);
+    Route::get('/users', ...);
+});
+
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+    Route::get('/dashboard', ...);
+    Route::get('/users', ...);
+});
+```
+
+👉 Gom:
+
+- prefix
+- middleware
+- name
+
+## 🛡️ Middleware
+
+### 🛡️ Nhiệm vụ của Middleware
+
+Middleware dùng để:
+
+- Xác thực user
+- Check quyền
+- Log request
+- Modify request
+
+👉 Chạy:
+
+- Trước hoặc sau controller
+
+### 🔗 Gán Middleware
+
+Gán cho route:
+
+```php
+Route::get('/profile', ...)->middleware('auth');
+```
+
+Gán nhiều:
+
+```php
+Route::get('/profile', ...)->middleware(['auth', checkRole::class]);
+```
+
+### ❌ Bỏ qua Middleware
+
+```php
+Route::middleware(['auth'])->group(function () {
+    Route::get('/public', function () {
+        return "Public";
+    })->withoutMiddleware(['auth']);
+});
+```
+
+### 🎯 Middleware Parameters
+
+```php
+Route::get('/admin', function () {
+    return "Admin";
+})->middleware('role:admin');
+
+👉 truyền param vào middleware
+```

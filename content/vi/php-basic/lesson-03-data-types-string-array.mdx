@@ -1,0 +1,95 @@
+---
+title: "🧩 LESSON 03 – Data Types + String + Array"
+slug: "lesson-03-data-types-string-array"
+module: "php-basic"
+phase: 1
+order: 3
+type: lesson
+summary: "Các kiểu dữ liệu phổ biến trong PHP, thao tác cơ bản với string và cách khai báo, sử dụng array."
+---
+
+## 🎯 Mục tiêu
+
+- Hiểu các kiểu dữ liệu phổ biến trong PHP
+- Thao tác cơ bản với string
+- Khai báo và sử dụng array (mảng)
+
+## 1) Data types phổ biến
+
+| Type    | Ví dụ      | Ghi chú          |
+| ------- | ---------- | ---------------- |
+| String  | "Hello"    | Chuỗi ký tự      |
+| Integer | 10         | Số nguyên        |
+| Float   | 10.5       | Số thực          |
+| Boolean | true       | Đúng/Sai         |
+| Array   | \[1, 2, 3] | Mảng             |
+| NULL    | null       | Không có giá trị |
+
+## 2) String
+
+### Nối chuỗi
+
+```php
+<?php
+$name = "Phuc";
+echo "Hello " . $name;
+```
+
+### Một số hàm hay dùng
+
+```php
+<?php
+strlen("Hello");                // độ dài
+strtoupper("hello");            // HELLO
+trim("  hello  ");              // "hello"
+sprintf("Hello %s", "Phuc");    // format
+```
+
+## 3) Array
+
+### 3.1 Mảng tuần tự (indexed array)
+
+```php
+<?php
+$colors = ["red", "blue"];
+echo $colors[0]; // red
+```
+
+### 3.2 Mảng kết hợp (associative array)
+
+```php
+<?php
+$user = [
+	"name" => "Phuc",
+	"age" => 20,
+];
+echo $user["name"];
+```
+
+### 3.3 Mảng đa chiều (multidimensional array)
+
+```php
+<?php
+$data = [
+	"colors" => ["red", "blue"],
+	"users" => [
+		["name" => "A"],
+		["name" => "B"],
+	],
+];
+```
+
+### Một số hàm array hay dùng
+
+```php
+<?php
+$nums = [3, 1, 2];
+sort($nums);           // [1,2,3]
+array_push($nums, 4);  // thêm phần tử
+```
+
+## 🧪 Bài tập nhanh
+
+- Tạo mảng `$students` gồm 3 tên TTS
+- Tạo mảng `$profile` gồm `name`, `email`, `age`
+- In ra tên TTS đầu tiên và email trong `$profile`

@@ -1,0 +1,72 @@
+---
+title: "🧩 LESSON 01 – PHP Overview"
+slug: "lesson-01-php-overview"
+module: "php-basic"
+phase: 1
+order: 1
+type: lesson
+summary: "PHP là gì, chạy ở đâu (server-side), cách cài môi trường và chạy ví dụ Hello World đầu tiên."
+---
+
+## 🎯 Mục tiêu
+
+- Hiểu PHP là gì, chạy ở đâu (server-side)
+- Biết cách setup môi trường để chạy được file PHP
+- Chạy được ví dụ “Hello World” đầu tiên
+
+## 🧠 PHP là gì?
+
+- PHP (Hypertext Preprocessor) là ngôn ngữ lập trình **backend (server-side)**
+- Thường dùng để xây dựng web động, API, xử lý form, thao tác database
+- Mã nguồn mở, cộng đồng lớn
+
+## 🌍 Ứng dụng phổ biến
+
+- Website & API (Laravel/Symfony, hoặc PHP thuần)
+- CMS: WordPress, Joomla, Drupal
+- E-commerce: Magento, OpenCart
+
+## 🖥️ Chuẩn bị môi trường
+
+Một cách dễ cho TTS:
+
+- Windows: **XAMPP** hoặc **Laragon**
+- macOS: Homebrew + PHP (hoặc Docker)
+- Linux: LAMP/LEMP
+
+Tối thiểu cần:
+
+- PHP runtime
+- Web server (Apache/Nginx) hoặc PHP built-in server
+
+## 🚀 Chạy PHP nhanh bằng built-in server (khuyến nghị để học)
+
+1. Tạo thư mục project, ví dụ `php-basic/`
+
+2. Tạo file `index.php`:
+
+```php
+<?php
+echo "Hello World";
+```
+
+3. Mở terminal tại thư mục project và chạy:
+
+```bash
+php -S localhost:8000
+```
+
+4. Mở trình duyệt: `http://localhost:8000`
+
+## 🧱 Cấu trúc cơ bản của file PHP
+
+```php
+<?php
+// code PHP ở đây
+?>
+```
+
+## 📝 Ghi chú
+
+- File PHP luôn có đuôi `.php`
+- Khi dùng `echo`, nên có dấu cách và dấu `;` đầy đủ

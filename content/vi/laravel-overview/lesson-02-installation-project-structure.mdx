@@ -1,0 +1,134 @@
+---
+title: "🧩 LESSON 02 – Installation & Project Structure"
+slug: "lesson-02-installation-project-structure"
+module: "laravel-overview"
+phase: 3
+order: 2
+type: lesson
+summary: "Cài đặt và chạy Laravel project local, cấu trúc thư mục và vai trò của từng folder."
+---
+
+## 🎯 Mục tiêu bài học
+
+- Cài đặt được Laravel project
+- Chạy được project local
+- Hiểu cấu trúc thư mục Laravel
+- Biết mỗi folder dùng để làm gì
+
+## 🛠️ 1. Yêu cầu môi trường
+
+### Yêu cầu tối thiểu
+
+- Xampp version ≥ 8.2.x
+- PHP version ≥ 8.2.x
+- Composer
+- Laravel latest
+
+## 🚀 2. Tạo project Laravel
+
+Tạo project:
+
+```bash
+composer create-project laravel/laravel your-project-name
+```
+
+Khởi chạy project
+
+- Di chuyển đến thư mục source
+- Chạy command
+
+```bash
+php artisan serve
+```
+
+## 3. Cấu trúc thư mục trong Laravel
+
+| Tên thư mục | Mục đích                                                                 |
+| ----------- | ------------------------------------------------------------------------ |
+| app         | Nơi chứa các file nguồn của ứng dụng: controller, model, service, …      |
+| database    | Nơi chứa các file liên quan đến cơ sở dữ liệu: thông tin bảng, fake data |
+| resources   | Nơi chứa các file view, css, js, …                                       |
+| lang        | Nơi chứa các file ngôn ngữ                                               |
+| storage     | Nơi chứa các file log, cache, session, image, …                          |
+| config      | Nơi chứa các file cấu hình ứng dụng                                      |
+| routes      | Nơi chứa các file định nghĩa route                                       |
+| public      | Nơi chứa các file css, js, image, …                                      |
+
+### 📁 app/
+
+Chứa code chính của project
+
+Bao gồm:
+
+- Controller
+- Model
+- Service
+- …
+
+👉 Đây là nơi bạn làm việc nhiều nhất
+
+### 🗄️ database/
+
+Chứa file liên quan database
+
+- migrations → tạo bảng
+- seeders → dữ liệu mẫu
+
+👉 Dùng để quản lý DB bằng code
+
+### 🎨 resources/
+
+Chứa giao diện
+
+- views (Blade)
+- css
+- js
+
+### 🌐 routes/
+
+Định nghĩa URL
+
+- web.php → web app
+- api.php → API
+
+👉 Mọi request đều đi qua đây
+
+### ⚙️ config/
+
+File cấu hình
+
+Ví dụ:
+
+- database.php
+- app.php
+
+👉 Không nên hardcode config trong code
+
+### 📦 public/
+
+Entry point của project
+
+- index.php
+- css, js, image
+
+👉 Đây là thư mục chạy trên server
+
+### 🧾 storage/
+
+Lưu dữ liệu tạm
+
+- log
+- cache
+- session
+- upload file
+
+👉 Không commit lên git (trừ khi cần)
+
+### 🌍 lang/ (nếu có)
+
+Chứa file đa ngôn ngữ
+
+Ví dụ:
+
+- en.json
+- vi.json

@@ -1,0 +1,61 @@
+---
+title: "🧩 LESSON 05 – Loop (for, foreach...)"
+slug: "lesson-05-loop"
+module: "php-basic"
+phase: 1
+order: 5
+type: lesson
+summary: "Khi nào dùng for, foreach, while, do...while và cách duyệt mảng để in dữ liệu."
+---
+
+## 🎯 Mục tiêu
+
+- Hiểu khi nào dùng `for`, `foreach`, `while`, `do...while`
+- Duyệt được mảng và in ra dữ liệu
+
+## 1) for
+
+```php
+<?php
+for ($i = 0; $i < 5; $i++) {
+	echo $i;
+}
+```
+
+## 2) foreach (duyệt mảng)
+
+```php
+<?php
+$colors = ["red", "blue", "green"];
+
+foreach ($colors as $color) {
+	echo $color;
+}
+```
+
+## 3) while
+
+```php
+<?php
+$i = 0;
+
+while ($i < 5) {
+	$i++;
+}
+```
+
+## 4) do...while
+
+```php
+<?php
+$i = 0;
+
+do {
+	$i++;
+} while ($i < 5);
+```
+
+## 🧪 Bài tập nhanh
+
+- Dùng `for` in ra các số chẵn từ 0 → 20
+- Dùng `foreach` duyệt mảng `$students` và in ra từng tên

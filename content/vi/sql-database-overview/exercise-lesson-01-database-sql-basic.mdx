@@ -1,0 +1,46 @@
+---
+title: "Bài tập – SQL Basic"
+slug: "exercise-lesson-01-database-sql-basic"
+module: "sql-database-overview"
+phase: 2
+order: 2
+type: exercise
+summary: "Bài tập SQL cơ bản: tạo database và table, insert, select có điều kiện, update, delete."
+---
+
+## Yêu cầu chung
+
+- Tạo database `training_sql` (nếu chưa có)
+- Tạo table `users` theo lesson
+- Mỗi câu: viết SQL + chụp kết quả (hoặc copy output)
+
+## Bài 01 — Tạo database & table
+
+1. Tạo database `training_sql`
+
+2. Tạo table `users` gồm: `id`, `name`, `email`, `created_at`
+
+- `id` auto increment PK
+- `email` unique
+- `created_at` default current timestamp
+
+## Bài 02 — Insert dữ liệu
+
+- Insert ít nhất 5 user khác nhau
+
+## Bài 03 — Select có điều kiện
+
+- Lấy user có `id` = 3
+- Lấy danh sách user có `id` > 2
+
+## Bài 04 — Update
+
+- Update tên user có `id` = 2
+
+## Bài 05 — Delete
+
+- Xóa user có `id` = 5
+
+## Bonus
+
+- Thêm cột `role` (ALTER TABLE) và update role cho các user

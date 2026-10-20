@@ -1,0 +1,94 @@
+---
+title: "🧩 LESSON 01 – Laravel Overview"
+slug: "lesson-01-laravel-overview"
+module: "laravel-overview"
+phase: 3
+order: 1
+type: lesson
+summary: "Laravel là gì, dùng để làm gì, mô hình MVC, vòng đời request và lợi ích so với PHP thuần."
+---
+
+## 🎯 Mục tiêu bài học
+
+- Hiểu Laravel là gì
+- Biết Laravel dùng để làm gì
+- Hiểu mô hình MVC trong Laravel
+- Nắm được lợi ích khi dùng Laravel thay vì PHP thuần
+
+## 📖 1. Laravel là gì?
+
+- Laravel là một framework PHP mã nguồn mở, được phát triển bởi Taylor Otwell.
+- Laravel giúp xây dựng ứng dụng web theo mô hình MVC (Model - View - Controller).
+- Laravel cung cấp sẵn nhiều chức năng:
+  - Routing
+  - Authentication
+  - Database ORM (Eloquent)
+  - Middleware
+  - Queue, Cache, API,...
+- Mục tiêu: giúp dev code nhanh hơn, sạch hơn, dễ maintain hơn.
+
+## 🤔 2. So sánh Laravel và PHP thuần?
+
+PHP thuần vs Laravel
+
+- Code: Laravel clean hơn
+- Tốc độ dev: Laravel nhanh hơn
+- Structure: Laravel rõ ràng
+- Bảo trì: Laravel dễ hơn
+
+👉 Kết luận:
+
+- Laravel giúp tiết kiệm thời gian và giảm bug.
+
+## 🧠 3. Mô hình MVC là gì?
+
+👉 Đây là phần quan trọng nhất của bài
+
+MVC = Model - View - Controller
+
+1. Model
+   - Xử lý dữ liệu
+   - Làm việc với database
+2. View
+   - Giao diện người dùng (HTML, Blade)
+3. Controller
+   - Nhận request
+   - Xử lý logic
+   - Trả về response
+
+👉 Flow:
+
+- User → Route → Controller → Model → Controller → View → User
+
+## 🔁 4. Ví dụ dễ hiểu về MVC
+
+![Sơ đồ vòng đời request trong Laravel: Client gửi request đến public/index.php rồi App/Http/Kernel.php, qua Service providers (register và bootstrap), tới Router, Middleware, Controller/Action, sau đó View và trả response về Client](/content-images/laravel-overview/b4bce647-722e-4064-ac19-b7e9e0d0573e.png)
+
+Ví dụ: Xem danh sách bài viết
+
+1. User truy cập URL: /posts
+2. Route gọi đến PostController
+3. Controller gọi Model (Post) để lấy data
+4. Model query database
+5. Controller trả data về View
+6. View hiển thị danh sách bài viết
+
+👉 Đây chính là flow chuẩn của Laravel
+
+## ⚡ 5. Laravel giải quyết vấn đề gì?
+
+▶ Tổ chức code tốt hơn
+
+▶ Giảm code lặp
+
+▶ Tăng tốc phát triển
+
+▶ Dễ bảo trì
+
+▶ Hỗ trợ team làm việc hiệu quả
+
+👉 Laravel rất phù hợp cho:
+
+- Web app
+- REST API
+- SaaS system

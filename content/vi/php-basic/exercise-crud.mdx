@@ -1,0 +1,71 @@
+---
+title: "Bài tập CRUD"
+slug: "exercise-crud"
+module: "php-basic"
+phase: 1
+order: 8
+type: exercise
+summary: "Bài tập CRUD bằng PHP thuần với MySQL: tạo, đọc, sửa, xóa dữ liệu bảng students."
+---
+
+## 🎯 Mục tiêu
+
+- Làm quen luồng CRUD cơ bản: Create / Read / Update / Delete
+- Biết tổ chức folder PHP đơn giản (không framework) để hiểu bản chất
+- Thực hành thao tác dữ liệu với MySQL (khuyến nghị)
+
+## ✅ Chuẩn bị
+
+- Cài XAMPP/Laragon và bật MySQL
+- Tạo database: `php_basic`
+- Tạo table: `students` (id, name, email, created_at)
+
+Ví dụ SQL:
+
+```sql
+CREATE DATABASE php_basic CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE php_basic;
+
+CREATE TABLE students (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL,
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+## 📁 Cấu trúc gợi ý
+
+```text
+crud/
+  config/
+    db.php
+  students/
+    index.php      (list)
+    create.php     (form + submit)
+    edit.php       (form + submit)
+    delete.php
+```
+
+## 🧩 Nhiệm vụ
+
+1. **List**: hiển thị danh sách students
+
+2. **Create**: form thêm student mới
+
+3. **Update**: form sửa student
+
+4. **Delete**: xóa student (có confirm)
+
+## 🔒 Yêu cầu tối thiểu
+
+- Validate: name/email không rỗng, email đúng format
+- Dùng prepared statements (mysqli hoặc PDO) để tránh SQL injection
+- UI đơn giản: bảng + form là được
+
+## ✅ Bonus (nếu có thời gian)
+
+- Search theo name/email
+- Pagination
+- Thông báo thành công/thất bại bằng session flash

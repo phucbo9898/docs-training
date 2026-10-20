@@ -1,0 +1,193 @@
+---
+title: "🧩 LESSON 08 — Event, Notification & Task Scheduling"
+slug: "lesson-08-event-notification-task-scheduling"
+module: "laravel-overview"
+phase: 3
+order: 8
+type: lesson
+summary: "Event/Listener, Notification đa kênh, Task Scheduling và dùng Queue để xử lý tác vụ nặng."
+---
+
+## 🎯 Mục tiêu bài học
+
+- **Làm chủ Event/Listener:** Hiểu cách tách biệt các logic không liên quan (Decoupling) để code sạch và dễ mở rộng.
+- **Hệ thống Notification:** Biết cách gửi thông báo đa kênh (Email, Database, SMS) một cách chuyên nghiệp.
+- **Tự động hóa với Task Schedule:** Biết cách lập lịch cho các tác vụ lặp đi lặp lại mà không cần cấu hình Cronjob phức tạp thủ công.
+- **Tối ưu hiệu năng:** Nắm được tư duy sử dụng **Queue** để xử lý các tác vụ tốn thời gian ngầm.
+
+## 📨 Event & Listener
+
+### 📨 Event & Listener là gì?
+
+Event là một "sự kiện" xảy ra (ví dụ: User đăng ký)
+
+Listener là "người lắng nghe" để thực hiện hành động tương ứng (ví dụ: Tặng voucher, Gửi mail chào mừng).
+
+Mục đích
+
+- Giúp Controller không bị "phình to" bởi những logic phụ trợ.
+
+### 🧠 Các bước setup
+
+#### Bước 1: Tạo Event
+
+- Command
+
+```bash
+php artisan make:event UserRegistered
+```
+
+- **Vị trí:** `app/Events/UserRegistered.php` (Chứa dữ liệu về User vừa đăng ký).
+
+#### Bước 2: Tạo Listener
+
+- Command
+
+```bash
+php artisan make:listener SendWelcomeGift --event=UserRegistered
+```
+
+- **Vị trí:** `app/Listeners/SendWelcomeGift.php` (Nơi viết logic tặng quà).
+
+#### Bước 3: Đăng ký Event
+
+- Nếu chưa có file `EventServiceProvider.php` , tạo file để mapping event và listener
+
+```php
+namespace App\Providers;
+
+use App\Events\UserRegistered;
+use App\Listeners\SendWelcomeGift;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\ServiceProvider;
+
+class EventServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any events for your application.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Event::listen(UserRegistered::class, SendWelcomeGift::class);
+    }
+}
+```
+
+- Tuy nhiên vẫn có thể đăng ký tại `app/Providers/AppServiceProvider.php` nếu cần.
+
+#### Bước 4: Kích hoạt (Dispatch)
+
+```php
+// Trong Controller
+use App\Events\UserRegistered;
+
+public function register(Request $request)
+{
+    $user = User::create(...);
+    event(new UserRegistered($user)); // Bắn sự kiện đi
+}
+```
+
+## 📢 Notification
+
+### Mô tả
+
+Notification cho phép bạn gửi thông báo qua nhiều kênh (Mail, Slack, SMS, Database) chỉ với một Class duy nhất.
+
+### Các bước tạo Notification
+
+- Command
+
+```php
+php artisan make:notification OrderProcessed
+```
+
+- **Vị trí:** `app/Notifications/OrderProcessed.php`
+
+#### Cấu hình kênh gửi (via)
+
+```php
+public function via(object $notifiable): array
+{
+    return ['mail', 'database']; // Gửi qua cả Email và lưu vào DB
+}
+
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)
+                ->subject('Đơn hàng của bạn đã hoàn tất')
+                ->line('Cảm ơn bạn đã mua hàng tại hệ thống.')
+                ->action('Xem đơn hàng', url('/orders'))
+                ->line('Chúc bạn một ngày tốt lành!');
+}
+```
+
+#### Cách gọi gửi
+
+```php
+// Cách 1: Dùng Trait Notifiable (phổ biến)
+$user->notify(new OrderProcessed($order));
+
+// Cách 2: Dùng Facade
+Notification::send($users, new OrderProcessed($order));
+```
+
+## ⏰ Task Scheduling (Lập lịch tác vụ)
+
+### Mô tả
+
+- Task Schedule trong Laravel cho phép lên lịch các tác vụ tự động để chạy theo các khoảng thời gian được chỉ định.
+- Tính năng này đặc biệt hữu ích để chạy các tác vụ định kỳ như gửi email, dọn dẹp database hoặc tạo báo cáo
+- Task schedule được xây dựng dựa trên dịch vụ cron Unix, nhưng nó cung cấp một API để xác định các nhiệu vụ và lịch trình của chúng.
+
+### Vị trí cấu hình
+
+- `routes/console.php` (Kể từ Laravel 11 trở đi).
+- Giải thích nội dung trong file console.php
+
+  ```php
+  use Illuminate\Support\Facades\Schedule;
+
+  // Chạy một Command mỗi ngày vào lúc nửa đêm
+  Schedule::command('emails:send-reminders')->daily();
+
+  // Chạy một Closure function mỗi giờ
+  Schedule::call(function () {
+      \DB::table('recent_users')->delete();
+  })->hourly();
+
+  // Chạy Job vào các thứ 2 hàng tuần
+  Schedule::job(new HeartbeatJob)->mondays();
+  ```
+
+#### Cách chạy trên môi trường local
+
+Để test thử các task này có chạy không, chạy command sau
+
+```bash
+php artisan schedule:work
+```
+
+## ⚡ Queued Jobs
+
+### Mô tả
+
+- Queue job là phương pháp có thể được sử dụng để sắp xếp một công việc vào hàng đợi.
+
+### Config queue
+
+- Kiểm tra key `QUEUE_CONNETION` trong file `config/queue.php`  hoặc `.env`
+- Đối với QUEUE_CONNETION là “sync” job sẽ được thực thi ngay lập tức
+- Đối với QUEUE_CONNETION là “database” job sẽ được insert vào bảng jobs trong database sau đó sẽ chạy tuần tự các job đó
+
+## Lưu ý chung
+
+- **🚀 Sử dụng Queue:**
+  - Các tác vụ như gửi Email hoặc gọi API bên thứ 3 (SMS) rất chậm.
+  - Luôn sử dụng `implements ShouldQueue` trong Listener và Notification để đẩy chúng vào hàng đợi xử lý ngầm, giúp người dùng không phải chờ đợi.
+- **📂 Tổ chức file:**
+  - Khi dự án lớn, hãy chia nhỏ `routes/console.php` hoặc sử dụng các Command Class riêng biệt để dễ quản lý.
+- **🛡️ Idempotency:**
+  - Đảm bảo một Event nếu bị bắn 2 lần thì Listener cũng không gây ra lỗi dữ liệu (ví dụ: không tặng quà 2 lần cho 1 user).

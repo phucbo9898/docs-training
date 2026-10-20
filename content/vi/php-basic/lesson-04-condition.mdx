@@ -1,0 +1,66 @@
+---
+title: "🧩 LESSON 04 – Condition (if, switch...)"
+slug: "lesson-04-condition"
+module: "php-basic"
+phase: 1
+order: 4
+type: lesson
+summary: "Viết điều kiện với if/else/elseif và switch, làm quen toán tử rút gọn như ternary và null coalescing."
+---
+
+## 🎯 Mục tiêu
+
+- Viết được điều kiện `if / else / elseif`
+- Biết dùng `switch`
+- Làm quen với toán tử rút gọn (ternary, null coalescing)
+
+## 1) if / else / elseif
+
+```php
+<?php
+$age = 20;
+
+if ($age >= 18) {
+	echo "Adult";
+} else {
+	echo "Child";
+}
+```
+
+## 2) switch
+
+```php
+<?php
+$role = "admin";
+
+switch ($role) {
+	case "admin":
+		echo "Admin";
+		break;
+	case "user":
+		echo "User";
+		break;
+	default:
+		echo "Guest";
+}
+```
+
+## 3) Ternary operator
+
+```php
+<?php
+$age = 20;
+$result = ($age >= 18) ? "Adult" : "Child";
+```
+
+## 4) Null coalescing (??)
+
+```php
+<?php
+$name = $_GET["name"] ?? "Guest";
+```
+
+## 🧪 Bài tập nhanh
+
+- Nhập `$score` và phân loại: `>= 8` Giỏi, `>= 6.5` Khá, còn lại Trung bình
+- Dùng `switch` để map `$dayNumber` (1-7) ra tên thứ trong tuần

@@ -1,0 +1,42 @@
+---
+title: "Bài tập – Join & Subquery"
+slug: "exercise-lesson-03-join-subquery"
+module: "sql-database-overview"
+phase: 2
+order: 6
+type: exercise
+summary: "Bài tập JOIN và Subquery trên bảng users và orders: INNER JOIN, LEFT JOIN và Subquery."
+---
+
+## Chuẩn bị schema
+
+Tạo thêm bảng `orders`:
+
+```sql
+CREATE TABLE orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  total DECIMAL(10,2) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_orders_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+```
+
+Insert tối thiểu 5 orders cho nhiều user (có user không có order).
+
+## Bài 01 — INNER JOIN
+
+- Lấy danh sách order kèm thông tin user (`user_name`, `email`, `total`)
+
+## Bài 02 — LEFT JOIN
+
+- Lấy danh sách user và số lượng order (user không có order vẫn hiện)
+
+## Bài 03 — Subquery
+
+- Lấy danh sách user đã từng đặt hàng (dùng `IN` hoặc `EXISTS`)
+
+## Bonus
+
+- Tìm user có tổng tiền order lớn nhất

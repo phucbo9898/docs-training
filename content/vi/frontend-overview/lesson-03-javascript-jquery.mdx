@@ -1,0 +1,90 @@
+---
+title: "🧩 LESSON 03 – JavaScript + jQuery"
+slug: "lesson-03-javascript-jquery"
+module: "frontend-overview"
+phase: 1
+order: 3
+type: lesson
+summary: "JavaScript cơ bản để tạo tương tác, thao tác DOM và event, kèm jQuery cơ bản (selector, event, DOM)."
+---
+
+## 🎯 Mục tiêu
+
+- Nắm JavaScript cơ bản để tạo tương tác
+- Biết thao tác DOM + event
+- Biết jQuery cơ bản (selector, event, DOM manipulation)
+
+## 1) JavaScript là gì?
+
+JavaScript giúp tạo **tương tác trên web** (click, validate form, gọi API, render data…).
+
+## 2) Cách nhúng JS (khuyến nghị)
+
+```html
+<script src="./app.js"></script>
+```
+
+## 3) Biến & kiểu dữ liệu (nhanh)
+
+```jsx
+let name = "Phuc";
+const age = 20;
+const isActive = true;
+```
+
+## 4) Function
+
+```jsx
+function sayHello(name) {
+	return "Hello " + name;
+}
+console.log(sayHello("Phuc"));
+```
+
+## 5) DOM + Event
+
+```html
+<button id="btn">Click</button>
+<script>
+	const btn = document.querySelector("#btn");
+	btn.addEventListener("click", function () {
+		alert("Clicked");
+	});
+</script>
+```
+
+## 6) jQuery (giới thiệu)
+
+### Cài đặt (CDN)
+
+```html
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+```
+
+### Ready
+
+```jsx
+$(document).ready(function () {
+	console.log("Ready");
+});
+```
+
+### Selector + thao tác DOM
+
+```jsx
+$("#title").text("New title");
+$(".box").addClass("active");
+```
+
+### Event
+
+```jsx
+$("#btn").on("click", function () {
+	alert("Clicked");
+});
+```
+
+## 🧪 Bài tập nhanh
+
+- Làm form login (email/password) và validate rỗng
+- Click button → đổi text của 1 đoạn `<p>`

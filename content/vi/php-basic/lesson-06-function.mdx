@@ -1,0 +1,57 @@
+---
+title: "🧩 LESSON 06 – Function (built-in + user-defined)"
+slug: "lesson-06-function"
+module: "php-basic"
+phase: 1
+order: 6
+type: lesson
+summary: "Function là gì, cách viết function có tham số và giá trị trả về, cùng một số built-in function hay dùng."
+---
+
+## 🎯 Mục tiêu
+
+- Hiểu function là gì và lợi ích (tái sử dụng)
+- Viết được function có tham số và return value
+- Làm quen một số built-in function hay dùng
+
+## 1) Function là gì?
+
+Function là một khối code thực hiện một nhiệm vụ cụ thể, có thể gọi nhiều lần.
+
+## 2) Cú pháp cơ bản
+
+```php
+<?php
+function sayHello(): void
+{
+	echo "Hello";
+}
+
+sayHello();
+```
+
+## 3) Function có tham số và return
+
+```php
+<?php
+function sum(int $a, int $b): int
+{
+	return $a + $b;
+}
+
+echo sum(2, 3); // 5
+```
+
+## 4) Built-in functions (ví dụ)
+
+```php
+<?php
+strlen("Hello");
+date("Y-m-d");
+implode(",", ["a", "b"]);
+```
+
+## 🧪 Bài tập nhanh
+
+- Viết function `isPrime($n)` kiểm tra số nguyên tố
+- Viết function `isLeapYear($year)` kiểm tra năm nhuận

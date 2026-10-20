@@ -1,0 +1,107 @@
+---
+title: "🧩 LESSON 01 – HTML Basic"
+slug: "lesson-01-html-basic"
+module: "frontend-overview"
+phase: 1
+order: 1
+type: lesson
+summary: "HTML là gì, cấu trúc trang chuẩn, các thẻ phổ biến (text, link, image, list, table, form) và semantic HTML cơ bản."
+---
+
+## 🎯 Mục tiêu
+
+- Hiểu HTML là gì và vai trò trong frontend
+- Nắm cấu trúc trang HTML chuẩn
+- Biết các thẻ phổ biến: text, link, image, list, table, form
+- Biết semantic HTML cơ bản
+
+## 1) HTML là gì?
+
+HTML (HyperText Markup Language) là ngôn ngữ đánh dấu dùng để **xây dựng cấu trúc** website.
+
+## 2) Cấu trúc trang HTML chuẩn
+
+```html
+<!doctype html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>My Page</title>
+</head>
+<body>
+	<h1>Hello HTML</h1>
+	<p>This is a paragraph.</p>
+</body>
+</html>
+```
+
+## 3) Các thẻ cơ bản (hay dùng)
+
+### Heading
+
+```html
+<h1>Title</h1>
+<h2>Subtitle</h2>
+```
+
+### Paragraph / Text inline
+
+```html
+<p>Text</p>
+<strong>bold</strong>
+<em>italic</em>
+```
+
+### Link
+
+```html
+<a href="https://google.com" target="_blank" rel="noopener">Go to Google</a>
+```
+
+### Image
+
+```html
+<img src="image.jpg" alt="Description" />
+```
+
+### List
+
+```html
+<ul>
+	<li>Item 1</li>
+	<li>Item 2</li>
+</ul>
+```
+
+## 4) Semantic HTML (gợi ý)
+
+- Dùng đúng thẻ giúp code dễ đọc + hỗ trợ SEO + accessibility
+
+```html
+<header>Header</header>
+<nav>Menu</nav>
+<main>
+	<section>Section</section>
+	<article>Article</article>
+</main>
+<footer>Footer</footer>
+```
+
+## 5) Form cơ bản
+
+```html
+<form action="#" method="post">
+	<label>
+		Email
+		<input type="email" name="email" required />
+	</label>
+
+	<button type="submit">Submit</button>
+</form>
+```
+
+## 🧪 Bài tập nhanh
+
+- Tạo 1 trang CV đơn giản bằng HTML (ảnh, tên, liên hệ, kỹ năng)
+- Tạo 1 form đăng ký: name/email/password + button submit

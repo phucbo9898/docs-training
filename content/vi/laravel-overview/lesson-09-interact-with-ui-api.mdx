@@ -1,0 +1,148 @@
+---
+title: "🧩 LESSON 09 — Interact with UI & API"
+slug: "lesson-09-interact-with-ui-api"
+module: "laravel-overview"
+phase: 3
+order: 9
+type: lesson
+summary: "Truyền dữ liệu từ Controller sang Blade, xây API RESTful, gọi API bằng Ajax và phân biệt Web Route với API Route."
+---
+
+## 🎯 Mục tiêu bài học
+
+- **Làm chủ View:** Hiểu cách truyền dữ liệu từ Controller sang giao diện (Blade) một cách tối ưu.
+- **Xây dựng API chuẩn RESTful:** Biết cách cài đặt và cấu hình hệ thống API trên các phiên bản Laravel mới nhất.
+- **Kỹ thuật kết nối Ajax:** Thành thạo việc gọi API từ giao diện mà không cần load lại trang.
+- **Tư duy tách biệt (Separation of Concerns):** Phân biệt rõ khi nào nên dùng Web Route (UI) và khi nào dùng API Route.
+
+## 🖥️ Tương tác với UI (Web Interface)
+
+### Mô tả
+
+- Trong Laravel, tương tác với giao diện chủ yếu thông qua các **Blade Template**.
+- Controller đóng vai trò chuẩn bị dữ liệu và "đổ" vào View.
+
+### Cách truyền dữ liệu từ Controller sang View
+
+Có 3 cách phổ biến, nhưng trong thực tế dự án, chúng ta ưu tiên sự rõ ràng.
+
+#### Cách 1: Sử dụng mảng (Array) - Khuyên dùng khi truyền nhiều dữ liệu
+
+```php
+// app/Http/Controllers/ProductController.php
+public function index()
+{
+    $products = Product::all();
+    return view('products.index', [
+        'items' => $products,
+        'pageTitle' => 'Danh sách sản phẩm'
+    ]);
+}
+```
+
+#### Cách 2: Sử dụng hàm `compact()` - Ngắn gọn nhất
+
+```php
+public function show($id)
+{
+    $product = Product::findOrFail($id);
+    return view('products.detail', compact('product'));
+}
+```
+
+#### Cách 3: Sử dụng phương thức `with()`
+
+```php
+return view('products.index')->with('status', 'Cập nhật thành công!');
+```
+
+## 🔌 Tương tác với API (JSON Response)
+
+### Mô tả
+
+- API (Application Programming Interface) cho phép các hệ thống phần mềm khác nhau giao tiếp với nhau, cho phép tạo ra các dịch vụ web và ứng dụng có thể tương tác theo chương trình.
+- Từ Laravel 11 trở đi (bao gồm cả **Laravel 12**), hệ thống API không được cài đặt sẵn để tối ưu hóa hiệu năng core. Chúng ta cần cài đặt thủ công.
+
+### Cài đặt và Cấu hình API
+
+- Command
+
+```php
+php artisan install:api
+```
+
+- **Kết quả:**
+  - Laravel sẽ tạo file `routes/api.php`
+  - file cấu hình `config/sanctum.php` và bảng `personal_access_tokens` trong DB.
+- Cấu hình API
+  - Bước 1: Định nghĩa Route
+    - **Vị trí:** `routes/api.php`
+
+      ```php
+      use App\Http\Controllers\Api\ProductApiController;
+      use Illuminate\Support\Facades\Route;
+
+      Route::get('/products', [ProductApiController::class, 'index']);
+      ```
+
+  - Bước 2: Xử lý trong Controller
+
+    - **Vị trí:** `app/Http/Controllers/Api/ProductApiController.php`
+
+    ```php
+    public function index() {
+        $products = Product::all();
+        
+        // Luôn trả về đúng HTTP Status Code (200: OK, 201: Created, 404: Not Found...)
+        return response()->json([
+            'success' => true,
+            'data' => $products,
+            'message' => 'Lấy danh sách thành công'
+        ], 200);
+    }
+    ```
+
+## 🔄 Kết nối UI và API thông qua Ajax
+
+### Mô tả
+
+- Đây là kỹ thuật giúp ứng dụng mượt mà hơn (Single Page Experience).
+- Chúng ta sẽ dùng UI để gọi dữ liệu từ API.
+
+### Ví dụ
+
+- Giao diện (Blade): `resources/views/products/list.blade.php`
+- code mẫu
+
+  ```html
+  <div id="product-list">Đang tải...</div>
+
+  <script>
+      // Sử dụng Fetch API (Hiện đại) hoặc jQuery Ajax
+      fetch('/api/products')
+          .then(response => response.json())
+          .then(res => {
+              if(res.success) {
+                  let html = '';
+                  res.data.forEach(item => {
+                      html += `<li>${item.name}</li>`;
+                  });
+                  document.getElementById('product-list').innerHTML = html;
+              }
+          })
+          .catch(error => console.error('Error:', error));
+  </script>
+  ```
+
+## Lưu ý chung
+
+- **🛡️ Security (CSRF vs Stateless):**
+  - Với **UI (Web Routes)**: Luôn phải có thẻ `@csrf` trong Form để chống tấn công giả mạo.
+  - Với **API Routes**: Là Stateless (không lưu session), nên sử dụng Token (Sanctum) để bảo mật thay vì CSRF.
+- **📊 API Resources:**
+  - Trong dự án thực tế, không nên trả về trực tiếp `$model`.
+  - Hãy sử dụng `php artisan make:resource ProductResource` để định nghĩa các trường dữ liệu nào được phép trả về cho phía Client (giấu các trường nhạy cảm như `password`, `deleted_at`).
+- **🌐 API Versioning:**
+  - Luôn bắt đầu URL API bằng version để dễ nâng cấp: `/api/v1/products`, `/api/v2/products`.
+- **🛠️ Công cụ Test:**
+  - **Postman:** Dùng để test các phương thức POST, PUT, DELETE một cách chuyên nghiệp.

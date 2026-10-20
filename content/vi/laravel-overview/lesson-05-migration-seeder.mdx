@@ -1,0 +1,193 @@
+---
+title: "🧩 LESSON 05 — Migration & Seeder (Database Management)"
+slug: "lesson-05-migration-seeder"
+module: "laravel-overview"
+phase: 3
+order: 5
+type: lesson
+summary: "Migration là gì và vì sao cần, tạo và quản lý database bằng migration, rollback, Seeder và dữ liệu mẫu."
+---
+
+## 🎯 Mục tiêu bài học
+
+- Hiểu Migration là gì và tại sao cần dùng
+- Tạo và quản lý database bằng migration
+- Sử dụng các lệnh migrate, rollback
+- Hiểu Seeder và cách tạo dữ liệu mẫu
+- Biết cách dùng migration + seeder trong project thực tế
+
+## 🧩 Migration
+
+### 🧩 Migration là gì?
+
+Migration là cách tạo và quản lý database bằng code PHP
+
+Thay vì:
+
+- Tạo bảng thủ công trong MySQL
+
+Ta sẽ sử dụng migration đẻ định nghĩa bảng, cột
+
+👉 Ưu điểm:
+
+- Đồng bộ DB giữa các môi trường (dev, staging, production)
+- Dễ quản lý version database
+- Không cần thao tác tay
+
+Vị trí:
+
+```bash
+database/migrations
+```
+
+### ⚙️ Tạo Migration
+
+### Tạo bằng command
+
+```bash
+php artisan make create_users_table
+```
+
+### Ví dụ
+
+```php
+public function up()
+{
+    Schema::create('users', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->string('email');
+        $table->timestamps();
+    });
+}
+
+public function down()
+{
+    Schema::dropIfExists('users');
+}
+```
+
+### Giải thích thêm về các thông tin trong file migration
+
+#### Function up()
+
+- chạy khi migrate
+- tạo bảng / sửa bảng
+
+👉 up = apply
+
+#### Function down()
+
+- rollback
+- xóa hoặc revert thay đổi
+
+👉 down = undo
+
+### Cách chạy migration
+
+Chạy tất cả migration:
+
+```bash
+php artisan migrate
+```
+
+👉 Laravel sẽ tạo bảng trong database
+
+### Rollback migration
+
+#### Để rollback về lần chạy gần nhất, chạy command
+
+```bash
+php artisan migrate
+```
+
+#### Rollback theo số lượng step
+
+```bash
+php artisan migrate --step=5
+```
+
+#### Rollback toàn bộ
+
+```bash
+php artisan migrate
+```
+
+#### Rollback và tạo lại cơ sở dữ liệu
+
+```bash
+php artisan migrate:refresh
+```
+
+#### Xóa toàn bộ bảng hiện tại và chạy lại migration
+
+```bash
+php artisan migrate:fresh
+```
+
+### Lưu ý khi chạy migration
+
+- Rollback sẽ xóa toàn bộ dữ liệu đang có
+- Cẩn thận khi chạy môi trường production
+
+## 🧩 Seeder
+
+### 🧩 Seeder là gì?
+
+Seeder dùng để tạo dữ liệu mẫu
+
+Thay vì chạy insert thủ công thì sẽ sử dụng code để generate data
+
+Vị trí:
+
+`database/seeders`
+
+### ⚙️ 6. Tạo Seeder
+
+Command:
+
+```bash
+php artisan make UserSeeder
+```
+
+Ví dụ:
+
+```php
+public function run()
+{
+    DB::table('users')->insert([
+        'name' => 'Phuc',
+        'email' => 'phuc@gmail.com'
+    ]);
+}
+```
+
+### ▶️ 7. Chạy Seeder
+
+Chạy 1 seeder chỉ định:
+
+```bash
+php artisan db:seed --class=UserSeeder
+```
+
+Chạy toàn bộ seeder
+
+```bash
+php artisan db:seed
+```
+
+### Lưu ý
+
+- Không sửa migration cũ đã chạy trên production
+- Tạo file mới để update DB
+- Đặt tên rõ ràng
+- Seeder chỉ nên sử dụng cho môi trường develop/test, hạn chế chạy seeder trên production
+- Không seeder data nhạy cảm
+
+```php
+Route::get('/admin', function () {
+    return "Admin";
+})->middleware('role:admin');
+
+👉 truyền param vào middleware
+```

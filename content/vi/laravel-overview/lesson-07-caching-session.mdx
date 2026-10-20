@@ -1,0 +1,207 @@
+---
+title: "🧩 LESSON 07 — Caching & Session"
+slug: "lesson-07-caching-session"
+module: "laravel-overview"
+phase: 3
+order: 7
+type: lesson
+summary: "Caching là gì và khi nào cần dùng, dùng Cache trong Laravel, Session và cách lưu, đọc dữ liệu Session."
+---
+
+## 🎯 Mục tiêu bài học
+
+- Hiểu Caching là gì và khi nào cần dùng
+- Biết cách sử dụng Cache trong Laravel
+- Hiểu Session là gì
+- Lưu và đọc dữ liệu từ Session
+- Áp dụng Cache & Session trong thực tế
+
+## ⚡ Caching
+
+### ⚡ Caching là gì?
+
+Caching được sử dụng để lưu trữ dữ liệu tạm
+
+Mục đích
+
+- Tăng tốc độ ứng dụng
+- Giảm query database
+- Giảm load hệ thống
+
+👉 Ví dụ:
+
+- Danh sách sản phẩm
+- Config
+- Data ít thay đổi
+
+Config
+
+```bash
+config/cache.php
+```
+
+### 🧠 Cache hoạt động như thế nào?
+
+Flow hoạt động:
+
+1. php artisan make create_users_table
+2. Request đến
+3. Kiểm tra cache
+4. Nếu có → trả luôn
+5. Nếu không → query DB → lưu cache
+
+👉 Giảm rất nhiều query DB
+
+### 🗄️ 2. Cache Drivers
+
+Laravel hỗ trợ các drivers
+
+- File
+- Database
+- Redis
+- Memcached
+- Array
+
+Đối với môi trường production nên sử dụng
+
+- Redis
+- Memcached
+
+### 🔧 3. Các thao tác cơ bản với Cache
+
+#### Lưu item vào cache
+
+```php
+Cache::put('key', 'value', 60);
+
+👉 60 = seconds
+👉 Nếu không truyền thời gian thì sẽ lưu trữ vĩnh viễn
+```
+
+#### Lấy item từ cache
+
+```php
+Cache::get('key');
+```
+
+#### Lấy item từ cache và xóa chúng
+
+```php
+Cache::pull('key');
+```
+
+#### Lưu item vào cache vĩnh viễn
+
+```php
+Cache::forever('key', $value);
+```
+
+#### Lưu cache nếu item không tồn tại
+
+```php
+Cache::add('key', $value, 60); // Lưu trữ trong 60 giây
+```
+
+#### Xóa item trong cache
+
+```bash
+Cache::forget('key');
+```
+
+#### Xóa toàn bộ item trong cache
+
+```php
+Cache::flush('key');
+```
+
+#### Kiểm tra item có tồn tại không
+
+```php
+Cache::has('key'); // true -> có, false -> không
+```
+
+#### Cache helper
+
+Laravel cung cấp 1 số hàm trợ giúp cho cache
+
+```php
+cache(['key' => 'value'], 60);
+
+$value = cache('key', 'default');
+```
+
+### 🏷️ 4. Cache Tags (nâng cao)
+
+Lưu ý:
+
+- Cache tags không hỗ trợ khi sử dụng cache driver là “file” và “database”
+- Trong trường hợp sử dụng nhiều tag với cache được lưu dưới dạng “forever”, hiệu năng sẽ đạt tốt nhất ở driver có khả năng tự động xóa các danh sách đã lưu quá lâu như “memcached”
+
+```php
+// Lưu trữ trong 60 giây
+Cache::tags(['tag1', 'tag2'])->put('key', 'value', 60);
+
+// Lấy ra item từ cache được gán tag
+Cache::tags(['tag1', 'tag2'])->get('key');
+
+// Xóa tất cả item có tag
+Cache::tags(['tag1', 'tag2'])->flush();
+```
+
+### 🎯 5. Cache Events
+
+Laravel cung cấp event cho cache như sau:
+
+| Illuminate\Cache\Events\CacheHit     | được kích hoạt khi 1 item lấy từ cache.                    |
+| ------------------------------------ | ---------------------------------------------------------- |
+| Illuminate\Cache\Events\CacheMissed  | được kích hoạt khi không tin thấy item nào đó trong cache. |
+| Illuminate\Cache\Events\KeyForgotten | được kích hoạt khi 1 item bị xóa khỏi cache.               |
+| Illuminate\Cache\Events\KeyWritten   | được kích hoạt khi 1 item được ghi vào cache.              |
+
+👉 Dùng để log / debug
+
+## 🔐 Session
+
+### 🔐 Session là gì?
+
+HTTP là stateless (không nhớ)
+
+Session giúp lưu dữ liệu user giữa các request
+
+👉 Ví dụ:
+
+- login user
+- giỏ hàng
+
+Config:
+
+- config/session.php
+
+### 🗄️ Session Drivers
+
+Laravel hỗ trợ các driver như sau:
+
+- File
+- Cookie
+- Database
+- Redis
+- Memcached
+
+Trên môi trường production nên sử dụng redis/database
+
+### 🔧 Thao tác với Session
+
+| Cách viết 1                       | Cách viết 2                       | Mục đích sử dụng                                              |
+| --------------------------------- | --------------------------------- | ------------------------------------------------------------- |
+| *Session*::put('key', 'value');   | \*\*session(\['key' => 'value']); | Lưu trữ dữ liệu vào session                                   |
+| *Session*::get('key', 'default'); | \*\*session('key', 'default');    | Lấy dữ liệu từ session với giá trị mặc định nếu không tồn tại |
+| *Session*::forget('key');         | \*\*session()->forget('key');     | Xóa dữ liệu theo key khỏi session                             |
+| *Session*::flush();               | \*\*session()->flush();           | Xóa tất cả dữ liệu khỏi session                               |
+| *Session*::has('key');            | \*\*session()->has('key');        | Kiểm tra nếu một khóa tồn tại trong session                   |
+
+### So sánh Cache với Session
+
+| Cache            | Session               |
+| ---------------- | --------------------- |
+| Lưu data chung   | Lưu data theo user    |
+| Tăng performance | Dùng cho login, state |
