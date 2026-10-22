@@ -16,7 +16,7 @@ const linkBase =
 function linkClass(active: boolean): string {
   return `${linkBase} ${
     active
-      ? "bg-primary/10 font-semibold text-primary"
+      ? "bg-primary/10 font-semibold text-primary-text"
       : "text-text-muted hover:bg-bg-subtle hover:text-text"
   }`;
 }

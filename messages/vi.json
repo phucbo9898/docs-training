@@ -110,7 +110,6 @@
     "closeMenu": "Đóng menu điều hướng"
   },
   "Search": {
-    "label": "Tìm kiếm tài liệu",
     "placeholder": "Tìm kiếm tài liệu…",
     "shortcutMac": "⌘K",
     "shortcutOther": "Ctrl K",

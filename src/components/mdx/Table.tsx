@@ -7,7 +7,7 @@ export default function Table(props: ComponentProps<"table">) {
 
   return (
     <div
-      role="region"
+      role="group"
       aria-label={t("label")}
       tabIndex={0}
       className="my-6 overflow-x-auto rounded-lg border border-border"

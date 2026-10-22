@@ -18,7 +18,10 @@ type HastNode = {
 };
 
 const prettyCodeOptions: Options = {
-  theme: { light: "github-light", dark: "github-dark" },
+  theme: {
+    light: "github-light-high-contrast",
+    dark: "github-dark-high-contrast",
+  },
   // Nền và màu chữ do globals.css quyết định theo theme của trang.
   keepBackground: false,
   defaultLang: { block: "plaintext" },

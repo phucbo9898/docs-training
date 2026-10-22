@@ -23,7 +23,6 @@ export default function SearchBox({ showShortcut = false }: SearchBoxProps) {
     <button
       type="button"
       data-search-trigger
-      aria-label={t("label")}
       aria-haspopup="dialog"
       aria-keyshortcuts="Control+K Meta+K"
       onClick={openSearch}

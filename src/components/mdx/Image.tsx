@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 import NextImage from "next/image";
+import { getPublicImageSize } from "@/lib/image-size";
 
 type ImageProps = Omit<ComponentProps<"img">, "width" | "height"> & {
   /** Chú thích hiển thị dưới ảnh; markdown `![alt](src "chú thích")` cũng dùng được. */
@@ -15,15 +16,16 @@ export default function Image({
 }: ImageProps) {
   if (typeof src !== "string" || !src) return null;
   const text = caption ?? title;
+  const { width, height } = getPublicImageSize(src);
 
   return (
     <figure className="my-6">
-      {/* Chưa biết kích thước thật: để ảnh tự co theo tỷ lệ, tối đa bằng khung chứa. */}
+      {/* Kích thước thật giữ chỗ cho ảnh; CSS cho co theo khung chứa. */}
       <NextImage
         src={src}
         alt={alt ?? ""}
-        width={1200}
-        height={675}
+        width={width}
+        height={height}
         sizes="(min-width: 1024px) 46rem, 100vw"
         unoptimized={!src.startsWith("/")}
         className={`mx-auto h-auto w-auto max-w-full rounded-lg border border-border ${className ?? ""}`}

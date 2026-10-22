@@ -110,7 +110,6 @@
     "closeMenu": "Close navigation menu"
   },
   "Search": {
-    "label": "Search the documentation",
     "placeholder": "Search the docs…",
     "shortcutMac": "⌘K",
     "shortcutOther": "Ctrl K",

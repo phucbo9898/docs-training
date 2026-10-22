@@ -13,7 +13,7 @@ type CalloutProps = {
 };
 
 const STYLES: Record<CalloutType, string> = {
-  info: "border-primary bg-primary/10 text-primary",
+  info: "border-primary bg-primary/10 text-primary-text",
   tip: "border-success bg-success/10 text-success",
   warning: "border-warning bg-warning/10 text-warning",
   danger: "border-danger bg-danger/10 text-danger",
