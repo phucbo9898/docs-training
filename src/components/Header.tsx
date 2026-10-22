@@ -11,8 +11,8 @@ export default function Header() {
         <MenuButton />
         <Logo />
         {/* Mobile: nút tìm kiếm, ngôn ngữ và theme nằm trong drawer. */}
-        <div className="ml-auto hidden min-w-0 max-w-xs flex-1 md:block">
-          <SearchBox showShortcut />
+        <div className="ml-auto hidden shrink-0 md:block lg:min-w-0 lg:max-w-xs lg:flex-1">
+          <SearchBox showShortcut compact />
         </div>
         <div className="hidden shrink-0 items-center gap-3 md:flex">
           <LanguageSwitcher />

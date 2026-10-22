@@ -16,7 +16,6 @@ export default function Logo() {
   return (
     <Link
       href="/"
-      aria-label={t("siteName")}
       className="inline-flex min-h-11 min-w-0 shrink items-center gap-2 rounded-md font-bold text-text"
     >
       {hasLogo ? (
@@ -29,9 +28,7 @@ export default function Logo() {
           className="h-7 w-auto shrink-0 sm:h-8 md:h-9"
         />
       ) : null}
-      <span
-        className={`truncate leading-tight ${hasLogo ? "hidden sm:inline" : ""}`}
-      >
+      <span className="line-clamp-2 min-w-0 text-xs leading-tight sm:line-clamp-none sm:block sm:truncate sm:text-base">
         {t("siteName")}
       </span>
     </Link>
