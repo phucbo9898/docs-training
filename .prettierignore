@@ -8,3 +8,6 @@ package-lock.json
 notion-export
 CLAUDE.md
 public/search-index.*.json
+
+# Content is edited by hand; do not reformat
+content
