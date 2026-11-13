@@ -1,8 +1,6 @@
 import { hasLocale } from "next-intl";
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import ModulePageContent from "@/components/ModulePageContent";
-import PageSkeleton from "@/components/PageSkeleton";
 import { routing } from "@/i18n/routing";
 import { getAllLessons, getLesson, isIndexSlug } from "@/lib/content";
 
@@ -30,9 +28,5 @@ export async function generateMetadata({
 export default function ModulePage({
   params,
 }: PageProps<"/[locale]/[module]">) {
-  return (
-    <Suspense fallback={<PageSkeleton />}>
-      <ModulePageContent params={params} />
-    </Suspense>
-  );
+  return <ModulePageContent params={params} />;
 }
