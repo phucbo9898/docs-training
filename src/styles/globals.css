@@ -324,10 +324,12 @@
   }
 }
 
-/* Fade ngắn khi nội dung trang xuất hiện; reduced-motion đã được rút về ~0ms ở trên. */
+/* Fade ngắn khi nội dung trang xuất hiện; reduced-motion đã được rút về ~0ms ở trên.
+   Bắt đầu từ 0.01 thay vì 0: Chrome bỏ qua phần tử opacity 0 khi đo LCP,
+   nên fade từ 0 làm LCP bị dời tới sau khi JS tải xong (điểm Lighthouse mobile thấp). */
 @keyframes page-fade-in {
   from {
-    opacity: 0;
+    opacity: 0.01;
   }
   to {
     opacity: 1;
