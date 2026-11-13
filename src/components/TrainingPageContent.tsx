@@ -8,13 +8,13 @@ import HomeLessons from "./HomeLessons";
 import HomeTimeline from "./HomeTimeline";
 import HomeWelcome from "./HomeWelcome";
 
-type HomePageContentProps = {
-  params: PageProps<"/[locale]">["params"];
+type TrainingPageContentProps = {
+  params: PageProps<"/[locale]/training">["params"];
 };
 
-export default async function HomePageContent({
+export default async function TrainingPageContent({
   params,
-}: HomePageContentProps) {
+}: TrainingPageContentProps) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);

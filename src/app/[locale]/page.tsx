@@ -1,11 +1,11 @@
 import { Suspense } from "react";
-import HomePageContent from "@/components/HomePageContent";
 import PageSkeleton from "@/components/PageSkeleton";
+import TrackChooserContent from "@/components/TrackChooserContent";
 
 export default function HomePage({ params }: PageProps<"/[locale]">) {
   return (
     <Suspense fallback={<PageSkeleton />}>
-      <HomePageContent params={params} />
+      <TrackChooserContent params={params} />
     </Suspense>
   );
 }
