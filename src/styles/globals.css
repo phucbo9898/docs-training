@@ -68,7 +68,9 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: var(--font-sans);
+    /* Dùng utility (theme inline) để biến font resolve ngay tại <body>, nơi
+       next/font gắn class biến; var(--font-sans) ở :root sẽ không thấy biến đó. */
+    @apply font-sans;
     font-size: 1rem;
     line-height: 1.7;
   }
