@@ -3,11 +3,14 @@
 import { useEffect, useRef, type MouseEvent } from "react";
 import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
-import type { NavPhase } from "@/lib/navigation";
+import type { NavTrack } from "@/lib/navigation";
+import { findTrackByPath } from "@/lib/track-path";
 import LanguageSwitcher from "./LanguageSwitcher";
 import SearchBox from "./SearchBox";
 import { useSidebar } from "./SidebarProvider";
 import SidebarModule from "./SidebarModule";
+import SidebarTrackHeader from "./SidebarTrackHeader";
+import SidebarTrackLinks from "./SidebarTrackLinks";
 import ThemeToggle from "./ThemeToggle";
 
 const FOCUS_DELAY_MS = 50;
@@ -16,10 +19,11 @@ const FOCUS_DELAY_MS = 50;
  * Từ md trở lên là cột cố định (hẹp ở tablet, rộng hơn ở desktop); dưới md là
  * drawer trượt từ trái, ẩn hẳn khi đóng để không nhận focus.
  */
-export default function Sidebar({ tree }: { tree: NavPhase[] }) {
+export default function Sidebar({ tracks }: { tracks: NavTrack[] }) {
   const t = useTranslations("Sidebar");
   const th = useTranslations("Header");
   const pathname = usePathname();
+  const track = findTrackByPath(tracks, pathname);
   const { open, setOpen, menuButtonRef } = useSidebar();
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -93,7 +97,12 @@ export default function Sidebar({ tree }: { tree: NavPhase[] }) {
         </div>
 
         <nav aria-label={t("label")} className="flex-1 space-y-5 p-3">
-          {tree.map((phase) => (
+          {track ? (
+            <SidebarTrackHeader track={track} pathname={pathname} />
+          ) : (
+            <SidebarTrackLinks tracks={tracks} />
+          )}
+          {track?.phases.map((phase) => (
             <section key={phase.phase} aria-label={phase.label}>
               <h2 className="px-3 text-xs font-bold tracking-wide text-text-muted uppercase">
                 {phase.label}

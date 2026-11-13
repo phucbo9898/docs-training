@@ -15,8 +15,9 @@ type LessonViewProps = {
 };
 
 export default async function LessonView({ locale, lesson }: LessonViewProps) {
-  const [t, tracks, { content, headings }] = await Promise.all([
+  const [t, tt, tracks, { content, headings }] = await Promise.all([
     getTranslations("Lesson"),
+    getTranslations("Tracks"),
     getNavTree(locale),
     renderMdx(lesson.body, mdxComponents),
   ]);
@@ -30,7 +31,11 @@ export default async function LessonView({ locale, lesson }: LessonViewProps) {
     : { prev: null, next: null };
 
   const crumbs: BreadcrumbItem[] = [{ label: t("home"), href: "/" }];
-  if (phase) crumbs.push({ label: phase.label });
+  if (track && track.home !== lesson.href) {
+    crumbs.push({ label: tt(`${track.id}.title`), href: track.home });
+  }
+  // Chỉ track training có lộ trình nhiều phase.
+  if (phase && lesson.track === "backend") crumbs.push({ label: phase.label });
   if (navModule && !isIndex) {
     crumbs.push({ label: navModule.title, href: navModule.href });
   }
