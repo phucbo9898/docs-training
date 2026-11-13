@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  experimental: {
+    // CSS toàn site chỉ ~9 KiB: nhúng thẳng vào HTML để bỏ request chặn render (LCP mobile).
+    inlineCss: true,
+  },
   turbopack: {
     rules: {
       "*.css": {
