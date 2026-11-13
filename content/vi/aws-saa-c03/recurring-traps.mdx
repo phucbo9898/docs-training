@@ -1,0 +1,46 @@
+---
+title: "Bẫy lặp lại"
+slug: "recurring-traps"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 1
+type: lesson
+summary: "8 bẫy hay dính nhất gộp từ 4 đề, 3 tình huống hay gặp và 2 lỗi vẫn lặp lại ở Đề 4."
+---
+
+Gộp từ cả 4 đề, sắp theo mức độ hay dính.
+
+<Callout type="info" title="Trước khi chốt đáp án">
+Tự hỏi lại 8 câu dưới đây.
+</Callout>
+
+## 8 bẫy hay dính nhất
+
+1. **Đọc sót chữ quyết định.** Gạch chân NOT, EXCEPT, LEAST, MOST cost-effective, LEAST operational overhead. "any", "only if", "always" trong đáp án thường sai.
+2. **Dịch vụ nghe liên quan nhưng lạc đề, hoặc tính năng không tồn tại.** Ví dụ: S3 Cache, SQS priority, Parameter Store auto-rotate, Aurora Parallel Query, AWS Batch, Lex, SageMaker Clarify, Spot volume, SR-IOV volume, cài phần mềm lên S3, SCP gắn vào bucket. Tự hỏi: dịch vụ này có giải quyết đúng vấn đề đề nêu không?
+3. **Một vế trong đáp án sai là cả đáp án sai.** Đáp án 2–3 vế phải kiểm từng vế: region, giao thức, đường đi, con số (DeleteMarkerCreated thay vì Delete, presigned URL thay vì OAC, cert ở us-east-1 cho Regional API, 800 IOPS cho volume io1 nhỏ).
+4. **Có dịch vụ managed/native thì không tự build.** "LEAST overhead", "easily" → managed (Route 53 failover, DLM, Glue, Athena, Config managed rule, Predictive Scaling), không Lambda/EC2 tự viết, không snapshot rồi restore.
+5. **Chọn giải pháp đắt khi đề không yêu cầu.** Multi-region, Dedicated IP, Firewall Manager cho 1 account đều là quá tay. Đề chỉ nói AZ sập thì Multi-AZ là đủ.
+6. **Sai phạm vi (scope).** ELB và ASG chỉ trong 1 region; subnet và EBS nằm trong 1 AZ; VPC peering không transitive; quota EC2 tính theo region, không theo AZ.
+7. **Nhầm phát hiện với ngăn chặn.** "unable to / prevent" → SCP, IAM policy. "detect / identify" → Config rule, GuardDuty.
+8. **Nhầm chiều của quyền hoặc traffic.** Lambda gọi ra → execution role; ai gọi vào Lambda → resource policy. NACL stateless → phải mở outbound ephemeral port cho response. Role không có thành viên, nhiều user cùng quyền → IAM Group.
+
+## 3 tình huống hay gặp
+
+<Callout type="warning" title="Thấy là nhận ra ngay">
+
+- Workload "can be interrupted" → **Spot**.
+- Mạng công ty chậm, chuyển mất hàng tuần → **offline transfer**, mọi giải pháp online đều sai.
+- Tính năng chỉ bật lúc tạo (hibernation, mã hóa EBS/RDS) → phải tạo mới hoặc migrate.
+
+</Callout>
+
+## Hai lỗi vẫn lặp lại ở Đề 4
+
+<Callout type="danger" title="Đã ôn nhưng vẫn sai">
+
+- **Multi-AZ không phải để scale đọc** (sai 4 câu). "read-heavy, reporting, offload read" → Read Replica hoặc cache. Multi-AZ chỉ để failover, standby không đọc được.
+- **Bài toán số instance theo AZ** (sai 3 câu). Luôn xét trường hợp xấu nhất: **tổng − AZ lớn nhất ≥ N**.
+
+</Callout>

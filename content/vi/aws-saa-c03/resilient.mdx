@@ -1,0 +1,61 @@
+---
+title: "Resilient (47%)"
+slug: "resilient"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 4
+type: lesson
+summary: "4 chiến lược DR theo RPO/RTO, Multi-AZ và failover, Route 53, decouple bằng SQS/SNS/EventBridge, backup và replication."
+---
+
+Domain này hỏi: hệ thống có sống sót khi một phần hỏng không, và có tách rời được các thành phần không. Tỉ lệ đúng ở Đề 4: **47%**, ưu tiên ôn số 2.
+
+## 4 chiến lược DR
+
+Đề hay hỏi theo RPO/RTO và chi phí.
+
+| Chiến lược | Ở region DR có gì | RTO | Chi phí |
+| --- | --- | --- | --- |
+| Backup & Restore | Chỉ có backup/snapshot | Hàng giờ | Rẻ nhất |
+| Pilot Light | DB replicate sẵn, server tắt | Hàng chục phút | Thấp |
+| Warm Standby | Bản thu nhỏ chạy sẵn, scale khi cần | Vài phút | Trung bình |
+| Multi-site Active-Active | Bản đầy đủ chạy song song | Gần 0 | Đắt nhất |
+
+## Keyword theo tình huống
+
+| Thấy trong đề | Chọn |
+| --- | --- |
+| Scale web app, thêm elasticity | ELB + Auto Scaling Group trải nhiều AZ (hoặc Route 53 Weighted cho nhiều EC2) |
+| Cần tối thiểu N instance khi 1 AZ sập | Tổng − AZ lớn nhất ≥ N; rẻ nhất mỗi AZ = N / (số AZ − 1). Ví dụ 6 instance, 3 AZ → 3-3-3 |
+| RDS phải sống khi AZ sập, failover tự động | RDS Multi-AZ (sync, failover 60–120 giây, đổi CNAME) |
+| Aurora failover nhanh, không đổi endpoint | Thêm Aurora Replica (reader) cùng cluster; app ghi qua Cluster endpoint |
+| DR cross-region, RPO ~1 giây, RTO &lt; 1 phút | Aurora Global Database |
+| NoSQL toàn cầu, low latency, nhiều region | DynamoDB Global Tables |
+| NAT Gateway không là single point of failure | 1 NAT Gateway mỗi AZ, private subnet trỏ NAT cùng AZ |
+| Trang dự phòng khi app sập | Route 53 Failover routing → S3 static website |
+| Chỉ sang region phụ khi region chính lỗi | Route 53 Failover routing + health check |
+| Tất cả site cùng chạy | Route 53 Active-Active + health check |
+| Region sập, downtime thấp nhất | Resource chạy sẵn ở region 2 + Route 53 failover (restore snapshot mất hàng giờ) |
+| CloudFront lỗi 5xx, tự chuyển origin | CloudFront origin group (origin failover) |
+| Backup Direct Connect | DX thứ 2, hoặc Site-to-Site VPN |
+| Request bị mất khi tải đột biến | Đệm bằng SQS, ASG scale theo backlog |
+| Decouple, xử lý bất đồng bộ | SQS (pull) |
+| Exactly-once, đúng thứ tự | SQS FIFO |
+| Message lỗi lặp lại làm nghẽn queue | Dead-letter queue + maxReceiveCount |
+| 1 event gửi tới nhiều nơi (fan-out) | SNS topic → nhiều SQS; hoặc EventBridge |
+| Lọc message vào từng queue | SNS subscription filter policy |
+| Ưu tiên premium/free | 2 SQS queue, poll queue ưu tiên trước (SQS không có priority) |
+| Bắt thay đổi item DynamoDB | DynamoDB Streams + Lambda |
+| Bắt thay đổi dữ liệu Aurora MySQL | Aurora native function gọi Lambda (RDS event subscription chỉ báo sự kiện instance) |
+| Chạy ECS task khi có file mới trên S3 | EventBridge rule → ECS task (không cần Lambda) |
+| Workflow nhiều bước, retry, chờ duyệt | Step Functions |
+| Migrate ActiveMQ/RabbitMQ | Amazon MQ |
+| Chờ app cài xong mới tạo resource tiếp (CloudFormation) | CreationPolicy + cfn-signal (DependsOn chỉ ép thứ tự) |
+| Đổi AMI cho ASG | Launch template version mới + Instance Refresh |
+| ASG scale-in terminate instance nào | AZ nhiều instance nhất → launch template cũ nhất → gần giờ billing |
+| Session bị mất khi instance bị terminate | Lưu session ra ElastiCache hoặc DynamoDB (sticky sessions vẫn mất khi instance chết) |
+| Backup tập trung nhiều service, > 35 ngày, cross-account | AWS Backup (DLM chỉ cho EBS) |
+| Chống xóa nhầm object S3 | Versioning + MFA Delete |
+| S3 sống sót khi region sập | Cross-Region Replication (cần Versioning) |
+| Redshift DR khi region sập | Cross-Region Snapshot Copy |

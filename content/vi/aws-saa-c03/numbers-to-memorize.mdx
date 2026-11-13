@@ -1,0 +1,45 @@
+---
+title: "Con số cần thuộc"
+slug: "numbers-to-memorize"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 7
+type: lesson
+summary: "Giới hạn Lambda, S3, EBS IOPS, thời gian lưu tối thiểu, Glacier retrieval, RDS, DynamoDB, SQS, Kinesis, VPC CIDR và các port hay gặp."
+---
+
+Đọc lại trang này vào sáng ngày thi.
+
+## Bảng con số
+
+| Thông số | Giá trị |
+| --- | --- |
+| Lambda | Timeout 15 phút · RAM 10 GB · /tmp 10 GB |
+| Fargate ephemeral storage | 20 GB mặc định, tối đa 200 GB |
+| S3 single PUT / object tối đa | 5 GB / 5 TB |
+| Multipart part | 5 MB – 5 GB, tối đa 10.000 part |
+| Thời gian lưu tối thiểu | Standard-IA 30 ngày · Glacier IR/Flexible 90 ngày · Deep Archive 180 ngày |
+| Glacier Flexible | Expedited 1–5 phút · Standard 3–5 giờ · Bulk 5–12 giờ |
+| Glacier Deep Archive | Standard 12 giờ · Bulk 48 giờ |
+| S3 Standard / One Zone-IA | ≥ 3 AZ / 1 AZ |
+| EBS IOPS | gp2 3 IOPS/GiB · gp3 baseline 3.000, tối đa 16.000 · io1 tối đa 50 IOPS/GiB, 64.000/volume · io2 Block Express 1.000 IOPS/GiB, 256.000/volume |
+| RDS automated backup | 1 – 35 ngày (lâu hơn → AWS Backup) |
+| RDS Multi-AZ failover | 60 – 120 giây |
+| RDS stopped | Tự start lại sau 7 ngày, vẫn tính phí storage |
+| DynamoDB | PITR 35 ngày · 1 RCU = 4 KB · 1 WCU = 1 KB · item ≤ 400 KB · Streams lưu 24 giờ |
+| Read Replica tối đa | Aurora 15 · MySQL/PostgreSQL 15 · Oracle/SQL Server 5 |
+| SQS retention | Mặc định 4 ngày, tối đa 14 ngày |
+| SQS FIFO | 300 TPS, 3.000 với batching · cửa sổ dedup 5 phút |
+| Kinesis Data Streams retention | 24 giờ, tối đa 365 ngày |
+| ASG cooldown mặc định | 300 giây |
+| Spot interruption notice | 2 phút |
+| Hibernation | RAM ≤ 150 GB · tối đa 60 ngày |
+| VPC / subnet CIDR | /16 đến /28 · AWS giữ 5 IP mỗi subnet (/27 = 32 địa chỉ, 27 dùng được) |
+| DNS của VPC | VPC CIDR base + 2 |
+| Ephemeral ports | Mở 1024 – 65535 |
+| IAM DB Auth token | Sống 15 phút |
+| KMS automatic rotation | Mặc định 1 năm |
+| ALB certificate | 25 cert mỗi listener |
+| CloudWatch EC2 | Mặc định 5 phút · detailed 1 phút · RDS Enhanced Monitoring tới 1 giây |
+| Port | SSH 22 · RDP 3389 · MySQL 3306 · PostgreSQL 5432 · MS SQL 1433 · NFS 2049 · SMB 445 · DNS 53 (UDP) |

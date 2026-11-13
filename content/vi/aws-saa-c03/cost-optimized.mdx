@@ -1,0 +1,68 @@
+---
+title: "Cost-Optimized (63%)"
+slug: "cost-optimized"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 6
+type: lesson
+summary: "S3 storage class, Spot/RI/Savings Plans, tránh phí NAT và transfer, công cụ chi phí: Budgets, Cost Explorer, Compute Optimizer, Trusted Advisor."
+---
+
+Domain này hỏi: cách rẻ nhất mà vẫn thỏa yêu cầu. Tỉ lệ đúng ở Đề 4: **63%**, ưu tiên ôn số 4.
+
+## S3 storage class
+
+| Thấy trong đề | Chọn |
+| --- | --- |
+| Ít truy cập (khoảng 1 lần/tháng) nhưng cần lấy ngay | Standard-IA |
+| Không biết pattern truy cập | Intelligent-Tiering |
+| Archive (1 lần/quý trở lên) nhưng lấy trong mili giây | Glacier Instant Retrieval |
+| Archive, lấy trong vài phút đến vài giờ | Glacier Flexible Retrieval |
+| Lưu 7–10 năm, rẻ nhất, chấp nhận chờ 12–48 giờ | Glacier Deep Archive |
+| Lấy dưới 15 phút, luôn có capacity | Expedited + Provisioned capacity |
+| Chuyển lớp hoặc tự xóa theo tuổi | Lifecycle Transition / Expiration |
+| Biết trước sẽ ít truy cập | Ghi thẳng vào class rẻ, không qua lifecycle |
+| Dữ liệu tạo lại được, ít truy cập, cần lấy ngay | One Zone-IA (rẻ hơn Standard-IA khoảng 20%, chỉ 1 AZ) |
+
+## Compute và mua hàng
+
+| Thấy trong đề | Chọn |
+| --- | --- |
+| Workload chịu gián đoạn, batch, stateless | Spot |
+| Chạy ổn định 1–3 năm | Reserved Instance / Savings Plans |
+| Bỏ RI không dùng nữa | Bán Standard RI trên Marketplace (Convertible không bán được) |
+| License theo socket/core (BYOL) | Dedicated Hosts |
+| Máy dev chỉ dùng giờ hành chính | Tắt ngoài giờ bằng EventBridge Scheduler |
+| Vẫn tính phí khi không running | RI, EBS, EIP không gắn |
+| Đa domain trên ALB, rẻ | SNI (CloudFront Dedicated IP rất đắt) |
+| Private subnet → S3/DynamoDB, tránh phí NAT | Gateway Endpoint |
+| Dữ liệu lớn, mạng chậm | Offline transfer (Snow family / Data Transfer Terminal) |
+| RDS dùng không thường xuyên, rẻ nhất | Snapshot + terminate, restore khi cần |
+| Xử lý dữ liệu S3, giảm phí transfer | EC2 cùng region với bucket (S3 ↔ EC2 cùng region miễn phí) |
+
+## Savings Plans và Reserved Instances
+
+| Kiểu mua | Áp dụng cho | Khi nào chọn |
+| --- | --- | --- |
+| Standard RI | 1 instance type cố định, 1 region | Giảm nhiều nhất, không đổi gì trong 1–3 năm |
+| Convertible RI | Đổi được instance family | Muốn đổi family nhưng vẫn dùng RI |
+| EC2 Instance Savings Plans | 1 instance family, 1 region | Đổi size hoặc OS trong family |
+| Compute Savings Plans | Mọi EC2, mọi region, Fargate, Lambda | Đề nhắc Fargate, Lambda hoặc đổi family/region |
+| Spot | Workload chịu gián đoạn | Batch, stateless, "can be interrupted" |
+
+<Callout type="tip" title="Quy tắc giảm giá">
+Phương án càng ít linh hoạt nhưng vẫn thỏa yêu cầu thì giảm giá càng nhiều.
+</Callout>
+
+## Công cụ chi phí
+
+| Thấy trong đề | Chọn |
+| --- | --- |
+| Chi phí theo phòng ban | Tag + Cost Allocation Tags |
+| Cảnh báo vượt ngân sách (kể cả theo dự báo) | Budgets |
+| Xem, phân tích, dự báo chi phí bằng giao diện | Cost Explorer (không tự gửi cảnh báo) |
+| Lấy hoặc dự báo chi phí bằng code | Cost Explorer API |
+| Rightsizing, tìm EC2 dư cấu hình theo metric | Compute Optimizer |
+| Phát hiện thiếu tag | Config `required-tags`; chặn tạo thiếu tag → SCP `aws:RequestTag` |
+| Khuyến nghị best practice, tài nguyên bỏ không | Trusted Advisor |

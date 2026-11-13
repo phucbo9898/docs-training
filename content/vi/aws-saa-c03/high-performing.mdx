@@ -1,0 +1,102 @@
+---
+title: "High-Performing (41%)"
+slug: "high-performing"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 3
+type: lesson
+summary: "Chọn đúng storage, database, mạng, CDN, compute và analytics: EFS vs FSx, Read Replica vs RDS Proxy, CloudFront vs Global Accelerator, Kinesis vs Firehose…"
+---
+
+Domain này hỏi: chọn đúng loại storage, database, mạng và compute cho tải trọng. Tỉ lệ đúng ở Đề 4: **41%**, ưu tiên ôn số 1 và có nhiều câu nhất.
+
+## Storage
+
+| Thấy trong đề | Chọn |
+| --- | --- |
+| Linux, NFS, POSIX, nhiều EC2 / nhiều AZ cùng mount | EFS |
+| Windows, SMB, Active Directory | FSx for Windows File Server |
+| HPC, ML, tốc độ rất cao, liên kết S3 | FSx for Lustre (hot) + S3 (cold) |
+| NetApp, đa giao thức NFS + SMB + iSCSI, Windows block Multi-AZ | FSx for NetApp ONTAP |
+| Hybrid NFS/SMB, cache on-prem, file thành object S3 | S3 File Gateway |
+| Hybrid iSCSI block | Volume Gateway |
+| Thay tape backup | Tape Gateway |
+| Chuyển dữ liệu 1 lần (online) | DataSync (Storage Gateway là hybrid lâu dài) |
+| SFTP/FTP managed vào S3/EFS | Transfer Family |
+| File > 5 GB | Multipart Upload |
+| User toàn cầu upload về 1 bucket xa | S3 Transfer Acceleration (+ Multipart) |
+| Biến đổi dữ liệu khi GET | S3 Object Lambda |
+| Đổi size/type EBS không downtime | Elastic Volumes |
+| I/O intensive, DB lớn, IOPS rất cao | EBS io2 Block Express (hoặc io1); gp3 tối đa 16.000 IOPS |
+| Boot volume, dev/test, đa dụng | EBS gp2/gp3 |
+| Big data, log, truy cập tuần tự / ít truy cập, rẻ nhất | st1 / sc1 (HDD, không làm boot volume) |
+| Nhiều EC2 cùng gắn 1 block volume | Multi-Attach, chỉ io1/io2, cùng 1 AZ (khác AZ → EFS) |
+| I/O cao nhất, dữ liệu tạm hoặc đã replicate | Instance store (mất khi stop/terminate, reboot thì còn) |
+
+## Database
+
+| Thấy trong đề | Chọn |
+| --- | --- |
+| Giảm tải đọc RDS, reporting, analytics | Read Replica (async) |
+| Aurora phân phối read | Reader endpoint; ghi → Cluster endpoint |
+| Aurora tách production và reporting | Custom endpoint |
+| Aurora replica không theo kịp lúc cao điểm | Aurora Auto Scaling (tối đa 15 replica) |
+| Lambda + RDS, too many connections | RDS Proxy |
+| Query lặp lại, cần dưới 1 mili giây | ElastiCache |
+| DynamoDB đọc nhiều, microsecond | DAX |
+| DynamoDB hot partition | Partition key high-cardinality, thêm suffix ngẫu nhiên |
+| DynamoDB traffic không đoán trước, nhiều lúc nhàn rỗi | On-demand capacity mode |
+| Schema thay đổi, scale lớn, key-value | DynamoDB |
+| MongoDB, không đổi code | DocumentDB |
+| GraphQL, mobile real-time | AppSync |
+| RDS metric theo process/thread | Enhanced Monitoring |
+| Query nào gây tải RDS | Performance Insights |
+| RDS hết dung lượng | Storage Autoscaling |
+| SQL Server → Aurora PostgreSQL, ít sửa code | Babelfish (+ SCT cho schema, DMS cho dữ liệu) |
+
+## Mạng, CDN và compute
+
+| Thấy trong đề | Chọn |
+| --- | --- |
+| Static content toàn cầu, có cache, HTTP | CloudFront |
+| Static IP, TCP/UDP, không cache, failover nhanh | Global Accelerator |
+| Xử lý dữ liệu gần người dùng, at the edge | Lambda@Edge (sửa header nhẹ → CloudFront Functions) |
+| Path/host routing | ALB; static IP, layer 4, UDP → NLB; firewall appliance → GWLB |
+| Private subnet → S3/DynamoDB, rẻ nhất | Gateway Endpoint (miễn phí) |
+| Nhiều VPC cần transitive, + on-prem | Transit Gateway |
+| Hàng trăm VPC + VPN, single gateway, inter-region | Transit Gateway + TGW peering (CloudHub chỉ nối các site on-prem) |
+| Chỉ mở 1 dịch vụ cho VPC khác | PrivateLink |
+| 1 Direct Connect cho nhiều VPC/account | DX Gateway + Transit Gateway |
+| Container serverless | Fargate; Kubernetes serverless → EKS on Fargate |
+| Traffic burst vài giây, bình thường ít | API Gateway + Lambda |
+| Bảo vệ backend khỏi spike | API Gateway throttling + caching |
+| Ra API version mới, tăng dần traffic | API Gateway canary release |
+| HPC, MPI, độ trễ thấp giữa node | Cluster placement group + EFA |
+| Enhanced Networking, SR-IOV | ENA (ENI chỉ là card mạng ảo cơ bản) |
+| Khởi động nhanh, giữ RAM | Hibernation (bật lúc launch) |
+| Tải theo giờ biết trước | Scheduled scaling |
+| Tải theo chu kỳ, khởi động lâu, launch trước | Predictive Scaling |
+| Giữ ổn định một metric | Target tracking scaling |
+| EKS scale node / scale pod | Cluster Autoscaler (Karpenter) / HPA |
+| Launch EC2 lỗi sau N instance | Quota vCPU theo region → xin tăng (InsufficientCapacity → đổi AZ) |
+| ASG scale theo memory, disk | CloudWatch agent đẩy metric → scaling policy |
+| Lift-and-shift VM, downtime thấp / chỉ khảo sát on-prem | AWS MGN / Application Discovery Service |
+| Lấy IP, instance ID, AZ từ trong instance | Instance metadata 169.254.169.254 (user-data là script bootstrap) |
+
+## Analytics, streaming, AI
+
+| Thấy trong đề | Chọn |
+| --- | --- |
+| Streaming tùy biến, enhanced fan-out, real-time clickstream | Kinesis Data Streams (+ Lambda) |
+| Đổ stream vào S3/OpenSearch, không code | Data Firehose |
+| Đang dùng Kafka | MSK |
+| ETL serverless, CSV → Parquet | Glue (chạy lại không trùng → Job Bookmark) |
+| Big data Spark/Hadoop | EMR |
+| SQL trên S3, serverless, ad-hoc | Athena (không dùng cho real-time stream) |
+| Data warehouse, BI, SQL | Redshift |
+| Query dữ liệu S3 cùng bảng Redshift, không nạp vào | Redshift Spectrum |
+| Data lake nhiều account, quyền theo cột/hàng | Lake Formation |
+| Âm thanh → chữ / chữ → giọng / dịch / cảm xúc | Transcribe / Polly / Translate / Comprehend |
+| Ảnh, video / camera stream / tìm tài liệu | Rekognition / Kinesis Video Streams / Kendra |
+| OCR tài liệu + nhận diện PHI y tế | Textract + Comprehend Medical |
