@@ -54,7 +54,11 @@
             },
             {
               "title": "HTML / CSS / JavaScript",
-              "items": ["HTML structure", "Styling with CSS", "Basic JS + DOM"]
+              "items": [
+                "HTML structure",
+                "Styling with CSS",
+                "Basic JS + DOM"
+              ]
             }
           ]
         },
@@ -155,5 +159,28 @@
   },
   "Table": {
     "label": "Data table (scroll horizontally for more)"
+  },
+  "Tracks": {
+    "heading": "What would you like to study today?",
+    "intro": "Pick a track to get started. You can come back here any time via the logo or “All tracks” in the menu.",
+    "all": "All tracks",
+    "label": "Tracks",
+    "open": "Open",
+    "backend": {
+      "title": "Intern Backend Training",
+      "description": "A 4-phase path for Backend Developers: PHP, HTML/CSS/JavaScript, SQL, Laravel and a hands-on project.",
+      "meta": "{modules} modules · {pages} pages"
+    },
+    "aws": {
+      "title": "AWS SAA-C03 Review",
+      "description": "Keywords, common traps and numbers to memorize, compiled from 4 Solutions Architect – Associate practice exams.",
+      "meta": "{pages} review pages",
+      "phases": [
+        {
+          "label": "SAA-C03",
+          "title": "Review sheet, exams 1–4"
+        }
+      ]
+    }
   }
 }

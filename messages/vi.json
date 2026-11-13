@@ -54,7 +54,11 @@
             },
             {
               "title": "HTML / CSS / JavaScript",
-              "items": ["Cấu trúc HTML", "Styling với CSS", "JS cơ bản + DOM"]
+              "items": [
+                "Cấu trúc HTML",
+                "Styling với CSS",
+                "JS cơ bản + DOM"
+              ]
             }
           ]
         },
@@ -155,5 +159,28 @@
   },
   "Table": {
     "label": "Bảng dữ liệu (cuộn ngang để xem thêm)"
+  },
+  "Tracks": {
+    "heading": "Bạn muốn học gì hôm nay?",
+    "intro": "Chọn một nội dung để bắt đầu. Bạn có thể quay lại màn này bất cứ lúc nào qua logo hoặc mục “Tất cả nội dung” trong menu.",
+    "all": "Tất cả nội dung",
+    "label": "Danh sách nội dung",
+    "open": "Vào xem",
+    "backend": {
+      "title": "Intern Backend Training",
+      "description": "Lộ trình 4 phase cho Backend Developer: PHP, HTML/CSS/JavaScript, SQL, Laravel và dự án thực hành.",
+      "meta": "{modules} module · {pages} trang"
+    },
+    "aws": {
+      "title": "Ôn thi AWS SAA-C03",
+      "description": "Keyword, bẫy hay gặp và con số cần thuộc, tổng hợp từ 4 đề ôn Solutions Architect – Associate.",
+      "meta": "{pages} trang ôn",
+      "phases": [
+        {
+          "label": "SAA-C03",
+          "title": "Bảng ôn Đề 1–4"
+        }
+      ]
+    }
   }
 }

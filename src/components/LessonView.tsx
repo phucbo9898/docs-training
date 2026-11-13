@@ -4,7 +4,7 @@ import { routing } from "@/i18n/routing";
 import { isIndexSlug, type Lesson } from "@/lib/content";
 import { renderMdx } from "@/lib/mdx";
 import { mdxComponents } from "@/lib/mdx-components";
-import { findNeighbors, getNavTree } from "@/lib/navigation";
+import { findNeighbors, getNavTree, getTrack } from "@/lib/navigation";
 import Breadcrumb, { type BreadcrumbItem } from "./Breadcrumb";
 import LessonNav from "./LessonNav";
 import Toc from "./Toc";
@@ -15,16 +15,19 @@ type LessonViewProps = {
 };
 
 export default async function LessonView({ locale, lesson }: LessonViewProps) {
-  const [t, tree, { content, headings }] = await Promise.all([
+  const [t, tracks, { content, headings }] = await Promise.all([
     getTranslations("Lesson"),
     getNavTree(locale),
     renderMdx(lesson.body, mdxComponents),
   ]);
 
-  const phase = tree.find((item) => item.phase === lesson.phase);
+  const track = getTrack(tracks, lesson.track);
+  const phase = track?.phases.find((item) => item.phase === lesson.phase);
   const navModule = phase?.modules.find((item) => item.slug === lesson.module);
   const isIndex = isIndexSlug(lesson.slug);
-  const { prev, next } = findNeighbors(tree, lesson.href);
+  const { prev, next } = track
+    ? findNeighbors(track, lesson.href)
+    : { prev: null, next: null };
 
   const crumbs: BreadcrumbItem[] = [{ label: t("home"), href: "/" }];
   if (phase) crumbs.push({ label: phase.label });

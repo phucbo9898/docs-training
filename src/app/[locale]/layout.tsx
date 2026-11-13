@@ -13,7 +13,7 @@ import Sidebar from "@/components/Sidebar";
 import SidebarProvider from "@/components/SidebarProvider";
 import ThemeProvider from "@/components/ThemeProvider";
 import { routing } from "@/i18n/routing";
-import { getNavTree } from "@/lib/navigation";
+import { getNavTree, getTrack } from "@/lib/navigation";
 import "@/styles/globals.css";
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -62,7 +62,7 @@ export default async function LocaleLayout({
     Sidebar: sidebar,
     CodeBlock,
   } = await getMessages();
-  const [tree, tc] = await Promise.all([
+  const [tracks, tc] = await Promise.all([
     getNavTree(locale),
     getTranslations("Common"),
   ]);
@@ -100,7 +100,7 @@ export default async function LocaleLayout({
                 </a>
                 <Header />
                 <div className="mx-auto flex w-full max-w-[90rem] flex-1">
-                  <Sidebar tree={tree} />
+                  <Sidebar tree={getTrack(tracks, "backend")?.phases ?? []} />
                   <main id="main" className="min-w-0 flex-1">
                     {children}
                   </main>

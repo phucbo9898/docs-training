@@ -3,6 +3,13 @@ import path from "node:path";
 import matter from "gray-matter";
 import type { Locale } from "next-intl";
 import { routing } from "@/i18n/routing";
+import {
+  DEFAULT_TRACK,
+  isTrackId,
+  RESERVED_SLUGS,
+  trackRank,
+  type TrackId,
+} from "./tracks";
 
 export type LessonType = "overview" | "lesson" | "exercise";
 
@@ -10,6 +17,8 @@ export type LessonMeta = {
   module: string;
   /** Slug trong thư mục module; `index` là trang tổng quan của module. */
   slug: string;
+  /** Lấy từ front matter `track`, thiếu thì là track mặc định. */
+  track: TrackId;
   title: string;
   phase: number;
   order: number;
@@ -39,6 +48,7 @@ const MODULE_ORDER = [
   "sql-database-overview",
   "laravel-overview",
   "project-ecommerce",
+  "aws-saa-c03",
 ];
 
 const LESSON_TYPES: readonly LessonType[] = ["overview", "lesson", "exercise"];
@@ -73,6 +83,7 @@ async function readEntry(
     meta: {
       module,
       slug,
+      track: isTrackId(data.track) ? data.track : DEFAULT_TRACK,
       title: typeof data.title === "string" ? data.title : slug,
       phase: typeof data.phase === "number" ? data.phase : 0,
       order: typeof data.order === "number" ? data.order : 0,
@@ -108,7 +119,14 @@ async function loadLessons(locale: Locale): Promise<Entry[]> {
 
   const base = routing.defaultLocale;
   const modules = (await listDir(path.join(CONTENT_DIR, base))).filter(
-    (name) => !name.startsWith("."),
+    (name) => {
+      if (name.startsWith(".")) return false;
+      if (RESERVED_SLUGS.includes(name)) {
+        console.warn(`content: bỏ qua module "${name}" vì trùng route tĩnh.`);
+        return false;
+      }
+      return true;
+    },
   );
 
   const perModule = await Promise.all(
@@ -135,6 +153,7 @@ async function loadLessons(locale: Locale): Promise<Entry[]> {
     .flat()
     .sort(
       ({ meta: a }, { meta: b }) =>
+        trackRank(a.track) - trackRank(b.track) ||
         a.phase - b.phase ||
         moduleRank(a.module) - moduleRank(b.module) ||
         a.module.localeCompare(b.module) ||
