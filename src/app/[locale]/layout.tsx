@@ -26,6 +26,8 @@ const beVietnamPro = Be_Vietnam_Pro({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  // Chỉ dùng cho code block: không preload để nhường băng thông cho nội dung chính.
+  preload: false,
 });
 
 export function generateStaticParams() {
