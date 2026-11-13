@@ -15,41 +15,41 @@ Domain này hỏi: cách rẻ nhất mà vẫn thỏa yêu cầu. Tỉ lệ đú
 
 | Thấy trong đề | Chọn |
 | --- | --- |
-| Ít truy cập (khoảng 1 lần/tháng) nhưng cần lấy ngay | Standard-IA |
-| Không biết pattern truy cập | Intelligent-Tiering |
-| Archive (1 lần/quý trở lên) nhưng lấy trong mili giây | Glacier Instant Retrieval |
-| Archive, lấy trong vài phút đến vài giờ | Glacier Flexible Retrieval |
-| Lưu 7–10 năm, rẻ nhất, chấp nhận chờ 12–48 giờ | Glacier Deep Archive |
-| Lấy dưới 15 phút, luôn có capacity | Expedited + Provisioned capacity |
-| Chuyển lớp hoặc tự xóa theo tuổi | Lifecycle Transition / Expiration |
-| Biết trước sẽ ít truy cập | Ghi thẳng vào class rẻ, không qua lifecycle |
-| Dữ liệu tạo lại được, ít truy cập, cần lấy ngay | One Zone-IA (rẻ hơn Standard-IA khoảng 20%, chỉ 1 AZ) |
+| <mark>Ít truy cập</mark> (khoảng 1 lần/tháng) nhưng <mark>cần lấy ngay</mark> | **Standard-IA** |
+| <mark>Không biết pattern truy cập</mark> | **Intelligent-Tiering** |
+| <mark>Archive</mark> (1 lần/quý trở lên) nhưng <mark>lấy trong mili giây</mark> | **Glacier Instant Retrieval** |
+| Archive, <mark>lấy trong vài phút đến vài giờ</mark> | **Glacier Flexible Retrieval** |
+| <mark>Lưu 7–10 năm</mark>, <mark>rẻ nhất</mark>, chấp nhận <mark>chờ 12–48 giờ</mark> | **Glacier Deep Archive** |
+| <mark>Lấy dưới 15 phút</mark>, <mark>luôn có capacity</mark> | **Expedited + Provisioned capacity** |
+| <mark>Chuyển lớp</mark> hoặc <mark>tự xóa theo tuổi</mark> | **Lifecycle Transition / Expiration** |
+| <mark>Biết trước</mark> sẽ ít truy cập | **Ghi thẳng vào class rẻ**, không qua lifecycle |
+| Dữ liệu <mark>tạo lại được</mark>, ít truy cập, cần lấy ngay | **One Zone-IA** (rẻ hơn Standard-IA khoảng 20%, chỉ 1 AZ) |
 
 ## Compute và mua hàng
 
 | Thấy trong đề | Chọn |
 | --- | --- |
-| Workload chịu gián đoạn, batch, stateless | Spot |
-| Chạy ổn định 1–3 năm | Reserved Instance / Savings Plans |
-| Bỏ RI không dùng nữa | Bán Standard RI trên Marketplace (Convertible không bán được) |
-| License theo socket/core (BYOL) | Dedicated Hosts |
-| Máy dev chỉ dùng giờ hành chính | Tắt ngoài giờ bằng EventBridge Scheduler |
-| Vẫn tính phí khi không running | RI, EBS, EIP không gắn |
-| Đa domain trên ALB, rẻ | SNI (CloudFront Dedicated IP rất đắt) |
-| Private subnet → S3/DynamoDB, tránh phí NAT | Gateway Endpoint |
-| Dữ liệu lớn, mạng chậm | Offline transfer (Snow family / Data Transfer Terminal) |
-| RDS dùng không thường xuyên, rẻ nhất | Snapshot + terminate, restore khi cần |
-| Xử lý dữ liệu S3, giảm phí transfer | EC2 cùng region với bucket (S3 ↔ EC2 cùng region miễn phí) |
+| Workload <mark>chịu gián đoạn</mark>, batch, <mark>stateless</mark> | **Spot** |
+| <mark>Chạy ổn định 1–3 năm</mark> | **Reserved Instance / Savings Plans** |
+| <mark>Bỏ RI không dùng nữa</mark> | **Bán Standard RI trên Marketplace** (Convertible không bán được) |
+| <mark>License theo socket/core</mark> (<mark>BYOL</mark>) | **Dedicated Hosts** |
+| Máy dev <mark>chỉ dùng giờ hành chính</mark> | **Tắt ngoài giờ bằng EventBridge Scheduler** |
+| <mark>Vẫn tính phí</mark> khi <mark>không running</mark> | **RI, EBS, EIP không gắn** |
+| <mark>Đa domain trên ALB</mark>, rẻ | **SNI** (CloudFront Dedicated IP rất đắt) |
+| Private subnet → <mark>S3/DynamoDB</mark>, <mark>tránh phí NAT</mark> | **Gateway Endpoint** |
+| <mark>Dữ liệu lớn</mark>, <mark>mạng chậm</mark> | **Offline transfer** (Snow family / Data Transfer Terminal) |
+| RDS <mark>dùng không thường xuyên</mark>, rẻ nhất | **Snapshot + terminate**, restore khi cần |
+| Xử lý dữ liệu S3, <mark>giảm phí transfer</mark> | **EC2 cùng region với bucket** (S3 ↔ EC2 cùng region miễn phí) |
 
 ## Savings Plans và Reserved Instances
 
 | Kiểu mua | Áp dụng cho | Khi nào chọn |
 | --- | --- | --- |
-| Standard RI | 1 instance type cố định, 1 region | Giảm nhiều nhất, không đổi gì trong 1–3 năm |
-| Convertible RI | Đổi được instance family | Muốn đổi family nhưng vẫn dùng RI |
-| EC2 Instance Savings Plans | 1 instance family, 1 region | Đổi size hoặc OS trong family |
-| Compute Savings Plans | Mọi EC2, mọi region, Fargate, Lambda | Đề nhắc Fargate, Lambda hoặc đổi family/region |
-| Spot | Workload chịu gián đoạn | Batch, stateless, "can be interrupted" |
+| **Standard RI** | 1 instance type cố định, 1 region | <mark>Giảm nhiều nhất</mark>, <mark>không đổi gì</mark> trong 1–3 năm |
+| **Convertible RI** | Đổi được instance family | Muốn <mark>đổi family</mark> nhưng vẫn dùng RI |
+| **EC2 Instance Savings Plans** | 1 instance family, 1 region | <mark>Đổi size hoặc OS</mark> trong family |
+| **Compute Savings Plans** | Mọi EC2, mọi region, Fargate, Lambda | Đề nhắc <mark>Fargate, Lambda</mark> hoặc <mark>đổi family/region</mark> |
+| **Spot** | Workload chịu gián đoạn | Batch, stateless, <mark>"can be interrupted"</mark> |
 
 <Callout type="tip" title="Quy tắc giảm giá">
 Phương án càng ít linh hoạt nhưng vẫn thỏa yêu cầu thì giảm giá càng nhiều.
@@ -59,10 +59,10 @@ Phương án càng ít linh hoạt nhưng vẫn thỏa yêu cầu thì giảm gi
 
 | Thấy trong đề | Chọn |
 | --- | --- |
-| Chi phí theo phòng ban | Tag + Cost Allocation Tags |
-| Cảnh báo vượt ngân sách (kể cả theo dự báo) | Budgets |
-| Xem, phân tích, dự báo chi phí bằng giao diện | Cost Explorer (không tự gửi cảnh báo) |
-| Lấy hoặc dự báo chi phí bằng code | Cost Explorer API |
-| Rightsizing, tìm EC2 dư cấu hình theo metric | Compute Optimizer |
-| Phát hiện thiếu tag | Config `required-tags`; chặn tạo thiếu tag → SCP `aws:RequestTag` |
-| Khuyến nghị best practice, tài nguyên bỏ không | Trusted Advisor |
+| Chi phí <mark>theo phòng ban</mark> | **Tag + Cost Allocation Tags** |
+| <mark>Cảnh báo vượt ngân sách</mark> (kể cả theo dự báo) | **Budgets** |
+| Xem, phân tích, dự báo chi phí <mark>bằng giao diện</mark> | **Cost Explorer** (không tự gửi cảnh báo) |
+| Lấy hoặc dự báo chi phí <mark>bằng code</mark> | **Cost Explorer API** |
+| <mark>Rightsizing</mark>, tìm <mark>EC2 dư cấu hình</mark> theo metric | **Compute Optimizer** |
+| <mark>Phát hiện thiếu tag</mark> | **Config** `required-tags`; chặn tạo thiếu tag → **SCP** `aws:RequestTag` |
+| <mark>Khuyến nghị best practice</mark>, <mark>tài nguyên bỏ không</mark> | **Trusted Advisor** |

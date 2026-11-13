@@ -15,23 +15,23 @@ Những cặp dịch vụ hay xuất hiện cùng lúc trong 4 đáp án. Nắm 
 
 | Cặp | Phân biệt nhanh |
 | --- | --- |
-| Multi-AZ vs Read Replica | Multi-AZ: HA, failover tự động, đồng bộ, standby không đọc được. Read Replica: scale đọc, bất đồng bộ, promote thủ công |
-| SQS Standard vs FIFO vs Kinesis | Standard: có thể trùng, không đảm bảo thứ tự. FIFO: exactly-once, đúng thứ tự. Kinesis: đúng thứ tự theo shard, lưu và replay được |
-| Config vs CloudTrail vs EventBridge | Config: đánh giá compliance cấu hình. CloudTrail: ai gọi API gì. EventBridge: nhận event, không tự đánh giá |
-| SCP vs Config | SCP: chặn trước. Config: phát hiện sau |
-| GuardDuty vs Inspector vs Macie | GuardDuty: mối đe dọa từ log. Inspector: lỗ hổng phần mềm EC2/ECR/Lambda. Macie: PII trong S3 |
-| Secrets Manager vs Parameter Store | Secrets Manager: có auto rotation, tính phí theo secret. Parameter Store: rẻ, không tự xoay vòng |
-| IAM Identity Center vs Cognito vs Control Tower | Identity Center: nhân viên nội bộ, SSO. Cognito: người dùng cuối của app. Control Tower: dựng và quản trị multi-account |
-| CloudFront vs Global Accelerator | CloudFront: HTTP, có cache. Global Accelerator: TCP/UDP, static IP, không cache |
-| Lambda@Edge vs CloudFront Functions | CloudFront Functions: logic rất nhẹ (header, URL), rẻ. Lambda@Edge: logic phức tạp hơn |
-| Transit Gateway vs Peering vs PrivateLink | TGW: hub nhiều VPC + VPN + DX, transitive. Peering: 1-1, không bắc cầu. PrivateLink: chỉ mở 1 dịch vụ |
-| DataSync vs Storage Gateway | DataSync: di chuyển, đồng bộ dữ liệu. Storage Gateway: on-prem dùng cloud storage lâu dài |
-| ENI vs ENA vs EFA | ENI: card mạng ảo cơ bản. ENA: Enhanced Networking (SR-IOV). EFA: HPC, OS-bypass |
-| SSE-S3 vs SSE-KMS vs SSE-C | SSE-S3: header `AES256`, AWS tự xoay key. SSE-KMS: header `aws:kms`, có audit CloudTrail. SSE-C: bạn tự giữ key |
-| ACM public vs Private CA vs self-signed vs import | Public: miễn phí, được tin cậy, tự gia hạn. Private CA: nội bộ. Self-signed: không được tin cậy. Import: không tự gia hạn |
-| CloudWatch metric chuẩn vs agent / Enhanced Monitoring | Metric chuẩn từ hypervisor (CPU, network). Memory, process cần agent hoặc Enhanced Monitoring |
-| Predictive vs Scheduled vs Dynamic scaling | Predictive: ML dự báo, launch trước. Scheduled: giờ cố định. Dynamic: phản ứng sau khi tải tăng |
-| Budgets vs Cost Explorer vs Compute Optimizer | Budgets: cảnh báo. Cost Explorer: xem, phân tích, dự báo. Compute Optimizer: rightsizing |
-| RDS snapshot + terminate vs stop | Stop vẫn tính phí storage, tự start sau 7 ngày. Snapshot + terminate rẻ nhất cho DB dùng không thường xuyên |
-| Instance metadata vs user-data | Metadata: thông tin instance (IP, ID, AZ). User-data: script bootstrap |
-| MGN vs Discovery Service vs VM Import | MGN: rehost, replicate liên tục. Discovery: chỉ khảo sát. VM Import: import một lần |
+| Multi-AZ vs Read Replica | **Multi-AZ**: <mark>HA</mark>, <mark>failover tự động</mark>, đồng bộ, standby không đọc được. **Read Replica**: <mark>scale đọc</mark>, bất đồng bộ, promote thủ công |
+| SQS Standard vs FIFO vs Kinesis | **Standard**: <mark>có thể trùng</mark>, không đảm bảo thứ tự. **FIFO**: <mark>exactly-once</mark>, <mark>đúng thứ tự</mark>. **Kinesis**: đúng thứ tự theo shard, <mark>lưu và replay được</mark> |
+| Config vs CloudTrail vs EventBridge | **Config**: <mark>đánh giá compliance cấu hình</mark>. **CloudTrail**: <mark>ai gọi API gì</mark>. **EventBridge**: <mark>nhận event</mark>, không tự đánh giá |
+| SCP vs Config | **SCP**: <mark>chặn trước</mark>. **Config**: <mark>phát hiện sau</mark> |
+| GuardDuty vs Inspector vs Macie | **GuardDuty**: <mark>mối đe dọa từ log</mark>. **Inspector**: <mark>lỗ hổng phần mềm</mark> EC2/ECR/Lambda. **Macie**: <mark>PII trong S3</mark> |
+| Secrets Manager vs Parameter Store | **Secrets Manager**: có <mark>auto rotation</mark>, tính phí theo secret. **Parameter Store**: <mark>rẻ</mark>, không tự xoay vòng |
+| IAM Identity Center vs Cognito vs Control Tower | **Identity Center**: <mark>nhân viên nội bộ</mark>, <mark>SSO</mark>. **Cognito**: <mark>người dùng cuối của app</mark>. **Control Tower**: dựng và quản trị <mark>multi-account</mark> |
+| CloudFront vs Global Accelerator | **CloudFront**: <mark>HTTP</mark>, <mark>có cache</mark>. **Global Accelerator**: <mark>TCP/UDP</mark>, <mark>static IP</mark>, không cache |
+| Lambda@Edge vs CloudFront Functions | **CloudFront Functions**: <mark>logic rất nhẹ</mark> (header, URL), rẻ. **Lambda@Edge**: <mark>logic phức tạp hơn</mark> |
+| Transit Gateway vs Peering vs PrivateLink | **TGW**: <mark>hub nhiều VPC</mark> + VPN + DX, <mark>transitive</mark>. **Peering**: <mark>1-1</mark>, không bắc cầu. **PrivateLink**: <mark>chỉ mở 1 dịch vụ</mark> |
+| DataSync vs Storage Gateway | **DataSync**: <mark>di chuyển, đồng bộ dữ liệu</mark>. **Storage Gateway**: on-prem dùng cloud storage <mark>lâu dài</mark> |
+| ENI vs ENA vs EFA | **ENI**: <mark>card mạng ảo cơ bản</mark>. **ENA**: <mark>Enhanced Networking</mark> (SR-IOV). **EFA**: <mark>HPC</mark>, <mark>OS-bypass</mark> |
+| SSE-S3 vs SSE-KMS vs SSE-C | **SSE-S3**: header `AES256`, <mark>AWS tự xoay key</mark>. **SSE-KMS**: header `aws:kms`, <mark>có audit CloudTrail</mark>. **SSE-C**: <mark>bạn tự giữ key</mark> |
+| ACM public vs Private CA vs self-signed vs import | **Public**: <mark>miễn phí</mark>, được tin cậy, <mark>tự gia hạn</mark>. **Private CA**: <mark>nội bộ</mark>. **Self-signed**: <mark>không được tin cậy</mark>. **Import**: <mark>không tự gia hạn</mark> |
+| CloudWatch metric chuẩn vs agent / Enhanced Monitoring | **Metric chuẩn** <mark>từ hypervisor</mark> (CPU, network). <mark>Memory, process</mark> cần **agent** hoặc **Enhanced Monitoring** |
+| Predictive vs Scheduled vs Dynamic scaling | **Predictive**: <mark>ML dự báo</mark>, launch trước. **Scheduled**: <mark>giờ cố định</mark>. **Dynamic**: <mark>phản ứng sau</mark> khi tải tăng |
+| Budgets vs Cost Explorer vs Compute Optimizer | **Budgets**: <mark>cảnh báo</mark>. **Cost Explorer**: <mark>xem, phân tích, dự báo</mark>. **Compute Optimizer**: <mark>rightsizing</mark> |
+| RDS snapshot + terminate vs stop | **Stop** <mark>vẫn tính phí storage</mark>, <mark>tự start sau 7 ngày</mark>. **Snapshot + terminate** <mark>rẻ nhất</mark> cho DB dùng không thường xuyên |
+| Instance metadata vs user-data | **Metadata**: <mark>thông tin instance</mark> (IP, ID, AZ). **User-data**: <mark>script bootstrap</mark> |
+| MGN vs Discovery Service vs VM Import | **MGN**: <mark>rehost</mark>, <mark>replicate liên tục</mark>. **Discovery**: <mark>chỉ khảo sát</mark>. **VM Import**: <mark>import một lần</mark> |

@@ -15,61 +15,61 @@ Domain này hỏi: ai được làm gì, dữ liệu được mã hóa thế nà
 
 | Thấy trong đề | Chọn |
 | --- | --- |
-| EC2/Lambda/ECS gọi AWS | IAM Role (không dùng access key) |
-| Nhiều user cùng quyền | IAM Group + policy (Role không có thành viên) |
-| Cross-account tạm thời | STS AssumeRole |
-| Nhân viên SSO vào nhiều account | IAM Identity Center + permission sets (+ AD Connector nếu có AD) |
-| SSO bằng AD on-prem qua SAML | AD FS + SAML 2.0 (AssumeRoleWithSAML) |
-| LDAP không tương thích SAML | Custom identity broker + STS |
-| Directory đơn giản, rẻ, không có AD sẵn | Simple AD |
-| End-user đăng nhập app | Cognito |
-| Mỗi user chỉ vào folder S3 riêng | Policy variable `${aws:username}` |
-| Bắt buộc MFA | Điều kiện `aws:MultiFactorAuthPresent` |
-| Đăng nhập RDS bằng token thay password | IAM DB Authentication |
-| "unable to", chặn cả root user của account thành viên | SCP (không cấp quyền, không ảnh hưởng management account) |
-| Phát hiện resource sai cấu hình, thiếu tag | AWS Config rule |
-| Dựng nhiều account có sẵn guardrail | Control Tower |
-| Chia sẻ TGW, subnet giữa account | AWS RAM |
-| Tải báo cáo compliance (SOC, PCI) | AWS Artifact |
+| <mark>EC2/Lambda/ECS</mark> gọi AWS | **IAM Role** (không dùng access key) |
+| Nhiều user <mark>cùng quyền</mark> | **IAM Group + policy** (Role không có thành viên) |
+| <mark>Cross-account tạm thời</mark> | **STS AssumeRole** |
+| Nhân viên <mark>SSO</mark> vào <mark>nhiều account</mark> | **IAM Identity Center** + permission sets (+ AD Connector nếu có AD) |
+| SSO bằng <mark>AD on-prem</mark> qua <mark>SAML</mark> | **AD FS + SAML 2.0** (AssumeRoleWithSAML) |
+| <mark>LDAP</mark> <mark>không tương thích SAML</mark> | **Custom identity broker + STS** |
+| Directory <mark>đơn giản, rẻ</mark>, <mark>không có AD sẵn</mark> | **Simple AD** |
+| <mark>End-user</mark> đăng nhập app | **Cognito** |
+| Mỗi user chỉ vào <mark>folder S3 riêng</mark> | **Policy variable** `${aws:username}` |
+| <mark>Bắt buộc MFA</mark> | Điều kiện `aws:MultiFactorAuthPresent` |
+| Đăng nhập RDS bằng <mark>token thay password</mark> | **IAM DB Authentication** |
+| <mark>"unable to"</mark>, chặn cả <mark>root user</mark> của account thành viên | **SCP** (không cấp quyền, không ảnh hưởng management account) |
+| Phát hiện resource <mark>sai cấu hình</mark>, <mark>thiếu tag</mark> | **AWS Config rule** |
+| Dựng nhiều account có sẵn <mark>guardrail</mark> | **Control Tower** |
+| <mark>Chia sẻ</mark> TGW, subnet <mark>giữa account</mark> | **AWS RAM** |
+| Tải <mark>báo cáo compliance</mark> (SOC, PCI) | **AWS Artifact** |
 
 ## Mã hóa và secret
 
 | Thấy trong đề | Chọn |
 | --- | --- |
-| Dữ liệu và key không bao giờ rời on-prem | Client-side encryption với master key tự giữ |
-| SSE header | `x-amz-server-side-encryption`; có chữ customer → SSE-C |
-| Mã hóa S3 có audit việc dùng key | SSE-KMS (header `aws:kms`). SSE-S3 header `AES256` |
-| Toàn quyền key, xóa key material ngay | KMS custom key store trên CloudHSM |
-| Mã hóa EBS có sẵn | Snapshot → copy có mã hóa → tạo volume mới |
-| Ép HTTPS vào S3 | Bucket policy `aws:SecureTransport` |
-| Secret cần auto rotation | Secrets Manager; không cần, rẻ → Parameter Store SecureString |
-| Ẩn credentials trong env var Lambda | Customer managed KMS key + encryption helpers |
-| Mã hóa Kubernetes Secrets | EKS secrets encryption với KMS |
-| Redis yêu cầu password | Redis AUTH + transit encryption |
-| WORM, không xóa/ghi đè | S3 Object Lock, Compliance mode (cần Versioning) |
-| SSL tin cậy công khai, ít overhead | ACM public cert (miễn phí, tự gia hạn) |
-| Cert ACM đặt ở region nào | Regional API, ALB → cùng region. CloudFront, edge-optimized API → us-east-1 |
+| Dữ liệu và key <mark>không bao giờ rời on-prem</mark> | **Client-side encryption** với master key tự giữ |
+| <mark>SSE header</mark> | `x-amz-server-side-encryption`; có chữ customer → **SSE-C** |
+| Mã hóa S3 có <mark>audit việc dùng key</mark> | **SSE-KMS** (header `aws:kms`). SSE-S3 header `AES256` |
+| <mark>Toàn quyền key</mark>, <mark>xóa key material ngay</mark> | **KMS custom key store trên CloudHSM** |
+| <mark>Mã hóa EBS có sẵn</mark> | **Snapshot → copy có mã hóa → tạo volume mới** |
+| <mark>Ép HTTPS</mark> vào S3 | **Bucket policy** `aws:SecureTransport` |
+| Secret cần <mark>auto rotation</mark> | **Secrets Manager**; không cần, rẻ → Parameter Store SecureString |
+| Ẩn <mark>credentials trong env var Lambda</mark> | **Customer managed KMS key + encryption helpers** |
+| Mã hóa <mark>Kubernetes Secrets</mark> | **EKS secrets encryption với KMS** |
+| <mark>Redis</mark> yêu cầu <mark>password</mark> | **Redis AUTH** + transit encryption |
+| <mark>WORM</mark>, không xóa/ghi đè | **S3 Object Lock**, Compliance mode (cần Versioning) |
+| SSL <mark>tin cậy công khai</mark>, ít overhead | **ACM public cert** (miễn phí, tự gia hạn) |
+| Cert ACM đặt ở <mark>region nào</mark> | Regional API, ALB → **cùng region**. CloudFront, edge-optimized API → **us-east-1** |
 
 ## Mạng và bảo vệ ứng dụng
 
 | Thấy trong đề | Chọn |
 | --- | --- |
-| SQL injection, XSS | WAF gắn ALB/CloudFront; nhiều account → Firewall Manager |
-| Request xấu, IP đổi liên tục | WAF rate-based rule |
-| DDoS | CloudFront + Shield (Advanced) + WAF |
-| Lọc traffic cấp VPC, FQDN | Network Firewall |
-| Phát hiện threat / lỗ hổng phần mềm / PII trong S3 | GuardDuty / Inspector / Macie |
-| SSH chỉ từ 1 IP | SG inbound TCP 22 từ `IP/32` |
-| Chỉ app tier / ASG được vào DB | SG của DB: source = SG ID của app tier (không có source là instance ID; NACL chỉ dùng CIDR) |
-| 1 instance lỗi, instance khác OK | Security Group; cả subnet lỗi → NACL hoặc route table |
-| Security Group vs NACL | SG: instance, stateful, chỉ Allow · NACL: subnet, stateless, có Deny, số nhỏ xét trước |
-| IPv6 chỉ đi ra | Egress-only Internet Gateway |
-| Outbound Internet only cho private subnet | NAT Gateway ở public subnet + route từ private subnet |
-| Copy traffic để phân tích | VPC Traffic Mirroring |
-| Chỉ member xem nhiều file, không đổi URL | CloudFront Signed Cookies (1 file → Signed URL) |
-| S3 chỉ truy cập qua CloudFront | OAC (presigned URL bỏ qua CloudFront) |
-| Chống hotlink, truy cập tạm thời | Tắt public + S3 presigned URL |
-| Public read cho mọi object | Bucket policy (Principal `*`) hoặc object ACL; CORS không cấp quyền |
-| S3 chỉ truy cập từ 1 VPC | Access Point network origin VPC / `aws:SourceVpc` |
-| Chia sẻ dữ liệu S3, người tải trả phí | Requester Pays (chặn truy cập ẩn danh) |
-| Nhiều domain trên 1 ALB | SNI (miễn phí) |
+| <mark>SQL injection</mark>, <mark>XSS</mark> | **WAF** gắn ALB/CloudFront; nhiều account → Firewall Manager |
+| Request xấu, <mark>IP đổi liên tục</mark> | **WAF rate-based rule** |
+| <mark>DDoS</mark> | **CloudFront + Shield (Advanced) + WAF** |
+| Lọc traffic <mark>cấp VPC</mark>, <mark>FQDN</mark> | **Network Firewall** |
+| Phát hiện <mark>threat</mark> / <mark>lỗ hổng phần mềm</mark> / <mark>PII trong S3</mark> | **GuardDuty** / **Inspector** / **Macie** |
+| SSH <mark>chỉ từ 1 IP</mark> | **SG inbound** TCP 22 từ `IP/32` |
+| Chỉ <mark>app tier / ASG</mark> được vào DB | **SG của DB: source = SG ID của app tier** (không có source là instance ID; NACL chỉ dùng CIDR) |
+| <mark>1 instance lỗi</mark>, instance khác OK | **Security Group**; cả subnet lỗi → NACL hoặc route table |
+| <mark>Security Group vs NACL</mark> | **SG**: instance, stateful, chỉ Allow · **NACL**: subnet, stateless, có Deny, số nhỏ xét trước |
+| <mark>IPv6</mark> <mark>chỉ đi ra</mark> | **Egress-only Internet Gateway** |
+| <mark>Outbound Internet only</mark> cho <mark>private subnet</mark> | **NAT Gateway** ở public subnet + route từ private subnet |
+| <mark>Copy traffic</mark> để phân tích | **VPC Traffic Mirroring** |
+| Chỉ member xem <mark>nhiều file</mark>, <mark>không đổi URL</mark> | **CloudFront Signed Cookies** (1 file → Signed URL) |
+| S3 <mark>chỉ truy cập qua CloudFront</mark> | **OAC** (presigned URL bỏ qua CloudFront) |
+| <mark>Chống hotlink</mark>, <mark>truy cập tạm thời</mark> | Tắt public + **S3 presigned URL** |
+| <mark>Public read</mark> cho mọi object | **Bucket policy** (Principal `*`) hoặc object ACL; CORS không cấp quyền |
+| S3 chỉ truy cập <mark>từ 1 VPC</mark> | **Access Point network origin VPC** / `aws:SourceVpc` |
+| Chia sẻ dữ liệu S3, <mark>người tải trả phí</mark> | **Requester Pays** (chặn truy cập ẩn danh) |
+| <mark>Nhiều domain</mark> trên 1 ALB | **SNI** (miễn phí) |
