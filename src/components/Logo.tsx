@@ -5,8 +5,10 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 
 const LOGO_FILE = "logo-nws.png";
-const LOGO_WIDTH = 274;
-const LOGO_HEIGHT = 72;
+// Kích thước hiển thị lớn nhất (h-9 = 36px), giữ tỉ lệ file gốc 274x72;
+// next/image sinh srcset 1x/2x theo kích thước này thay vì gửi file gốc.
+const LOGO_WIDTH = 137;
+const LOGO_HEIGHT = 36;
 
 /** Đọc `public/logo-nws.png`; chưa có file thì chỉ hiện tên site bằng chữ. */
 export default function Logo() {
@@ -24,7 +26,6 @@ export default function Logo() {
           alt=""
           width={LOGO_WIDTH}
           height={LOGO_HEIGHT}
-          unoptimized
           className="h-7 w-auto shrink-0 sm:h-8 md:h-9"
         />
       ) : null}
