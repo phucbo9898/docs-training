@@ -13,7 +13,7 @@ type HastNode = {
   type: string;
   tagName?: string;
   value?: string;
-  properties?: { id?: unknown };
+  properties?: { id?: unknown; dataLabel?: string };
   children?: HastNode[];
 };
 
@@ -49,6 +49,41 @@ function collectHeadings(headings: Heading[]) {
   };
 }
 
+function childElements(node: HastNode, tagName: string): HastNode[] {
+  return (node.children ?? []).filter((child) => child.tagName === tagName);
+}
+
+/**
+ * Gắn `data-label` (tiêu đề cột) vào từng ô `td` để trên mobile CSS hiển thị
+ * bảng dạng thẻ xếp dọc mà vẫn biết ô thuộc cột nào, không cần cuộn ngang.
+ */
+function rehypeTableLabels() {
+  return (tree: HastNode) => {
+    const walk = (node: HastNode) => {
+      if (node.tagName !== "table") {
+        node.children?.forEach(walk);
+        return;
+      }
+      const headerRow = childElements(node, "thead")
+        .flatMap((thead) => childElements(thead, "tr"))
+        .at(0);
+      if (!headerRow) return;
+      const labels = childElements(headerRow, "th").map((th) =>
+        textOf(th).trim(),
+      );
+      childElements(node, "tbody")
+        .flatMap((tbody) => childElements(tbody, "tr"))
+        .forEach((row) => {
+          childElements(row, "td").forEach((cell, index) => {
+            const label = labels[index];
+            if (label) cell.properties = { ...cell.properties, dataLabel: label };
+          });
+        });
+    };
+    walk(tree);
+  };
+}
+
 /**
  * Biên dịch MDX + tô màu code. Shiki nạp grammar bất đồng bộ nên việc này phải
  * nằm trong `"use cache"` thì route mới prerender được; vì vậy chỉ trả về dữ
@@ -68,6 +103,7 @@ async function compileLesson(
       rehypeSlug,
       [rehypeAutolinkHeadings, { behavior: "wrap" }],
       collectHeadings(headings),
+      rehypeTableLabels,
       [rehypePrettyCode, prettyCodeOptions],
     ],
   });
