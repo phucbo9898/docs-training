@@ -1,4 +1,6 @@
-import Fuse, { type IFuseOptions } from "fuse.js";
+// Chỉ import kiểu: thư viện Fuse được tải động khi mở tìm kiếm (xem loadSearcher).
+import type FuseClass from "fuse.js";
+import type { IFuseOptions } from "fuse.js";
 import { foldText } from "./search-text";
 import { isTrackId, type TrackId } from "./tracks";
 
@@ -104,7 +106,10 @@ export function matchRanges(
   return merged;
 }
 
-function createSearcher(entries: SearchEntry[]): Searcher {
+function createSearcher(
+  Fuse: typeof FuseClass,
+  entries: SearchEntry[],
+): Searcher {
   const options: IFuseOptions<SearchEntry> = {
     keys: [
       { name: "title", weight: 0.3 },
@@ -159,15 +164,17 @@ export function loadSearcher(locale: string): Promise<Searcher> {
   const cached = searchers.get(locale);
   if (cached) return cached;
 
-  const promise = fetch(`/search-index.${locale}.json`)
-    .then((response) => {
+  // Tải Fuse song song với index để không nằm trong JS ban đầu của mọi trang.
+  const promise = Promise.all([
+    import("fuse.js"),
+    fetch(`/search-index.${locale}.json`).then((response) => {
       if (!response.ok) throw new Error(`Search index ${response.status}`);
       return response.json() as Promise<unknown>;
-    })
-    .then((data) => {
-      if (!isSearchEntries(data)) throw new Error("Invalid search index");
-      return createSearcher(data);
-    });
+    }),
+  ]).then(([{ default: Fuse }, data]) => {
+    if (!isSearchEntries(data)) throw new Error("Invalid search index");
+    return createSearcher(Fuse, data);
+  });
   searchers.set(locale, promise);
   promise.catch(() => searchers.delete(locale));
   return promise;
