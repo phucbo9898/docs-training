@@ -34,7 +34,8 @@ export default function SearchResultItem({
     >
       <p className="text-xs text-text-muted">
         <span>{entry.module}</span>
-        {entry.phase > 0 ? (
+        {/* Chỉ track training có lộ trình nhiều phase. */}
+        {entry.track === "backend" && entry.phase > 0 ? (
           <span> · {t("phase", { phase: entry.phase })}</span>
         ) : null}
       </p>

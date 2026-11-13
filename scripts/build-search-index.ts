@@ -19,10 +19,13 @@ import remarkParse from "remark-parse";
 import { unified } from "unified";
 
 type Locale = "vi" | "en";
+/** Khớp `TrackId` trong src/lib/tracks.ts. */
+type TrackId = "backend" | "aws";
 
 type SearchEntry = {
   title: string;
   module: string;
+  track: TrackId;
   phase: number;
   /** Đường dẫn kèm locale, có `#anchor` khi trỏ tới một heading. */
   url: string;
@@ -34,11 +37,14 @@ type Lesson = {
   module: string;
   slug: string;
   title: string;
+  track: TrackId;
   phase: number;
   tree: Root;
 };
 
 const LOCALES: readonly Locale[] = ["vi", "en"];
+const DEFAULT_LOCALE: Locale = "vi";
+const DEFAULT_TRACK: TrackId = "backend";
 const INDEX_SLUG = "index";
 const CONTENT_DIR = path.join(process.cwd(), "content");
 const OUT_DIR = path.join(process.cwd(), "public");
@@ -125,8 +131,32 @@ async function listMdx(dir: string): Promise<string[]> {
     .sort();
 }
 
+function isTrackId(value: unknown): value is TrackId {
+  return value === "backend" || value === "aws";
+}
+
+/** Đọc bản của `locale`, thiếu thì dùng bản mặc định (giống loader của site). */
+async function readWithFallback(
+  locale: Locale,
+  moduleSlug: string,
+  file: string,
+): Promise<string> {
+  try {
+    return await fs.readFile(
+      path.join(CONTENT_DIR, locale, moduleSlug, file),
+      "utf8",
+    );
+  } catch {
+    return fs.readFile(
+      path.join(CONTENT_DIR, DEFAULT_LOCALE, moduleSlug, file),
+      "utf8",
+    );
+  }
+}
+
+/** Cấu trúc module/bài lấy từ locale mặc định, như src/lib/content.ts. */
 async function readLessons(locale: Locale): Promise<Lesson[]> {
-  const localeDir = path.join(CONTENT_DIR, locale);
+  const localeDir = path.join(CONTENT_DIR, DEFAULT_LOCALE);
   const modules = (await fs.readdir(localeDir, { withFileTypes: true }))
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."))
     .map((entry) => entry.name)
@@ -136,15 +166,13 @@ async function readLessons(locale: Locale): Promise<Lesson[]> {
   for (const moduleSlug of modules) {
     for (const file of await listMdx(path.join(localeDir, moduleSlug))) {
       const slug = file.slice(0, -".mdx".length);
-      const raw = await fs.readFile(
-        path.join(localeDir, moduleSlug, file),
-        "utf8",
-      );
+      const raw = await readWithFallback(locale, moduleSlug, file);
       const { data, content } = matter(raw);
       lessons.push({
         module: moduleSlug,
         slug,
         title: typeof data.title === "string" ? data.title : slug,
+        track: isTrackId(data.track) ? data.track : DEFAULT_TRACK,
         phase: typeof data.phase === "number" ? data.phase : 0,
         tree: parser.parse(content),
       });
@@ -177,6 +205,7 @@ function lessonEntries(
       entries.push({
         title: lesson.title,
         module: moduleTitle,
+        track: lesson.track,
         phase: lesson.phase,
         url: anchor ? `${basePath}#${anchor}` : basePath,
         heading,

@@ -1,10 +1,12 @@
 import Fuse, { type IFuseOptions } from "fuse.js";
 import { foldText } from "./search-text";
+import { isTrackId, type TrackId } from "./tracks";
 
 /** Một mục trong public/search-index.<locale>.json (xem scripts/build-search-index.ts). */
 export type SearchEntry = {
   title: string;
   module: string;
+  track: TrackId;
   phase: number;
   /** Đường dẫn kèm locale, có `#anchor` khi trỏ tới một heading. */
   url: string;
@@ -39,6 +41,7 @@ function isSearchEntry(value: unknown): value is SearchEntry {
   return (
     typeof entry.title === "string" &&
     typeof entry.module === "string" &&
+    isTrackId(entry.track) &&
     typeof entry.phase === "number" &&
     typeof entry.url === "string" &&
     typeof entry.heading === "string" &&
