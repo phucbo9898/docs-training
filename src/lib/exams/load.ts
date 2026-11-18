@@ -1,3 +1,4 @@
+import "server-only";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { examErrors, isExam, isExamIndex } from "./guards";
@@ -38,6 +39,9 @@ export function findExamEntry(
 }
 
 /**
+ * Chỉ gọi sau khi đã kiểm tra phiên (`requireExamUser`). `"use cache"` ở đây là
+ * cache phía server, không đưa dữ liệu vào trang tĩnh.
+ *
  * Một đề theo (bộ, số). Tra qua index nên tham số URL không đi thẳng vào
  * đường dẫn file; đề không có trong index trả về `null`, file có mà sai định
  * dạng hoặc lệch index thì throw.
