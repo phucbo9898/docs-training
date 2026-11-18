@@ -326,5 +326,10 @@
     },
     "signedInAs": "Đang đăng nhập: {email}",
     "signOut": "Đăng xuất"
+  },
+  "NotFound": {
+    "title": "Không tìm thấy trang",
+    "description": "Trang bạn tìm không tồn tại hoặc đã được chuyển đi.",
+    "backHome": "Về trang chủ"
   }
 }

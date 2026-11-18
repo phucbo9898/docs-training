@@ -4,6 +4,7 @@ import type { NextAuthRequest } from "next-auth";
 import createMiddleware from "next-intl/middleware";
 import { auth, isAllowedEmail } from "./auth";
 import { routing } from "./i18n/routing";
+import { isMissingContentPage } from "./lib/content-route";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -70,11 +71,26 @@ const handleProtected: ProtectedHandler = (request) => {
 
 const protectedProxy = auth(handleProtected);
 
-export default function proxy(request: NextRequest, event: NextFetchEvent) {
+/**
+ * Trang nội dung không tồn tại: rewrite sang `/<locale>/404` (prerender sẵn với
+ * status 404). Để page động tự gọi notFound() thì Cache Components đã stream
+ * shell với 200 trước đó (soft 404).
+ */
+function notFoundResponse(request: NextRequest): NextResponse {
+  const target = request.nextUrl.clone();
+  target.pathname = `/${localeOf(request.nextUrl.pathname)}/404`;
+  return NextResponse.rewrite(target);
+}
+
+export default async function proxy(
+  request: NextRequest,
+  event: NextFetchEvent,
+) {
   const { pathname } = request.nextUrl;
   if (pathname === "/login") return redirectBareLogin(request);
   // Chỉ giải mã phiên ở route cần bảo vệ; các trang docs giữ nguyên như cũ.
   if (PROTECTED.test(pathname)) return protectedProxy(request, event);
+  if (await isMissingContentPage(pathname)) return notFoundResponse(request);
   return intlMiddleware(request);
 }
 
