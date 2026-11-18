@@ -36,6 +36,28 @@ const BOX: Record<OptionState, string> = {
   wrongPicked: "border-danger bg-danger/10",
 };
 
+/** Màu chấm/ô đã chọn: chưa chấm là màu chính, đã chấm theo đúng/sai. */
+const MARK: Record<OptionState, string> = {
+  neutral: "checked:border-primary checked:bg-primary",
+  selected: "checked:border-primary checked:bg-primary",
+  correctPicked: "checked:border-success checked:bg-success",
+  correctMissed: "checked:border-success checked:bg-success",
+  wrongPicked: "checked:border-danger checked:bg-danger",
+};
+
+/**
+ * Radio/checkbox tự vẽ: input `disabled` gốc (sau khi hiện đáp án, màn chữa
+ * đề) bị trình duyệt tô xám và bỏ qua `accent-color`, gần như không thấy chấm.
+ * Chế độ tương phản cao (forced colors) dùng lại giao diện gốc.
+ */
+const INPUT_BASE =
+  "mt-1 size-4 shrink-0 appearance-none border-2 border-text-muted bg-bg forced-colors:appearance-auto";
+
+const RADIO = "rounded-full checked:shadow-[inset_0_0_0_2px_var(--bg)]";
+
+const CHECKBOX =
+  "relative rounded-sm checked:before:absolute checked:before:top-px checked:before:left-1 checked:before:h-2 checked:before:w-1 checked:before:rotate-45 checked:before:border-r-2 checked:before:border-b-2 checked:before:border-bg checked:before:content-['']";
+
 const TAG: Record<OptionState, string> = {
   neutral: "",
   selected: "",
@@ -106,7 +128,10 @@ export default function ExamOptionList({
                 disabled={disabled}
                 onChange={() => onToggle?.(option.id)}
                 aria-describedby={explanation ? explanationId : undefined}
-                className="mt-1.5 size-4 shrink-0 accent-primary"
+                className={`${INPUT_BASE} ${multi ? CHECKBOX : RADIO} ${MARK[state]} ${
+                  // Câu chọn nhiều đã đủ số đáp án: làm mờ các lựa chọn còn lại.
+                  disabled && !reveal && !isSelected ? "opacity-50" : ""
+                }`}
               />
               <span className="min-w-0 flex-1 text-text">
                 <span
