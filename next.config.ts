@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
   experimental: {
     // CSS toàn site chỉ ~9 KiB: nhúng thẳng vào HTML để bỏ request chặn render (LCP mobile).
     inlineCss: true,
+    agentUpgrade: "security",
   },
   turbopack: {
     rules: {
