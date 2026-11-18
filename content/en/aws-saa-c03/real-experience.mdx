@@ -1,0 +1,48 @@
+---
+title: "Real experience"
+slug: "real-experience"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 9
+type: lesson
+summary: "The study journey of a team member who passed: 35–50% on practice exams and still passed, 5 effective study methods, the 3 most repeated mistakes and 5 tips for the exam room."
+---
+
+This page records the study journey of a team member who passed the exam, so everyone has realistic expectations and avoids the same mistakes.
+
+## You don't need high practice scores to pass
+
+<Callout type="info" title="Realistic expectations for exam-mode scores">
+This member's practice exam scores ranged from 35% to 50% in exam mode, yet they passed the real exam. Practice exams are generally considered slightly harder than the real one. What matters more than the score is an **upward trend** and **fixing recurring mistakes**.
+</Callout>
+
+## The most effective study methods
+
+1. **Group keywords by domain, not by exam.** Notes per exam get long and repetitive. Grouping by domain keeps them short and shows your weak spots right away.
+2. **Write keywords as "seen in the question → choose service"** rather than writing definitions.
+3. **Study with classification questions.** Many mistakes look like "last time I picked A and was wrong, this time I picked B, but this question actually needed A". The wavering only stops once you have a clear criterion to tell them apart (see [Quick classification questions](/en/aws-saa-c03/classification-questions)).
+4. **Practice the reverse scenario too.** After getting a question wrong, find a scenario where the "trap" answer is actually the right one. Being able to answer both ways is real understanding.
+5. **Redo wrong questions until none are left**, and only then move on to a new exam.
+
+## The most repeated mistakes
+
+<Callout type="warning" title="Three common mistakes">
+
+- Picking a **stronger option just to be safe** (multi-region when Multi-AZ is enough, Warm standby when the RTO allows hours, 6 instances per AZ when 3 is enough). The exam rewards the option that is **just enough**.
+- **Missing a number or condition** in the question: RPO of 1 minute but choosing hourly snapshots, a job running 20 minutes but choosing Lambda.
+- **Choosing based on a recently learned keyword** without reading the conditions of the current question.
+
+</Callout>
+
+## Tips for the exam room
+
+<Callout type="tip" title="In the exam room">
+
+1. **Read the final question and the conditions first**, jot them down on scratch paper (_20 minutes, RPO 1 minute, compliance, LEAST overhead…_), then read the scenario.
+2. **Check each answer against every condition.** Violating a single condition rules it out.
+3. **"Select TWO/THREE" questions:** the answers must complement each other; don't pick two answers that do the same job.
+4. **When two answers both seem reasonable:** pick the one that matches more conditions with fewer unnecessary components; with _LEAST overhead_, prefer managed services.
+5. **Use all the time.** 130 minutes for 65 questions is enough to read carefully and revisit flagged questions. Don't submit early.
+
+</Callout>

@@ -1,0 +1,37 @@
+---
+title: "Quick classification questions"
+slug: "classification-questions"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 2
+type: lesson
+summary: "20 easily confused service pairs, each with one classification question that settles the answer: file or block, at rest or in transit, buffering or orchestration, license or capacity…"
+---
+
+When you face an easily confused pair, don't pick based on the first keyword you see. Ask yourself exactly **one classification question**, and the answer will point to the right option.
+
+## Classification question table
+
+| Confused pair | Classification question | Answer → Choose |
+| --- | --- | --- |
+| EFS vs EBS io2 Multi-Attach | Do you need <mark>file</mark> or <mark>block</mark>? | File, multiple AZs, hundreds of instances → **EFS** · Block, same AZ, a few instances, high IOPS → **io2 Multi-Attach** |
+| Encryption | Is the data <mark>at rest</mark> or <mark>in transit</mark>? | At rest → **KMS** (existing instance: snapshot → encrypted copy → restore) · In transit → **SSL/TLS**, `rds.force_ssl` |
+| SCP vs Permissions boundary | Restrict <mark>the whole account</mark> or <mark>some users/roles</mark>? | Whole account, including root → **SCP** · Some users/roles, admins keep full access → **Permissions boundary** |
+| Pilot light vs Warm standby | In the DR region, are app servers <mark>off</mark> or <mark>on</mark>? | Off, only the DB replicates → **Pilot light** · On, scaled-down copy → **Warm standby** |
+| DR strategy | <mark>How long</mark> an <mark>RTO</mark> does the question allow? | Hours → **Backup & Restore** · Tens of minutes → **Pilot light** · Minutes → **Warm standby** · Near zero → **Active-active**. Stop at the **first** row that meets the requirement |
+| SQS vs Firehose | Does data go to a <mark>processing tier</mark> or a <mark>storage destination</mark>? | Workers pull jobs to process → **SQS** · Delivered into S3, Redshift, OpenSearch → **Firehose** |
+| SQS vs SNS → multiple SQS | Does each message need <mark>one</mark> or <mark>many</mark> services to process it? | One (work sharing) → **one SQS** · One copy per service → **SNS fan-out** |
+| SQS vs Step Functions | Do you need <mark>buffering</mark> or <mark>orchestration</mark>? | Buffer requests, decouple → **SQS** · Multiple steps, retries, waiting for approval → **Step Functions** |
+| CloudFront origin group vs Route 53 failover | Through <mark>which door</mark> do users come in? | Through CloudFront → **origin group** · Straight to the endpoint → **Route 53 failover** |
+| One Zone-IA vs Standard-IA | Is <mark>losing an AZ</mark> acceptable? | Yes (re-creatable, secondary copy) → **One Zone-IA** · No (only copy, compliance) → **Standard-IA** |
+| Standard RI vs Savings Plans | Does the question mention any <mark>change</mark>? | Nothing changes → **Standard RI** · Change size/OS within a family → **EC2 Instance SP** · Change family/region, Fargate/Lambda involved → **Compute SP** |
+| Dedicated Hosts vs Capacity Reservations | Is the question about <mark>licensing</mark> or <mark>capacity</mark>? | License, socket, core → **Dedicated Hosts** · Reserve capacity per AZ → **Capacity Reservations** |
+| Placement group | Do instances need to be <mark>close together</mark> or <mark>kept apart</mark>? | Close, low latency → **Cluster** · Each on separate hardware, few instances → **Spread** · Large distributed system → **Partition** |
+| ALB vs NLB vs GWLB | Do you need to read <mark>URL/host name</mark>, need <mark>static IP/UDP</mark>, or need a <mark>firewall</mark>? | URL, host → **ALB** · Static IP, TCP/UDP → **NLB** · Firewall appliance → **GWLB** |
+| Aurora vs Redshift | <mark>Transactions</mark> or <mark>analytics</mark>? | Transactions, ACID (OLTP) → **Aurora/RDS** · Analytics, BI (OLAP) → **Redshift** |
+| Lambda vs Fargate | <mark>How long</mark> does the job run? | Under 15 minutes → **Lambda** · Longer, still serverless → **Fargate** |
+| Function URL vs API Gateway | Do you need <mark>API keys, usage plans, throttling</mark>? | No, just a webhook → **Function URL** · Yes → **API Gateway** |
+| Transfer Acceleration vs CRR | Is <mark>upload</mark> slow, or do you need a copy <mark>after it is stored</mark>? | Long-distance upload → **Transfer Acceleration + multipart** · Copy in another region → **CRR** |
+| Memcached vs Redis | Do you need <mark>persistence, replication, sorted sets</mark>? | No, simple multithreaded → **Memcached** · Yes → **Redis** |
+| Secrets Manager vs Parameter Store vs IAM DB Auth | Do you need <mark>auto rotation</mark>, <mark>low cost</mark>, or a <mark>token</mark>? | Rotation → **Secrets Manager** · Cheap, no rotation → **Parameter Store** · 15-minute token from IAM → **IAM DB Auth** |

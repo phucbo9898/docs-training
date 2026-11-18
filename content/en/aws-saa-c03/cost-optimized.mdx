@@ -1,0 +1,74 @@
+---
+title: "Cost-Optimized"
+slug: "cost-optimized"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 7
+type: lesson
+summary: "Choosing S3 storage classes, EC2 purchasing options (Spot, RI, Savings Plans, Dedicated Hosts), avoiding NAT and transfer fees, and cost tools: Budgets, Cost Explorer, Compute Optimizer."
+---
+
+This domain asks: what is the cheapest way that still meets the requirements? It makes up **20%** of the exam.
+
+## S3 storage classes
+
+| Seen in the question | Choose |
+| --- | --- |
+| <mark>Infrequent access</mark> (about once a month) but <mark>needed immediately</mark> | **Standard-IA** |
+| <mark>Unknown access pattern</mark> | **Intelligent-Tiering** |
+| <mark>Archive</mark> (once a quarter or less) but <mark>retrieved in milliseconds</mark> | **Glacier Instant Retrieval** |
+| Archive, retrieved in <mark>minutes to hours</mark> | **Glacier Flexible Retrieval** |
+| Kept for <mark>7–10 years</mark>, <mark>cheapest</mark>, a <mark>12–48 hour</mark> wait is acceptable | **Glacier Deep Archive** |
+| <mark>Retrieval under 15 minutes</mark>, <mark>capacity always available</mark> | **Expedited + Provisioned capacity** |
+| <mark>Move between classes</mark> or <mark>delete by age</mark> | **Lifecycle Transition / Expiration** |
+| <mark>Known in advance</mark> to be rarely accessed | **Write directly to the cheaper class**, no lifecycle needed |
+| <mark>Access pattern is known</mark> | **Pick the matching class directly**, no need for Intelligent-Tiering |
+| Data that <mark>only lives a few hours / days</mark> | **S3 Standard** (IA bills a 30-day minimum) |
+| <mark>Athena is expensive and slow</mark> | **Convert to Parquet/ORC + partitioning** |
+| <mark>Re-creatable</mark> data, rarely accessed, needed immediately | **One Zone-IA** (about 20% cheaper than Standard-IA, single AZ) |
+
+## Compute and purchasing
+
+| Seen in the question | Choose |
+| --- | --- |
+| Workload <mark>tolerates interruption</mark>, batch, stateless | **Spot** |
+| Mix of <mark>critical workload</mark> and <mark>interruptible workload</mark> | **Reserved** for the critical part + **Spot** for the rest |
+| <mark>Tasks that run a few seconds a day</mark> | **Lambda** instead of EC2 running 24/7 |
+| Runs <mark>steadily for 1–3 years</mark> | **Reserved Instances / Savings Plans** |
+| <mark>No longer need an RI</mark> | **Sell the Standard RI on the Marketplace** (Convertible cannot be sold) |
+| <mark>Licensed per socket/core</mark> (BYOL) | **Dedicated Hosts** |
+| Dev machines <mark>only used during business hours</mark> | **Stop them off-hours with EventBridge Scheduler** |
+| <mark>Still charged when not running</mark> | **RIs**, **EBS**, **unattached EIPs** |
+| <mark>Multiple domains</mark> on an ALB, cheaply | **SNI** (CloudFront Dedicated IP is very expensive) |
+| Private subnet → S3/DynamoDB, <mark>avoid NAT charges</mark> | **Gateway Endpoint** |
+| <mark>Large data</mark>, <mark>slow network</mark> | **Offline transfer** (Snow family / Data Transfer Terminal) |
+| RDS <mark>used infrequently</mark>, cheapest option | **Snapshot + terminate**, restore when needed |
+| <mark>Dev/test</mark> DB that <mark>doesn't need HA</mark> | **Drop Multi-AZ** for dev/test |
+| Processing S3 data, <mark>reduce transfer costs</mark> | **EC2 in the same region as the bucket** (S3 ↔ EC2 in the same region is free) |
+
+## Savings Plans and Reserved Instances
+
+| Purchase option | Applies to | When to choose |
+| --- | --- | --- |
+| **Standard RI** | 1 fixed instance type, 1 region | <mark>Biggest discount</mark>, <mark>nothing changes</mark> for 1–3 years |
+| **Convertible RI** | Instance family can be changed | Want to <mark>change family</mark> while keeping an RI |
+| **EC2 Instance Savings Plans** | 1 instance family, 1 region | <mark>Change size or OS</mark> within the family |
+| **Compute Savings Plans** | Any EC2, any region, Fargate, Lambda | Question mentions <mark>Fargate, Lambda</mark> or <mark>changing family/region</mark> |
+| **Spot** | Interruptible workloads | Batch, stateless, <mark>"can be interrupted"</mark> |
+
+<Callout type="tip" title="Discount rule">
+The less flexible the option, as long as it still meets the requirements, the bigger the discount.
+</Callout>
+
+## Cost tools
+
+| Seen in the question | Choose |
+| --- | --- |
+| Costs <mark>per department</mark> | **Tags + Cost Allocation Tags** |
+| <mark>Alert when over budget</mark> (including forecasted) | **Budgets** |
+| View, analyze, forecast costs <mark>in a UI</mark> | **Cost Explorer** (does not send alerts by itself) |
+| Get or forecast costs <mark>programmatically</mark> | **Cost Explorer API** |
+| <mark>Rightsizing</mark>, find <mark>over-provisioned EC2</mark> from metrics | **Compute Optimizer** |
+| <mark>Detect missing tags</mark> | **Config** `required-tags`; block creation without tags → **SCP** `aws:RequestTag` |
+| <mark>Best-practice recommendations</mark>, <mark>idle resources</mark> | **Trusted Advisor** |
