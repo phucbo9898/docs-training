@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "siteName": "Intern Backend Training",
-    "description": "Tài liệu training Backend Developer: PHP, SQL, HTML/CSS/JavaScript và Laravel."
+    "siteName": "Tài liệu học tập",
+    "description": "Tài liệu training Backend Developer, ôn thi và luyện đề AWS SAA-C03."
   },
   "ThemeToggle": {
     "label": "Giao diện",
@@ -109,6 +109,7 @@
     "skipToContent": "Bỏ qua đến nội dung chính"
   },
   "Header": {
+    "siteName": "Tài liệu học tập",
     "home": "Trang chủ",
     "openMenu": "Mở menu điều hướng",
     "closeMenu": "Đóng menu điều hướng"
@@ -162,7 +163,7 @@
   },
   "Tracks": {
     "heading": "Bạn muốn học gì hôm nay?",
-    "intro": "Chọn một nội dung để bắt đầu. Bạn có thể quay lại màn này bất cứ lúc nào qua logo hoặc mục “Tất cả nội dung” trong menu.",
+    "intro": "Chọn một nội dung để bắt đầu. Bạn có thể quay lại màn này bất cứ lúc nào qua mục “Tất cả nội dung” trong menu.",
     "all": "Tất cả nội dung",
     "label": "Danh sách nội dung",
     "open": "Vào xem",

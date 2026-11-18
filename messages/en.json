@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "siteName": "Intern Backend Training",
-    "description": "Backend Developer training materials: PHP, SQL, HTML/CSS/JavaScript and Laravel."
+    "siteName": "Learning Materials",
+    "description": "Backend Developer training materials, plus AWS SAA-C03 review and practice exams."
   },
   "ThemeToggle": {
     "label": "Appearance",
@@ -109,6 +109,7 @@
     "skipToContent": "Skip to main content"
   },
   "Header": {
+    "siteName": "Learning Materials",
     "home": "Home",
     "openMenu": "Open navigation menu",
     "closeMenu": "Close navigation menu"
@@ -162,7 +163,7 @@
   },
   "Tracks": {
     "heading": "What would you like to study today?",
-    "intro": "Pick a track to get started. You can come back here any time via the logo or “All tracks” in the menu.",
+    "intro": "Pick a track to get started. You can come back here any time via “All tracks” in the menu.",
     "all": "All tracks",
     "label": "Tracks",
     "open": "Open",
