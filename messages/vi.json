@@ -292,5 +292,17 @@
       "expandAll": "Mở rộng tất cả",
       "empty": "Không có câu nào khớp bộ lọc."
     }
+  },
+  "Auth": {
+    "title": "Đăng nhập",
+    "intro": "Tab Luyện đề AWS chỉ dành cho thành viên được cấp quyền. Hãy đăng nhập bằng tài khoản Google đã được đăng ký.",
+    "loading": "Đang kiểm tra phiên đăng nhập…",
+    "signInWithGoogle": "Đăng nhập bằng Google",
+    "error": {
+      "notAllowed": "Email này chưa được cấp quyền vào tab Luyện đề. Hãy dùng tài khoản khác hoặc liên hệ người quản lý.",
+      "generic": "Đăng nhập không thành công. Vui lòng thử lại."
+    },
+    "signedInAs": "Đang đăng nhập: {email}",
+    "signOut": "Đăng xuất"
   }
 }

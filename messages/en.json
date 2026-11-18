@@ -292,5 +292,17 @@
       "expandAll": "Expand all",
       "empty": "No questions match this filter."
     }
+  },
+  "Auth": {
+    "title": "Sign in",
+    "intro": "The AWS practice exams tab is for approved members only. Sign in with your registered Google account.",
+    "loading": "Checking your session…",
+    "signInWithGoogle": "Sign in with Google",
+    "error": {
+      "notAllowed": "This email is not allowed to access the practice exams. Use another account or contact the maintainer.",
+      "generic": "Sign-in failed. Please try again."
+    },
+    "signedInAs": "Signed in as {email}",
+    "signOut": "Sign out"
   }
 }
