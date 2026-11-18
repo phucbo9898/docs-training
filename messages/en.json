@@ -203,6 +203,8 @@
       "sourceMeta": "{exams} exams",
       "exam": "Choose an exam",
       "examMeta": "{count} questions · {minutes} minutes",
+      "questionsBadge": "{count, plural, one {# question} other {# questions}}",
+      "minutesBadge": "{minutes} minutes",
       "mode": "Mode",
       "start": "Start exam"
     },

@@ -89,8 +89,7 @@ export default async function ExamPagePanel({
         <div className="mt-8">
           <ExamSetupForm
             sources={index.sources}
-            initialSource={found.source.id}
-            initialNumber={found.entry.number}
+            fixed={{ source: found.source.id, number: found.entry.number }}
           />
         </div>
       </div>

@@ -203,6 +203,8 @@
       "sourceMeta": "{exams} đề",
       "exam": "Chọn đề",
       "examMeta": "{count} câu · {minutes} phút",
+      "questionsBadge": "{count} câu hỏi",
+      "minutesBadge": "{minutes} phút",
       "mode": "Chế độ làm bài",
       "start": "Bắt đầu làm bài"
     },
