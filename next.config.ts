@@ -12,6 +12,18 @@ const nextConfig: NextConfig = {
     inlineCss: true,
     agentUpgrade: "security",
   },
+  // Trang luyện đề và đăng nhập: không cho CDN/trình duyệt lưu, không cho index.
+  async headers() {
+    const privateHeaders = [
+      { key: "Cache-Control", value: "private, no-store" },
+      { key: "X-Robots-Tag", value: "noindex, nofollow" },
+    ];
+    return [
+      { source: "/:locale/aws-exams", headers: privateHeaders },
+      { source: "/:locale/aws-exams/:path*", headers: privateHeaders },
+      { source: "/:locale/login", headers: privateHeaders },
+    ];
+  },
   turbopack: {
     rules: {
       "*.css": {
