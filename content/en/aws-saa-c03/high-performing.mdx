@@ -1,0 +1,141 @@
+---
+title: "High-Performing"
+slug: "high-performing"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 6
+type: lesson
+summary: "Choosing the right storage, database, network, CDN, compute and analytics: EFS vs FSx, Storage Gateway, Read Replica vs RDS Proxy, CloudFront vs Global Accelerator, Kinesis vs Firehose…"
+---
+
+This domain asks: which storage, database, network and compute fit the workload? It makes up **24%** of the exam and has the most keywords of any domain.
+
+## Storage
+
+| Seen in the question | Choose |
+| --- | --- |
+| Linux, <mark>NFSv4</mark>, <mark>POSIX</mark>, thousands of EC2 / <mark>mounted across multiple AZs</mark> | **EFS** |
+| <mark>Windows</mark>, <mark>SMB</mark>, <mark>NTFS</mark>, Active Directory, DFS (including HPC workloads) | **FSx for Windows File Server** |
+| <mark>HPC</mark>, ML, very high speed, <mark>linked to S3</mark>, POSIX | **FSx for Lustre** (hot) + **S3** (cold) |
+| EFS for <mark>hundreds of parallel clients</mark> | **EFS Max I/O + Provisioned Throughput** |
+| <mark>NetApp</mark>, <mark>multi-protocol NFS + SMB + iSCSI</mark>, Windows block storage Multi-AZ | **FSx for NetApp ONTAP** |
+| <mark>Hybrid NFS/SMB</mark>, on-prem cache, <mark>files become S3 objects</mark> | **S3 File Gateway** |
+| <mark>Hybrid iSCSI</mark>, <mark>primary data in S3</mark>, local cache, no on-prem storage expansion | **Volume Gateway cached** |
+| <mark>Hybrid iSCSI</mark>, <mark>primary data on-prem</mark>, backed up to AWS | **Volume Gateway stored** |
+| <mark>No virtualization</mark> on-prem | **Storage Gateway hardware appliance** |
+| Replace <mark>tape backup</mark> | **Tape Gateway** |
+| <mark>One-time (online)</mark> data transfer | **DataSync** (Storage Gateway is long-term hybrid) |
+| Managed <mark>SFTP/FTP</mark> into S3/EFS | **Transfer Family** |
+| Files <mark>> 5 GB</mark> | **Multipart Upload** |
+| <mark>Download large files</mark> <mark>in parallel</mark> | **S3 Byte-Range Fetches** |
+| <mark>High S3 request rate</mark> | Each prefix handles **3,500 PUT / 5,500 GET** per second; below that, nothing to do |
+| <mark>Global users uploading</mark> to 1 distant bucket | **S3 Transfer Acceleration** (+ Multipart) |
+| <mark>Transform data on GET</mark> | **S3 Object Lambda** |
+| Change EBS size/type <mark>without downtime</mark> | **Elastic Volumes** |
+| <mark>I/O intensive</mark>, large DB, <mark>very high IOPS</mark> | **EBS io2 Block Express** (or io1); gp3 tops out at 16,000 IOPS |
+| <mark>Boot volume</mark>, dev/test, general purpose | **EBS gp2/gp3** |
+| Big data, logs, <mark>sequential access</mark> / rarely accessed, cheapest | **st1 / sc1** (HDD, cannot be a boot volume) |
+| Multiple EC2 <mark>attached to 1 block volume</mark> | **Multi-Attach**, io1/io2 only, same AZ (different AZs → EFS) |
+| <mark>Highest I/O</mark>, <mark>temporary</mark> or already replicated data | **Instance store** (lost on stop/terminate, survives reboot) |
+
+## Database
+
+| Seen in the question | Choose |
+| --- | --- |
+| <mark>Offload reads</mark> from RDS, <mark>reporting</mark>, analytics | **Read Replica** (async) |
+| Aurora <mark>distribute reads</mark> | **Reader endpoint**; writes → **Cluster endpoint** |
+| Aurora <mark>separate production and reporting</mark> | **Custom endpoint** |
+| Aurora replicas <mark>can't keep up at peak</mark> | **Aurora Auto Scaling** (up to 15 replicas) |
+| Lambda + RDS, <mark>too many connections</mark> | **RDS Proxy** |
+| <mark>Repeated queries</mark>, need <mark>sub-millisecond</mark> | **ElastiCache** |
+| Read-heavy DynamoDB, <mark>microseconds</mark> | **DAX** |
+| DynamoDB <mark>hot partition</mark> | **High-cardinality partition key**, add a random suffix |
+| DynamoDB <mark>unpredictable traffic</mark>, often idle | **On-demand capacity mode** |
+| <mark>Changing schema</mark>, large scale, <mark>key-value</mark> | **DynamoDB** |
+| <mark>OLTP</mark>, <mark>ACID</mark>, large and growing data | **Aurora** (up to 128 TiB) |
+| <mark>OLAP</mark>, <mark>BI</mark>, columnar | **Redshift** |
+| <mark>Graph</mark>, complex relationships | **Neptune** |
+| <mark>Quickly copy a DB</mark> to test/staging | **Aurora cloning** (copy-on-write) |
+| <mark>Rewind the DB</mark> to an earlier point, <mark>without restoring</mark> | **Aurora Backtrack** |
+| Session store, simple cache, <mark>multithreaded</mark> | **ElastiCache for Memcached** |
+| <mark>Persistence</mark>, <mark>replication</mark>, <mark>leaderboards</mark> | **ElastiCache for Redis** |
+| <mark>Milliseconds</mark>, <mark>IoT</mark>, key-value | **DynamoDB** |
+| <mark>MongoDB</mark>, no code changes | **DocumentDB** |
+| <mark>GraphQL</mark>, real-time mobile, read/write across sources | **AppSync** (pipeline resolvers) |
+| RDS metrics <mark>per process/thread</mark> | **Enhanced Monitoring** |
+| <mark>Which queries load</mark> RDS | **Performance Insights** |
+| RDS <mark>running out of storage</mark> | **Storage Autoscaling** |
+| <mark>SQL Server → Aurora PostgreSQL</mark>, <mark>minimal code changes</mark> | **Babelfish** (+ SCT for schema, DMS for data) |
+
+## Networking, CDN and compute
+
+| Seen in the question | Choose |
+| --- | --- |
+| <mark>Global static content</mark>, <mark>cached</mark>, HTTP | **CloudFront** |
+| <mark>Static IP</mark>, <mark>TCP/UDP</mark>, no caching, fast failover | **Global Accelerator** |
+| <mark>5G edge</mark>, single-digit ms for mobile | **AWS Wavelength** (EKS: EC2 node group, Fargate doesn't run in Wavelength) |
+| <mark>Zone apex / root domain</mark> → ALB, CloudFront | **Route 53 Alias A record** |
+| Process data close to users, <mark>at the edge</mark> | **Lambda@Edge** (light header edits → **CloudFront Functions**) |
+| <mark>Path/host routing</mark> | **ALB** path / host conditions; static IP, layer 4, UDP → **NLB**; firewall appliance → **GWLB** |
+| <mark>Spread load evenly across AZs</mark> | **Cross-zone load balancing** |
+| Instance <mark>not reachable from the Internet</mark> | **Check the route** `0.0.0.0/0 → IGW` |
+| Connect VPCs <mark>across regions</mark> + <mark>IPS</mark> | **Transit Gateway + Network Firewall** |
+| <mark>Connect on-prem sites to each other</mark> over DX | **Direct Connect SiteLink** |
+| <mark>Manage and track IP addresses</mark> | **VPC IPAM** |
+| Private subnet → <mark>S3/DynamoDB</mark>, <mark>cheapest</mark> | **Gateway Endpoint** (free) |
+| Many VPCs need <mark>transitive</mark> routing, + on-prem | **Transit Gateway** |
+| <mark>Hundreds of VPCs</mark> + VPN, <mark>single gateway</mark>, <mark>inter-region</mark> | **Transit Gateway + TGW peering** (CloudHub only connects on-prem sites) |
+| <mark>Expose a single service</mark> to another VPC | **PrivateLink** |
+| <mark>1 Direct Connect for many VPCs/accounts</mark> | **DX Gateway + Transit Gateway** |
+| <mark>Dedicated</mark>, stable connection, <mark>not over the Internet</mark> | **Direct Connect** |
+| <mark>Increase VPN throughput</mark> | **Transit Gateway + ECMP** (BGP) |
+| Connect <mark>2 private VPCs</mark>, even across regions | **VPC peering + route tables on both sides** |
+| On-prem accesses S3 over DX using <mark>private IPs</mark> | **Interface endpoint (PrivateLink) for S3** |
+| <mark>Serverless containers</mark> | **Fargate**; serverless Kubernetes → **EKS on Fargate** |
+| Parallel batch jobs, <mark>lots of vCPU/RAM</mark>, <mark>job queue</mark> | **AWS Batch** |
+| <mark>Short tasks</mark>, small data, <mark>run infrequently</mark> | **Lambda** (not EC2 running 24/7) |
+| Configure EC2 <mark>without SSH/RDP</mark> | **SSM Run Command** |
+| <mark>Virtual desktops</mark> | **WorkSpaces** |
+| <mark>Traffic bursts lasting seconds</mark>, usually low / cost-effective REST API | **API Gateway + Lambda** |
+| <mark>Simple webhook</mark> for Lambda, least overhead | **Lambda Function URL** |
+| Get a <mark>Docker app up quickly</mark>, AWS manages the infrastructure | **Elastic Beanstalk** |
+| <mark>ECS service scaling</mark> / <mark>scaling EC2 for an ECS cluster</mark> | By **service CPU/Memory** / **Capacity Provider** |
+| Protect the backend <mark>from spikes</mark> | **API Gateway throttling + caching** |
+| Release a new API version, <mark>gradually shift traffic</mark> | **API Gateway canary release** |
+| <mark>HPC</mark>, <mark>MPI</mark>, low latency between nodes | **Cluster placement group + EFA** |
+| <mark>Enhanced Networking</mark>, <mark>SR-IOV</mark>, high PPS | **ENA** (ENI is just a basic virtual network card) |
+| <mark>Local storage</mark>, <mark>sequential I/O</mark> | **Storage Optimized instances** (I, D, H) |
+| Cluster placement group <mark>out of capacity</mark> | **Stop and then start all instances again** |
+| <mark>Reserve capacity per AZ</mark> | **On-Demand Capacity Reservations** |
+| <mark>Fast startup</mark>, <mark>preserve RAM</mark> | **Hibernation** (enabled at launch) |
+| Load <mark>at known times</mark> | **Scheduled scaling** |
+| <mark>Cyclical</mark> load, slow boot, <mark>launch ahead of time</mark> | **Predictive Scaling** |
+| <mark>Keep a metric steady at X%</mark> | **Target tracking scaling** |
+| <mark>Burst traffic</mark>, scale by <mark>how far a threshold is exceeded</mark>, slow-booting instances | **Step scaling + warm-up** |
+| <mark>EKS node scaling</mark> / <mark>pod scaling</mark> | **Karpenter** (least overhead) / **HPA + Metrics Server** |
+| <mark>EC2 launches fail after N instances</mark> | **Regional vCPU quota → request an increase** (InsufficientCapacity → try another AZ) |
+| ASG scaling on <mark>memory, disk</mark> | **CloudWatch agent publishes metrics → scaling policy** |
+| <mark>Lift-and-shift VMs</mark>, low downtime / <mark>assessment only</mark> on-prem | **AWS MGN** / **Application Discovery Service** |
+| Get <mark>IP, instance ID, AZ</mark> from inside the instance | **Instance metadata** 169.254.169.254 (user-data is a bootstrap script) |
+
+## Analytics, streaming, AI
+
+| Seen in the question | Choose |
+| --- | --- |
+| Custom streaming, <mark>real-time + replay</mark>, <mark>multiple consumers</mark> | **Kinesis Data Streams** (+ Lambda) |
+| <mark>Deliver a stream into S3/OpenSearch</mark>, <mark>no code</mark> | **Data Firehose** |
+| Kinesis is slow, <mark>needs more throughput</mark> | **Add shards** (`UpdateShardCount`) |
+| <mark>Two-way SMS</mark> | **AWS End User Messaging SMS** |
+| Already using <mark>Kafka</mark> | **MSK** |
+| <mark>Serverless ETL</mark>, <mark>CSV → Parquet</mark> | **Glue** (no duplicates on rerun → Job Bookmarks) |
+| Big data <mark>Spark/Hadoop</mark> | **EMR** |
+| <mark>SQL on S3</mark>, serverless, <mark>ad-hoc</mark> | **Athena** (not for real-time streams) |
+| OpenSearch + <mark>visualization</mark>, least overhead | **OpenSearch Dashboards** |
+| <mark>Data warehouse</mark>, BI, SQL | **Redshift** |
+| Query S3 data alongside Redshift tables, <mark>without loading it</mark> | **Redshift Spectrum** |
+| <mark>Store the results</mark> of stream processing | **S3**, **Redshift**, **DynamoDB**, **OpenSearch** (not EMR) |
+| Multi-account data lake, <mark>column/row-level permissions</mark> | **Lake Formation** |
+| <mark>Speech → text</mark> / <mark>text → speech</mark> / <mark>translation</mark> / <mark>sentiment</mark> | **Transcribe** / **Polly** / **Translate** / **Comprehend** |
+| <mark>Images, video</mark> / <mark>camera streams</mark> / <mark>document search</mark> | **Rekognition** / **Kinesis Video Streams** / **Kendra** |
+| <mark>Document OCR</mark> + detecting medical <mark>PHI</mark> | **Textract + Comprehend Medical** |

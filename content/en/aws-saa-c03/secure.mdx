@@ -1,0 +1,95 @@
+---
+title: "Secure"
+slug: "secure"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 4
+type: lesson
+summary: "IAM and multi-account governance, encryption and secrets (KMS, CloudHSM, SSE, Secrets Manager, ACM), Security Groups vs NACLs, WAF, Shield, CloudFront and S3 access."
+---
+
+This domain asks: who can do what, how data is encrypted, and how applications are protected. It makes up **30%** of the exam.
+
+## Identity and multi-account governance
+
+| Seen in the question | Choose |
+| --- | --- |
+| <mark>EC2/Lambda/ECS</mark> calling AWS | **IAM Role** (no access keys) |
+| Users calling APIs via <mark>CLI/SDK</mark> | **Access keys + permissions** (needs both authentication and authorization) |
+| <mark>Least privilege</mark> | **Specific actions + specific ARNs**, no wildcards |
+| <mark>Separate environments</mark>, <mark>central management</mark> | **Organizations + cross-account roles** |
+| Many users with <mark>the same permissions</mark> | **IAM Group + policy** (Roles have no members) |
+| <mark>Temporary cross-account</mark> access | **STS AssumeRole** |
+| Employees <mark>SSO</mark> into <mark>many accounts</mark> | **IAM Identity Center** + permission sets (+ AD Connector if there's AD) |
+| SSO with <mark>on-prem AD</mark> via <mark>SAML</mark> | **AD FS + SAML 2.0** (AssumeRoleWithSAML) |
+| <mark>LDAP</mark> that is <mark>not SAML-compatible</mark> | **Custom identity broker + STS** |
+| <mark>Simple, cheap</mark> directory, <mark>no existing AD</mark> | **Simple AD** |
+| <mark>End users</mark> signing in to an app | **Cognito** |
+| Each user can only access <mark>their own S3 folder</mark> | **Policy variable** `${aws:username}` |
+| Permissions for <mark>UAT vs Production</mark> in <mark>the same account</mark> | **Tags + IAM conditions (ABAC)** |
+| <mark>IP condition</mark> inside a <mark>Deny</mark> | That IP **is blocked**; an explicit Deny always wins |
+| IAM users/roles → <mark>Kubernetes permissions</mark> | **EKS access entries + access policies** |
+| <mark>Existing on-prem AD</mark>, <mark>only need a proxy</mark> | **AD Connector** |
+| <mark>Require MFA</mark> | Condition `aws:MultiFactorAuthPresent` |
+| Sign in to RDS with a <mark>token instead of a password</mark> | **IAM DB Authentication** (MySQL, MariaDB, PostgreSQL; not SQL Server) |
+| <mark>"unable to"</mark>, block even the <mark>root user</mark> of member accounts | **SCP** (grants no permissions, doesn't affect the management account) |
+| Detect resources that are <mark>misconfigured</mark> or <mark>missing tags</mark> | **AWS Config rule** |
+| <mark>Audit who called which API</mark> | **CloudTrail** (logs already SSE-S3 encrypted) |
+| Audit <mark>reads/writes of individual S3 objects</mark> | **CloudTrail Data Events** |
+| Monitor <mark>service quotas</mark> | **Service Quotas Automatic Management + User Notifications** |
+| Set up many accounts with built-in <mark>guardrails</mark> | **Control Tower** |
+| <mark>Share</mark> TGWs, subnets <mark>across accounts</mark> | **AWS RAM** |
+| Download <mark>compliance reports</mark> (SOC, PCI) | **AWS Artifact** |
+
+## Encryption and secrets
+
+| Seen in the question | Choose |
+| --- | --- |
+| Data and keys <mark>never leave on-prem</mark> | **Client-side encryption** with a self-managed master key |
+| <mark>SSE header</mark> | `x-amz-server-side-encryption`; mentions customer → **SSE-C** |
+| S3 encryption with <mark>key usage auditing</mark> | **SSE-KMS** (header `aws:kms`). SSE-S3 header is `AES256` |
+| <mark>Full control of keys</mark>, <mark>delete key material immediately</mark> | **KMS custom key store backed by CloudHSM** |
+| <mark>Dedicated HSM</mark>, <mark>lose the key and it's gone for good</mark> | **CloudHSM** (AWS can't access or recover keys) |
+| <mark>EBS encryption</mark> | **KMS**; carries over to snapshots, volumes from snapshots, instance ↔ volume traffic |
+| <mark>Encrypt an existing EBS volume</mark> | **Snapshot → encrypted copy → create a new volume** |
+| <mark>Enforce HTTPS</mark> to S3 | **Bucket policy** `aws:SecureTransport` |
+| <mark>Require SSL</mark> to RDS (<mark>in transit</mark>) | `rds.force_ssl` + **root CA** |
+| <mark>Automatically encrypt all new EBS volumes</mark> | **EBS Encryption by Default** (per-region setting) |
+| <mark>Another account uploads</mark>, the bucket owner needs <mark>full control</mark> | `bucket-owner-full-control` / **Object Ownership bucket owner enforced** |
+| <mark>Multiple accounts</mark> accessing <mark>one bucket</mark> | **Bucket policy** |
+| <mark>ACM cert about to expire</mark> | `DaysToExpiry` / **ACM event → EventBridge → SNS** |
+| Secrets needing <mark>auto rotation</mark> | **Secrets Manager**; no rotation needed, cheap → **Parameter Store SecureString** |
+| Hide <mark>credentials in Lambda env vars</mark> | **Customer managed KMS key + encryption helpers** |
+| Encrypt <mark>Kubernetes Secrets</mark> | **EKS secrets encryption with KMS** |
+| <mark>Redis</mark> requiring a <mark>password</mark> | **Redis AUTH** + in-transit encryption |
+| <mark>WORM</mark>, no deletes/overwrites | **S3 Object Lock**, Compliance mode (requires Versioning) |
+| <mark>Publicly trusted</mark> SSL, low overhead | **ACM public cert** (free, auto-renews) |
+| <mark>Which region</mark> the ACM cert goes in | Regional API, ALB → **same region**. CloudFront, edge-optimized API → **us-east-1** |
+
+## Network and application protection
+
+| Seen in the question | Choose |
+| --- | --- |
+| <mark>SQL injection</mark>, <mark>XSS</mark> | **WAF** on ALB/CloudFront; multiple accounts → **Firewall Manager** |
+| <mark>Block by country</mark>, <mark>allow a few IPs</mark> | **WAF**: Allow IP set (higher priority) + Block geo match |
+| <mark>DNS spoofing</mark> | **DNSSEC** (HTTPS doesn't solve it) |
+| Malicious requests, <mark>IPs constantly changing</mark> | **WAF rate-based rule** |
+| <mark>DDoS</mark> | **CloudFront + Shield (Advanced) + WAF** |
+| <mark>VPC-level</mark> traffic filtering, <mark>FQDN</mark>, <mark>IDS/IPS</mark> | **Network Firewall** |
+| Detect <mark>threats</mark> / <mark>software vulnerabilities</mark> / <mark>PII in S3</mark> | **GuardDuty** / **Inspector** / **Macie** (→ EventBridge → SNS for notifications) |
+| SSH <mark>only from 1 IP</mark> | **SG inbound** TCP 22 from `IP/32` |
+| <mark>Quickly block a few</mark> specific IPs | **NACL Deny rule** (SGs have no Deny) |
+| Only the <mark>app tier / ASG</mark> can reach the DB | **DB SG: source = the app tier's SG ID** (no instance-ID sources; NACLs only use CIDRs) |
+| <mark>1 instance failing</mark>, others OK | **Security Group**; whole subnet failing → **NACL** or **route table** |
+| <mark>Security Group vs NACL</mark> | **SG**: instance level, stateful, Allow only · **NACL**: subnet level, stateless, has Deny, lower numbers evaluated first |
+| <mark>IPv6</mark> <mark>outbound only</mark> | **Egress-only Internet Gateway** |
+| <mark>Outbound Internet only</mark> for a <mark>private subnet</mark> | **NAT Gateway** in a public subnet + route from the private subnet |
+| <mark>Copy traffic</mark> for analysis | **VPC Traffic Mirroring** |
+| Members only, viewing <mark>many files</mark>, <mark>URLs unchanged</mark> | **CloudFront Signed Cookies** (1 file → Signed URL) |
+| S3 <mark>only accessible through CloudFront</mark> | **OAC** (presigned URLs bypass CloudFront) |
+| <mark>Prevent hotlinking</mark>, <mark>temporary access</mark> | Disable public access + **S3 presigned URLs** |
+| <mark>Public read</mark> for every object | **Bucket policy** (Principal `*`) or **object ACL**; CORS doesn't grant permissions |
+| S3 accessible <mark>only from 1 VPC</mark> | **Access Point with VPC network origin** / `aws:SourceVpc` |
+| Share S3 data, <mark>downloader pays</mark> | **Requester Pays** (blocks anonymous access) |
+| <mark>Multiple domains</mark> on 1 ALB | **SNI** (free) |

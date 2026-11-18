@@ -1,0 +1,61 @@
+---
+title: "Numbers to memorize"
+slug: "numbers-to-memorize"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 8
+type: lesson
+summary: "Limits for Lambda, Fargate, S3, EBS IOPS, minimum storage durations, Glacier retrieval, RDS, Aurora, DynamoDB, SQS, Kinesis, VPC CIDR, networking quotas and common ports."
+---
+
+Reread this page on the morning of the exam.
+
+## Numbers table
+
+| Parameter | Value |
+| --- | --- |
+| Lambda | Timeout **15 minutes** · RAM **10 GB** · /tmp **10 GB** |
+| Fargate | Per task up to **16 vCPU**, **120 GB** RAM · ephemeral storage **20 GB** by default, up to **200 GB** |
+| S3 single PUT / max object size | **5 GB** / **5 TB** |
+| Multipart | Recommended **> 100 MB**, required **> 5 GB** · parts **5 MB – 5 GB**, up to **10,000** parts |
+| S3 requests per prefix | **3,500** PUT/COPY/POST/DELETE, **5,500** GET/HEAD per second |
+| S3 / EBS encryption | **AES-256** |
+| Minimum storage duration | Standard-IA **30 days** · Glacier IR/Flexible **90 days** · Deep Archive **180 days** |
+| Glacier Flexible | Expedited **1–5 minutes** · Standard **3–5 hours** · Bulk **5–12 hours** |
+| Glacier Deep Archive | Standard **12 hours** · Bulk **48 hours** |
+| S3 Standard / One Zone-IA | **≥ 3 AZs** / **1 AZ** |
+| EBS IOPS | gp2 **3 IOPS/GiB** · gp3 baseline **3,000**, max **16,000** · io1 max **50 IOPS/GiB**, **64,000**/volume · io2 Block Express **1,000 IOPS/GiB**, **256,000**/volume |
+| RDS automated backups | **1 – 35 days** (longer → AWS Backup) |
+| RDS Multi-AZ failover | **60 – 120 seconds** |
+| RDS max storage | **64 TiB** (SQL Server **16 TiB**) |
+| Aurora | Up to **128 TiB** · **6 copies** across **3 AZs** · failover with a replica **~30 seconds**, priority tiers **0–15** |
+| RDS stopped | Auto-starts after **7 days**, storage still billed |
+| DynamoDB | PITR **35 days** · 1 RCU = **4 KB** · 1 WCU = **1 KB** · item ≤ **400 KB** · Streams retained **24 hours** |
+| Max Read Replicas | Aurora **15** · MySQL/PostgreSQL **15** · Oracle/SQL Server **5** |
+| SQS retention | Default **4 days**, max **14 days** |
+| SQS visibility timeout | Default **30 seconds**, max **12 hours** |
+| SQS other | Long polling max **20 seconds** · delay queue max **15 minutes** · max message **256 KB** |
+| SQS FIFO | **300 TPS**, **3,000** with batching · dedup window **5 minutes** |
+| Kinesis Data Streams | Default retention **24 hours**, max **365 days** · per shard write **1 MB/s** (**1,000** records/s), read **2 MB/s** |
+| ASG | Default cooldown **300 seconds** · default lifecycle hook timeout **1 hour** |
+| Spot | Interruption notice **2 minutes** · up to **~90%** off |
+| Reserved / Savings Plans | Up to **~72%** off |
+| Hibernation | RAM ≤ **150 GB** · up to **60 days** |
+| VPC / subnet CIDR | **/16** to **/28** · AWS reserves **5 IPs** per subnet (/27 = 32 addresses, 27 usable) |
+| VPC DNS | VPC CIDR base **+ 2** |
+| NACL | Ephemeral ports **1024 – 65535** · default **20** rules per direction, max **40** |
+| Site-to-Site VPN | **2 tunnels** per connection, **~1.25 Gbps** per tunnel |
+| EBS | Multi-Attach within one AZ, up to **16** instances · Snapshot Archive restore **24–72 hours** |
+| Route 53 Multivalue | Up to **8** healthy records |
+| Spread placement group | Up to **7** instances per AZ |
+| Global Accelerator | **2** static anycast IPs |
+| ENA | Bandwidth up to **100 Gbps** |
+| ACM expiration events | Start **45 days** before expiry |
+| CloudFormation | Only template version is `2010-09-09` · the only required section is `Resources` |
+| ALB access logs | Written to S3 every **5 minutes** |
+| IAM DB Auth token | Valid for **15 minutes**, SSL required |
+| KMS automatic rotation | Every **1 year** by default |
+| ALB certificates | **25** certs per listener |
+| CloudWatch EC2 | Default **5 minutes** · detailed **1 minute** · RDS Enhanced Monitoring down to **1 second** |
+| Ports | SSH **22** · RDP **3389** · HTTPS **443** · MySQL **3306** · PostgreSQL **5432** · MS SQL **1433** · Oracle **1521** · NFS **2049** · SMB **445** · DNS **53** (UDP) |

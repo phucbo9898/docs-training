@@ -326,5 +326,10 @@
     },
     "signedInAs": "Signed in as {email}",
     "signOut": "Sign out"
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for doesn't exist or has been moved.",
+    "backHome": "Back to home"
   }
 }

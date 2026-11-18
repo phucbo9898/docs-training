@@ -1,0 +1,75 @@
+---
+title: "Resilient"
+slug: "resilient"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 5
+type: lesson
+summary: "The 4 DR strategies by RPO/RTO, Multi-AZ and Aurora failover, Route 53, decoupling with SQS/SNS/EventBridge, ASG, backup and replication."
+---
+
+This domain asks: does the system survive when part of it fails, and can its components be decoupled? It makes up **26%** of the exam.
+
+## The 4 DR strategies
+
+Questions often frame these by RPO/RTO and cost.
+
+| Strategy | What's in the DR region | RTO | Cost |
+| --- | --- | --- | --- |
+| **Backup & Restore** | Only <mark>backups/snapshots</mark> | Hours | <mark>Cheapest</mark> |
+| **Pilot Light** | <mark>DB already replicating</mark>, <mark>servers off</mark> | Tens of minutes | Low |
+| **Warm Standby** | <mark>Scaled-down copy running</mark>, scales up when needed | Minutes | Medium |
+| **Multi-site Active-Active** | <mark>Full copy running in parallel</mark> | <mark>Near zero</mark> | Most expensive |
+
+## Keywords by scenario
+
+| Seen in the question | Choose |
+| --- | --- |
+| Scale a web app, add <mark>elasticity</mark> | **ELB + Auto Scaling Group** across multiple AZs (or Route 53 Weighted for multiple EC2) |
+| Need <mark>at least N instances</mark> when <mark>1 AZ fails</mark> | **Total − largest AZ ≥ N**; cheapest per AZ = N / (number of AZs − 1). E.g. 6 instances, 3 AZs → 3-3-3 |
+| RDS must survive <mark>an AZ failure</mark>, <mark>automatic failover</mark> | **RDS Multi-AZ** (sync, 60–120 second failover, CNAME switch) |
+| Aurora <mark>fast failover</mark>, <mark>same endpoint</mark> | **Add an Aurora Replica (reader) to the cluster**; app writes through the Cluster endpoint |
+| Aurora <mark>with a replica</mark>, primary fails | **Flip the CNAME, promote the replica** (~30 seconds, by priority tier 0–15) |
+| Aurora <mark>single instance</mark> fails | **Create a new instance in the same AZ**, best effort (no replica to flip to) |
+| <mark>Cross-region</mark> DR, <mark>RPO ~1 second</mark>, RTO under 1 minute | **Aurora Global Database** |
+| <mark>Cheap DR</mark>, <mark>RPO in seconds, RTO in minutes</mark> for on-prem/EC2 servers | **AWS Elastic Disaster Recovery** (pilot light) |
+| <mark>Cross-region RDS</mark> | **Cross-region Read Replica** (Multi-AZ is always within one region) |
+| <mark>Global NoSQL</mark>, low latency, <mark>multiple regions</mark> | **DynamoDB Global Tables** |
+| NAT Gateway <mark>must not be a single point of failure</mark> | **1 NAT Gateway per AZ**, private subnets route to the NAT in the same AZ |
+| <mark>Fallback page</mark> when the app is down | **Route 53 Failover routing → S3 static website** |
+| Only go to the secondary region <mark>when the primary fails</mark> | **Route 53 Failover routing + health checks** |
+| <mark>All sites running at once</mark> | **Route 53 Active-Active + health checks** |
+| <mark>Split traffic by %</mark>, <mark>canary</mark>, migrate on-prem → AWS | **Route 53 Weighted** or **ALB weighted target groups** |
+| ALB reports <mark>unhealthy</mark> even though <mark>SGs are correct</mark> | **Check the health check** (path, port, protocol) |
+| <mark>Region outage</mark>, <mark>lowest downtime</mark> | **Resources already running in region 2 + Route 53 failover** (restoring snapshots takes hours) |
+| CloudFront <mark>5xx errors</mark>, <mark>switch origin automatically</mark> | **CloudFront origin group** (origin failover, 2 origins) |
+| HA for <mark>dynamic content</mark> through CloudFront | **Origin group of 2 EC2/ALB in different AZs** (S3 is for static content only) |
+| <mark>Back up Direct Connect</mark> | **A 2nd DX**, or **Site-to-Site VPN** |
+| Requests <mark>are lost</mark> under <mark>sudden load spikes</mark> | **Buffer with SQS**, ASG scales on backlog (Step Functions is not a buffer) |
+| <mark>Decouple</mark>, <mark>asynchronous</mark> processing | **SQS** (pull) |
+| <mark>Exactly-once</mark>, <mark>strict ordering</mark> | **SQS FIFO** |
+| Repeatedly failing messages <mark>clog the queue</mark> | **Dead-letter queue** + maxReceiveCount |
+| SQS consumer <mark>dies mid-processing</mark> | The message reappears for another consumer after the **visibility timeout** |
+| <mark>Prevent other consumers from receiving the same message</mark> | **Visibility timeout** |
+| <mark>Empty responses</mark>, reduce polling cost | **SQS long polling** |
+| SQS + <mark>processing time SLA</mark> | **ASG scales on** `ApproximateAgeOfOldestMessage` |
+| 1 event sent to <mark>many destinations (fan-out)</mark> | **SNS topic → multiple SQS**; or **EventBridge** |
+| <mark>Filter messages</mark> into each queue | **SNS subscription filter policy** |
+| <mark>Prioritize premium/free</mark> | **2 SQS queues**, poll the priority queue first (SQS has no priority) |
+| Capture <mark>DynamoDB item changes</mark> | **DynamoDB Streams + Lambda** |
+| Capture <mark>Aurora MySQL data changes</mark> | **Aurora native function invoking Lambda** (RDS event subscriptions only report instance events) |
+| Run an ECS task when a <mark>new file lands in S3</mark> | **EventBridge rule → ECS task** (no Lambda needed) |
+| <mark>Multi-step</mark> workflow, <mark>retries</mark>, <mark>waiting for approval</mark> | **Step Functions** |
+| Migrate <mark>ActiveMQ/RabbitMQ</mark> | **Amazon MQ** |
+| <mark>Wait for the app to finish installing</mark> before creating the next resource (CloudFormation) | **CreationPolicy + cfn-signal** (DependsOn only enforces order) |
+| <mark>Change the AMI</mark> for an ASG | **New launch template version + Instance Refresh** |
+| Which instance an ASG <mark>terminates on scale-in</mark> | **AZ with the most instances → oldest launch template → closest to the billing hour** |
+| Collect logs / do work <mark>before termination</mark> | **Lifecycle hook** `Terminating:Wait` + **EventBridge** (_Lifecycle Action_) + **Lambda/SSM** |
+| ASG <mark>flapping</mark>, scaling constantly | **Increase the cooldown** or **raise the threshold** |
+| <mark>Sessions are lost</mark> when an instance is terminated | **Store sessions in ElastiCache or DynamoDB** (sticky sessions are still lost when the instance dies) |
+| <mark>Centralized backup</mark> across services, <mark>> 35 days</mark>, <mark>cross-account</mark> | **AWS Backup** (DLM is for EBS only) |
+| <mark>Prevent accidental deletion</mark> of S3 objects | **Versioning + MFA Delete** |
+| Elastic Beanstalk app logs <mark>not lost when instances are replaced</mark> | **Ship logs to S3 / CloudWatch Logs** (not just stored on EBS) |
+| S3 survives a <mark>region outage</mark> | **Cross-Region Replication** (requires Versioning) |
+| <mark>Redshift DR</mark> for a region outage | **Cross-Region Snapshot Copy** |

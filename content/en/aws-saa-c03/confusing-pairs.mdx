@@ -1,0 +1,64 @@
+---
+title: "Confusing service pairs"
+slug: "confusing-pairs"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 3
+type: lesson
+summary: "47 service pairs often placed side by side in answer options: Multi-AZ vs Read Replica, SQS vs Kinesis, KMS vs CloudHSM, Network Firewall vs WAF, Aurora vs Redshift…"
+---
+
+These service pairs often appear together among the 4 answer options. Knowing the core difference lets you eliminate half the options right away. If you are still unsure, use the [Quick classification questions](/en/aws-saa-c03/classification-questions) page to decide.
+
+## Quick comparison table
+
+| Pair | Quick distinction |
+| --- | --- |
+| Multi-AZ vs Read Replica | **Multi-AZ**: <mark>HA</mark>, <mark>automatic failover</mark>, synchronous, standby is not readable. **Read Replica**: <mark>read scaling</mark>, asynchronous, manual promotion |
+| SQS Standard vs FIFO vs Kinesis | **Standard**: <mark>possible duplicates</mark>, no ordering guarantee. **FIFO**: <mark>exactly-once</mark>, <mark>strict ordering</mark>. **Kinesis**: ordered per shard, <mark>stored and replayable</mark> |
+| Config vs CloudTrail vs EventBridge | **Config**: <mark>evaluates configuration compliance</mark>. **CloudTrail**: <mark>who called which API</mark>. **EventBridge**: <mark>receives events</mark>, does not evaluate anything itself |
+| SCP vs Config | **SCP**: <mark>prevents up front</mark>. **Config**: <mark>detects afterwards</mark> |
+| GuardDuty vs Inspector vs Macie | **GuardDuty**: <mark>threats from logs</mark>. **Inspector**: <mark>software vulnerabilities</mark> in EC2/ECR/Lambda. **Macie**: <mark>PII in S3</mark> |
+| Secrets Manager vs Parameter Store | **Secrets Manager**: <mark>auto rotation</mark>, charged per secret. **Parameter Store**: <mark>cheap</mark>, no automatic rotation |
+| IAM Identity Center vs Cognito vs Control Tower | **Identity Center**: <mark>internal employees</mark>, <mark>SSO</mark>. **Cognito**: <mark>end users of an app</mark>. **Control Tower**: set up and govern <mark>multi-account</mark> |
+| CloudFront vs Global Accelerator | **CloudFront**: <mark>HTTP</mark>, <mark>caching</mark>. **Global Accelerator**: <mark>TCP/UDP</mark>, <mark>static IP</mark>, no caching |
+| Lambda@Edge vs CloudFront Functions | **CloudFront Functions**: <mark>very lightweight logic</mark> (headers, URL), cheap. **Lambda@Edge**: <mark>more complex logic</mark> |
+| Transit Gateway vs Peering vs PrivateLink | **TGW**: <mark>hub for many VPCs</mark> + VPN + DX, <mark>transitive</mark>. **Peering**: <mark>1-to-1</mark>, not transitive. **PrivateLink**: <mark>exposes a single service</mark> |
+| DataSync vs Storage Gateway | **DataSync**: <mark>moves and syncs data</mark>. **Storage Gateway**: on-prem uses cloud storage <mark>long term</mark> |
+| ENI vs ENA vs EFA | **ENI**: <mark>basic virtual network card</mark>. **ENA**: <mark>Enhanced Networking</mark> (SR-IOV), <mark>Windows too</mark>. **EFA**: <mark>HPC</mark>, <mark>OS-bypass</mark>, Linux only and supported instances only (not t3a) |
+| SSE-S3 vs SSE-KMS vs SSE-C | **SSE-S3**: header `AES256`, <mark>AWS rotates the key</mark>. **SSE-KMS**: header `aws:kms`, <mark>CloudTrail audit</mark>. **SSE-C**: <mark>customer holds the key</mark> |
+| ACM public vs Private CA vs self-signed vs import | **Public**: <mark>free</mark>, trusted, <mark>auto-renews</mark>. **Private CA**: <mark>internal</mark>. **Self-signed**: <mark>not trusted</mark>. **Import**: <mark>no auto-renewal</mark> |
+| Standard CloudWatch metrics vs agent / Enhanced Monitoring | **Standard metrics** <mark>come from the hypervisor</mark> (CPU, network). <mark>Memory, processes</mark> need the **agent** or **Enhanced Monitoring** |
+| Predictive vs Scheduled vs Dynamic scaling | **Predictive**: <mark>ML forecasting</mark>, launches ahead. **Scheduled**: <mark>fixed times</mark>. **Dynamic**: <mark>reacts after</mark> load increases |
+| Budgets vs Cost Explorer vs Compute Optimizer | **Budgets**: <mark>alerts</mark>. **Cost Explorer**: <mark>view, analyze, forecast</mark>. **Compute Optimizer**: <mark>rightsizing</mark> |
+| RDS snapshot + terminate vs stop | **Stop** <mark>still charges for storage</mark>, <mark>auto-starts after 7 days</mark>. **Snapshot + terminate** is <mark>cheapest</mark> for an infrequently used DB |
+| Instance metadata vs user-data | **Metadata**: <mark>instance information</mark> (IP, ID, AZ). **User-data**: <mark>bootstrap script</mark> |
+| MGN vs Discovery Service vs VM Import | **MGN**: <mark>rehost</mark>, <mark>continuous replication</mark>. **Discovery**: <mark>assessment only</mark>. **VM Import**: <mark>one-time import</mark> |
+| Aurora vs Redshift | **Aurora**: <mark>OLTP</mark>, transactions, ACID (up to 128 TiB). **Redshift**: <mark>OLAP</mark>, BI, <mark>columnar</mark> |
+| Storage vs processing services | <mark>"store results"</mark> → **S3**, **Redshift**, **DynamoDB**. **EMR**, **Glue** <mark>process data, they are not storage</mark> |
+| Kinesis Data Streams vs S3 + EMR | <mark>Real-time + replay</mark> → **Kinesis**. **S3 + EMR** is <mark>batch</mark> |
+| CloudTrail vs X-Ray vs ALB access logs | **CloudTrail**: <mark>API call audit</mark>. **X-Ray**: <mark>microservice tracing</mark>. **ALB access logs**: <mark>HTTP request details</mark>, client IP |
+| Secrets Manager vs IAM DB Auth | **Secrets Manager**: <mark>rotates passwords</mark>. **IAM DB Auth**: <mark>15-minute token</mark> tied to an IAM user/role |
+| Global Accelerator vs Route 53 Weighted | **GA**: endpoints <mark>must be AWS resources</mark>. Splitting traffic by % <mark>with on-prem</mark> → **Route 53 Weighted** |
+| Network Firewall vs WAF | **Network Firewall**: <mark>VPC-level filtering</mark>, FQDN, IDS/IPS. **WAF**: <mark>HTTP layer 7</mark>, geo match, SQLi, XSS |
+| CNAME vs Alias | <mark>Zone apex</mark> (root domain) → **Alias A record**. **CNAME** <mark>cannot be used at the zone apex</mark> |
+| Volume Gateway cached vs stored vs Tape Gateway | **Cached**: <mark>primary data in S3</mark>, local cache. **Stored**: <mark>primary data on-prem</mark>. **Tape**: <mark>replaces tape backup</mark> |
+| Volume Gateway cached vs ElastiCache | <mark>Cache on-prem data</mark> → **Volume Gateway cached**. **ElastiCache** <mark>runs inside AWS</mark> |
+| Target tracking vs Step vs Simple scaling | **Target tracking**: <mark>keep a metric at X%</mark>. **Step**: your own thresholds + <mark>set of adjustments</mark>. **Simple**: <mark>1 alarm, 1 action</mark> |
+| Cluster Autoscaler vs Karpenter | **Karpenter**: scales nodes, <mark>least overhead</mark>, <mark>no node groups needed</mark> |
+| Fargate vs AWS Batch | **Fargate** <mark>maxes out at 16 vCPU / 120 GB</mark> per task. Large, parallel batch jobs with a <mark>job queue</mark> → **AWS Batch** |
+| Athena Federated Query vs AppSync pipeline resolvers | **Athena Federated**: <mark>query (read) many sources</mark>. **AppSync pipeline resolvers**: <mark>GraphQL read + write</mark> across tables |
+| App Runner vs SSM Run Command | **App Runner**: <mark>runs containerized web apps</mark>. **Run Command**: <mark>configures EC2 without SSH/RDP</mark> |
+| KMS vs CloudHSM | **KMS**: <mark>managed</mark>, integrated with AWS services. **CloudHSM**: <mark>dedicated HSM</mark>, exclusive control, <mark>lose the key and it is gone for good</mark> |
+| ElastiCache Memcached vs Redis | **Memcached**: <mark>multithreaded</mark>, simple cache, Auto Discovery. **Redis**: <mark>persistence, replication</mark>, leaderboards, Global Datastore |
+| Aurora cloning vs snapshot vs Backtrack | **Cloning**: <mark>copy-on-write</mark>, test DB almost instantly. **Snapshot**: slower. **Backtrack**: <mark>rewinds the DB in place</mark>, no restore |
+| Dedicated Hosts vs Capacity Reservations | **Dedicated Hosts**: <mark>BYOL per socket/core</mark>. **On-Demand Capacity Reservations**: <mark>reserve capacity per AZ</mark> |
+| API Gateway vs Lambda Function URL | **Function URL**: <mark>simple webhook</mark>, least overhead. **API Gateway**: full REST API (<mark>auth, throttling, caching</mark>) |
+| Step Functions vs SQS | **Step Functions**: <mark>workflow orchestration</mark>. **SQS**: <mark>buffer, decouple</mark> (Step Functions is not a buffer) |
+| Elastic Disaster Recovery vs RDS + DMS | **Elastic DR**: <mark>cheap pilot light</mark>, RPO in seconds, RTO in minutes. **RDS + DMS** running all the time is <mark>warm standby, more expensive</mark> |
+| Vertical vs Horizontal scaling | **Vertical**: <mark>a bigger machine</mark>. **Horizontal**: <mark>more machines</mark> |
+| Cross-zone LB vs path routing | **Cross-zone**: <mark>spreads load evenly across AZs</mark>. **Path routing**: <mark>routes by URL</mark> |
+| Compute vs Storage Optimized | **Compute (C)**: <mark>high CPU</mark>. **Storage Optimized (I, D, H)**: <mark>local storage, sequential I/O</mark> |
+| Step Scaling vs Kinesis UpdateShardCount | **Kinesis** <mark>scales by shards</mark>, not with EC2 scaling policies |
+| GZIP vs Parquet | **Parquet/ORC**: <mark>columnar</mark>, Athena <mark>scans less data</mark>. **GZIP** <mark>only compresses</mark> |

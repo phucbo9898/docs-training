@@ -1,0 +1,64 @@
+---
+title: "Recurring traps"
+slug: "recurring-traps"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 1
+type: lesson
+summary: "The 23 most common traps combined from 6 practice exams, 3 instantly recognizable scenarios and 2 mistakes that keep coming back even after review."
+---
+
+Combined from all 6 exams, sorted by how often people fall for them.
+
+<Callout type="info" title="Before locking in an answer">
+Ask yourself the 8 questions below.
+</Callout>
+
+## The 8 most common traps
+
+1. **Missing the deciding word.** Underline NOT, EXCEPT, LEAST, MOST cost-effective, LEAST operational overhead. "any", "only if", "always" in an answer are usually wrong.
+2. **Services that sound related but are off-topic, or features that don't exist.** Examples: S3 Cache, SQS priority, Parameter Store auto-rotate, Aurora Parallel Query, AWS Batch, Lex, SageMaker Clarify, Spot volume, SR-IOV volume, installing software on S3, SCP attached to a bucket. Ask yourself: does this service actually solve the problem in the question?
+3. **One wrong part makes the whole answer wrong.** Check each part of 2–3-part answers: region, protocol, path, numbers (DeleteMarkerCreated instead of Delete, presigned URL instead of OAC, cert in us-east-1 for a Regional API, 800 IOPS for a small io1 volume).
+4. **If there's a managed/native service, don't build it yourself.** "LEAST overhead", "easily" → managed (Route 53 failover, DLM, Glue, Athena, Config managed rules, Predictive Scaling), not custom Lambda/EC2, not snapshot-then-restore.
+5. **Choosing an expensive solution the question didn't ask for.** Multi-region, Dedicated IP, Firewall Manager for 1 account are all overkill. If the question only mentions an AZ failing, Multi-AZ is enough.
+6. **Wrong scope.** ELB and ASG are within 1 region; subnets and EBS are within 1 AZ; VPC peering is not transitive; EC2 quotas are per region, not per AZ.
+7. **Confusing detection with prevention.** "unable to / prevent" → SCP, IAM policy. "detect / identify" → Config rule, GuardDuty.
+8. **Getting the direction of permissions or traffic backwards.** Lambda calling out → execution role; who can invoke Lambda → resource policy. NACLs are stateless → open outbound ephemeral ports for responses. Roles have no members; many users with the same permissions → IAM Group.
+
+## 3 common scenarios
+
+<Callout type="warning" title="Recognize instantly">
+
+- Workload "can be interrupted" → **Spot**.
+- Slow corporate network, transfer would take weeks → **offline transfer**; every online solution is wrong.
+- Features that can only be enabled at creation (hibernation, EBS/RDS encryption) → create new or migrate.
+
+</Callout>
+
+## Two mistakes that keep coming back, even after review
+
+<Callout type="danger" title="Reviewed but still wrong">
+
+- **Multi-AZ is not for scaling reads.** "read-heavy, reporting, offload read" → Read Replica or cache. Multi-AZ is only for failover; the standby is not readable.
+- **Instances-per-AZ math.** Always consider the worst case: **total − largest AZ ≥ N**.
+
+</Callout>
+
+## Subtler traps
+
+9. **Configuration details beat generic keywords.** The question says HPC but Windows or t3a → ENA, not EFA. HPC but SMB/NTFS/AD → FSx for Windows, not Lustre. Wavelength → EC2 node group, not Fargate. Aurora _single instance_ → no replica to flip the CNAME to.
+10. **Correct knowledge, wrong scenario.** Global Accelerator can't point to on-prem (on-prem → Route 53 Weighted). Secrets Manager rotates passwords; it doesn't issue 15-minute tokens (tokens → IAM DB Auth).
+11. **It's already the default, nothing to do.** CloudTrail logs are already SSE-S3 encrypted. Below 3,500 PUT / 5,500 GET per second per prefix, S3 needs no renaming or prefix splitting. EBS encryption automatically carries over to snapshots, volumes created from snapshots, and instance ↔ volume traffic.
+12. **IAM: is the Condition in an Allow or a Deny?** An IP condition in a Deny means that IP is blocked. An explicit Deny always wins.
+13. **Choose-two questions: the two answers must complement each other.** Detect + notify; peering + route table; scale pods (HPA) + scale nodes (Karpenter). Don't pick two answers with the same role.
+14. **Made-up terms.** "Receiving Timeout" doesn't exist (there's only visibility timeout). CloudHSM has no "snapshot" to recover keys. SSE uses AES-256, not AES-128.
+15. **Read the traffic direction and eliminate.** Blocking inbound clients by country → WAF geo match, not Network Firewall (outbound FQDN filtering). The question says the SG is correct yet the instance is still unhealthy → check the health check.
+16. **"It works" but isn't optimal.** One of the most common mistakes. Read the condition phrases (_MOST cost-effective_, _LEAST overhead_, _&lt; 1 second_) **before** reading the answers, then eliminate answers with unnecessary components.
+17. **"Multiple regions" as a distractor.** Determine the real scope of the question; often Multi-AZ within one region is all that's needed. Multi-AZ is always within one region; cross-region → Read Replica or Aurora Global Database.
+18. **Definitions turned around.** Vertical = a bigger machine, Horizontal = more machines. KMS = managed; CloudHSM = dedicated HSM, exclusively customer-controlled.
+19. **In transit or at rest.** SSL/TLS (`rds.force_ssl`) is in transit; KMS, TDE are at rest.
+20. **IPv4 or IPv6.** Private IPv4 out to the Internet → NAT Gateway; outbound-only IPv6 → Egress-only IGW. To AWS services (not the Internet) → VPC endpoint.
+21. **Static or dynamic.** S3 only serves static content; dynamic content needs EC2/ALB as the origin.
+22. **Metrics that don't exist.** ALB and target groups have no CPU metric; ECS services scale on service CPU/Memory.
+23. **Defaults and minimum storage durations.** Kinesis keeps data for only 24 hours by default ("default settings" is a trap). Data that lives a few hours → S3 Standard, not IA (30-day minimum billing).
