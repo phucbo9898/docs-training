@@ -13,6 +13,7 @@ const exam: Exam = {
   questions: [
     {
       id: "bo-1-1-01",
+      number: 1,
       baseId: "tt1-03",
       domain: "resilient",
       prompt: "Which queue?",
@@ -32,10 +33,11 @@ const exam: Exam = {
 };
 
 describe("toPublicExam", () => {
-  it("chỉ giữ id, domain, prompt, options và selectCount của câu", () => {
+  it("chỉ giữ id, number, domain, prompt, options và selectCount của câu", () => {
     const [question] = toPublicExam(exam).questions;
     assert.deepEqual(question, {
       id: "bo-1-1-01",
+      number: 1,
       domain: "resilient",
       prompt: "Which queue?",
       options: exam.questions[0]?.options,

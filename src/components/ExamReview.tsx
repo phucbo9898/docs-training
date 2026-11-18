@@ -42,9 +42,9 @@ export default function ExamReview({
   const [closed, setClosed] = useState<ReadonlySet<string>>(new Set());
 
   const markedSet = new Set(marked);
-  const items = exam.questions.map((question, index) => ({
+  const items = exam.questions.map((question) => ({
     question,
-    number: index + 1,
+    number: question.number,
     status: questionStatus(question, answers[question.id]),
     marked: markedSet.has(question.id),
   }));

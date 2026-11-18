@@ -11,6 +11,7 @@ function question(
   const ids = ["a", "b", "c", "d", "e"];
   return {
     id,
+    number: 1,
     baseId: id,
     domain,
     prompt: `Question ${id}`,

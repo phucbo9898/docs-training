@@ -28,6 +28,7 @@ type ExamQuestionBase = {
   /** Tiếng Anh, giống đề thật. */
   prompt: string;
   options: ExamOption[];
+  number: number;
 };
 
 /** Đáp án và lời giải: Exam mode chỉ nhận sau khi nộp bài. */

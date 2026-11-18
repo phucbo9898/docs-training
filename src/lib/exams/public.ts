@@ -15,6 +15,7 @@ export function toPublicExam(exam: Exam): PublicExam {
     mock: exam.mock,
     questions: exam.questions.map((question) => ({
       id: question.id,
+      number: question.number,
       domain: question.domain,
       prompt: question.prompt,
       options: question.options.map((option) => ({

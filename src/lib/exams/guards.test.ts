@@ -13,6 +13,7 @@ function exam(overrides: Record<string, unknown>) {
     questions: [
       {
         id: "bo-1-1-01",
+        number: 1,
         baseId: "q1",
         domain: "secure",
         prompt: "Which option?",
@@ -50,6 +51,12 @@ describe("examErrors", () => {
       ),
       [],
     );
+  });
+
+  it("number phải khớp vị trí câu", () => {
+    for (const number of [undefined, 0, 2, "1"]) {
+      assert.notDeepEqual(examErrors(exam({ number })), []);
+    }
   });
 
   it("vẫn từ chối giải thích không phải chuỗi", () => {

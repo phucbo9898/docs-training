@@ -34,7 +34,8 @@ function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every(isString);
 }
 
-function questionErrors(value: unknown, at: string): Errors {
+/** `position` bắt đầu từ 1: số câu phải khớp vị trí để lưới câu, đầu câu và chữa đề cùng một số. */
+function questionErrors(value: unknown, at: string, position: number): Errors {
   if (!isRecord(value)) return [`${at}: không phải object`];
   const errors: Errors = [];
   const q = value;
@@ -42,6 +43,9 @@ function questionErrors(value: unknown, at: string): Errors {
   for (const key of ["id", "baseId", "prompt", "explanation"] as const) {
     if (!isString(q[key]))
       errors.push(`${at}.${key}: thiếu hoặc không phải chuỗi`);
+  }
+  if (q.number !== position) {
+    errors.push(`${at}.number: phải là ${position} (đúng vị trí câu)`);
   }
   if (q.domain !== null && !isString(q.domain)) {
     errors.push(`${at}.domain: phải là chuỗi hoặc null`);
@@ -116,7 +120,7 @@ export function examErrors(value: unknown): Errors {
     return errors;
   }
   value.questions.forEach((question, index) => {
-    errors.push(...questionErrors(question, `questions[${index}]`));
+    errors.push(...questionErrors(question, `questions[${index}]`, index + 1));
   });
   const ids = value.questions.filter(isRecord).map((question) => question.id);
   if (new Set(ids).size !== ids.length)
