@@ -197,6 +197,7 @@
     "loading": "Đang tải đề…",
     "examLabel": "Đề {number}",
     "questionCount": "{count} câu",
+    "sidebarHeading": "Bộ đề",
     "setup": {
       "source": "Chọn bộ đề",
       "sourceMeta": "{exams} đề",

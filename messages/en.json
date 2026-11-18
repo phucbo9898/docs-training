@@ -197,6 +197,7 @@
     "loading": "Loading exam…",
     "examLabel": "Exam {number}",
     "questionCount": "{count} questions",
+    "sidebarHeading": "Exam sets",
     "setup": {
       "source": "Choose a set",
       "sourceMeta": "{exams} exams",
