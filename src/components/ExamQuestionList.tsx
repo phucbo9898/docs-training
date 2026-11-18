@@ -1,14 +1,14 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { ExamQuestion } from "@/lib/exams/types";
+import type { ExamQuestionPrompt } from "@/lib/exams/types";
 import ExamFlagIcon from "./ExamFlagIcon";
 import ExamStatusIcon, { type ExamItemStatus } from "./ExamStatusIcon";
 
 type ExamQuestionListProps = {
-  questions: ExamQuestion[];
+  questions: readonly ExamQuestionPrompt[];
   current: number;
-  statusOf: (question: ExamQuestion) => ExamItemStatus;
+  statusOf: (question: ExamQuestionPrompt) => ExamItemStatus;
   marked: ReadonlySet<string>;
   onSelect: (index: number) => void;
 };
@@ -38,25 +38,38 @@ export default function ExamQuestionList({
               type="button"
               onClick={() => onSelect(index)}
               aria-current={active ? "step" : undefined}
-              className={`flex min-h-11 w-full items-center gap-2 rounded-md px-2 py-2 text-left text-sm ${
+              className={`flex min-h-11 w-full flex-col gap-1 rounded-md px-2 py-2 text-left text-sm ${
                 active
                   ? "bg-primary/10 font-semibold text-primary-text ring-1 ring-primary"
                   : "text-text hover:bg-bg-subtle"
               }`}
             >
-              <ExamStatusIcon status={status} label={t(`status.${status}`)} />
-              <span className="w-7 shrink-0 tabular-nums text-text-muted">
-                {index + 1}.
+              <span className="flex items-center gap-2">
+                <ExamStatusIcon status={status} label={t(`status.${status}`)} />
+                <span className="tabular-nums text-text-muted">
+                  {question.number}
+                </span>
+                {status === "correct" || status === "incorrect" ? (
+                  // Icon trạng thái đã có nhãn cho trình đọc màn hình.
+                  <span
+                    aria-hidden="true"
+                    className={`shrink-0 rounded px-1.5 py-0.5 text-xs font-bold text-bg ${
+                      status === "correct" ? "bg-success" : "bg-danger"
+                    }`}
+                  >
+                    {t(`status.${status}`)}
+                  </span>
+                ) : null}
+                {isMarked ? (
+                  <span className="ml-auto inline-flex text-warning">
+                    <ExamFlagIcon filled />
+                    <span className="sr-only">{t("status.marked")}</span>
+                  </span>
+                ) : null}
               </span>
-              <span className="min-w-0 flex-1 truncate" title={question.prompt}>
+              <span className="block w-full truncate" title={question.prompt}>
                 {question.prompt}
               </span>
-              {isMarked ? (
-                <span className="inline-flex text-warning">
-                  <ExamFlagIcon filled />
-                  <span className="sr-only">{t("status.marked")}</span>
-                </span>
-              ) : null}
             </button>
           </li>
         );

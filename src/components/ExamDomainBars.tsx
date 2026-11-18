@@ -1,11 +1,11 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { ScoreSummary } from "@/lib/exams/score";
-import { EXAM_DOMAINS, type ExamDomain } from "@/lib/exams/types";
+import type { DomainScore } from "@/lib/exams/score";
+import { useDomainLabel } from "@/lib/exams/use-domain-label";
 
 type ExamDomainBarsProps = {
-  byDomain: Partial<Record<ExamDomain, ScoreSummary>>;
+  byDomain: DomainScore[];
 };
 
 /** Phần nhỏ hơn ngưỡng này không đủ chỗ ghi % bên trong thanh. */
@@ -18,12 +18,11 @@ function percentOf(value: number, total: number): number {
 /** Mỗi domain một thanh xếp chồng Đúng / Sai / Bỏ qua. */
 export default function ExamDomainBars({ byDomain }: ExamDomainBarsProps) {
   const t = useTranslations("Exams");
+  const domainLabel = useDomainLabel();
 
   return (
     <ul className="space-y-5">
-      {EXAM_DOMAINS.map((domain) => {
-        const score = byDomain[domain];
-        if (!score) return null;
+      {byDomain.map(({ domain, summary: score }) => {
         const parts = [
           {
             key: "correct",
@@ -48,10 +47,10 @@ export default function ExamDomainBars({ byDomain }: ExamDomainBarsProps) {
         });
 
         return (
-          <li key={domain}>
+          <li key={domain ?? ""}>
             <p className="font-semibold text-text">
               {t("domainHeading", {
-                domain: t(`domain.${domain}`),
+                domain: domainLabel(domain),
                 count: score.total,
               })}
             </p>

@@ -1,11 +1,10 @@
 import {
-  EXAM_DOMAINS,
-  type Exam,
-  type ExamDomain,
+  type ExamAnswers,
   type ExamIndex,
   type ExamIndexEntry,
   type ExamOption,
   type ExamSource,
+  type StoredExam,
 } from "./types";
 
 /**
@@ -27,10 +26,6 @@ function isPositiveInt(value: unknown): value is number {
   return typeof value === "number" && Number.isInteger(value) && value > 0;
 }
 
-function isDomain(value: unknown): value is ExamDomain {
-  return EXAM_DOMAINS.some((domain) => domain === value);
-}
-
 function isOption(value: unknown): value is ExamOption {
   return isRecord(value) && isString(value.id) && isString(value.text);
 }
@@ -39,7 +34,8 @@ function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every(isString);
 }
 
-function questionErrors(value: unknown, at: string): Errors {
+/** `position` bắt đầu từ 1: số câu phải khớp vị trí để lưới câu, đầu câu và chữa đề cùng một số. */
+function questionErrors(value: unknown, at: string, position: number): Errors {
   if (!isRecord(value)) return [`${at}: không phải object`];
   const errors: Errors = [];
   const q = value;
@@ -48,11 +44,16 @@ function questionErrors(value: unknown, at: string): Errors {
     if (!isString(q[key]))
       errors.push(`${at}.${key}: thiếu hoặc không phải chuỗi`);
   }
-  if (!isDomain(q.domain)) errors.push(`${at}.domain: không hợp lệ`);
+  if (q.number !== position) {
+    errors.push(`${at}.number: phải là ${position} (đúng vị trí câu)`);
+  }
+  if (q.domain !== null && !isString(q.domain)) {
+    errors.push(`${at}.domain: phải là chuỗi hoặc null`);
+  }
   if (q.hint !== undefined && !isString(q.hint)) {
     errors.push(`${at}.hint: phải là chuỗi`);
   }
-  if (q.reviewPage !== undefined && !isString(q.reviewPage)) {
+  if (q.reviewPage !== undefined && typeof q.reviewPage !== "string") {
     errors.push(`${at}.reviewPage: phải là chuỗi`);
   }
 
@@ -85,7 +86,8 @@ function questionErrors(value: unknown, at: string): Errors {
     if (keys.join() !== [...ids].sort().join()) {
       errors.push(`${at}.optionExplanations: key phải khớp id các lựa chọn`);
     }
-    if (!Object.values(explanations).every(isString)) {
+    // Chuỗi rỗng hợp lệ: lựa chọn đó không có giải thích riêng.
+    if (!Object.values(explanations).every((v) => typeof v === "string")) {
       errors.push(`${at}.optionExplanations: giá trị phải là chuỗi`);
     }
   }
@@ -118,7 +120,7 @@ export function examErrors(value: unknown): Errors {
     return errors;
   }
   value.questions.forEach((question, index) => {
-    errors.push(...questionErrors(question, `questions[${index}]`));
+    errors.push(...questionErrors(question, `questions[${index}]`, index + 1));
   });
   const ids = value.questions.filter(isRecord).map((question) => question.id);
   if (new Set(ids).size !== ids.length)
@@ -127,7 +129,7 @@ export function examErrors(value: unknown): Errors {
   return errors;
 }
 
-export function isExam(value: unknown): value is Exam {
+export function isExam(value: unknown): value is StoredExam {
   return examErrors(value).length === 0;
 }
 
@@ -162,5 +164,26 @@ export function isExamIndex(value: unknown): value is ExamIndex {
     Array.isArray(value.sources) &&
     value.sources.length > 0 &&
     value.sources.every(isSource)
+  );
+}
+
+/**
+ * Bài làm gửi lên Server Action: dữ liệu từ client nên kiểm tra kỹ. Giới hạn
+ * số câu và số lựa chọn để payload bất thường không làm server chấm vô ích.
+ */
+export function isExamAnswers(
+  value: unknown,
+  limits: { questions: number; options: number },
+): value is ExamAnswers {
+  if (!isRecord(value)) return false;
+  const entries = Object.entries(value);
+  return (
+    entries.length <= limits.questions &&
+    entries.every(
+      ([, picked]) =>
+        Array.isArray(picked) &&
+        picked.length <= limits.options &&
+        picked.every((id) => typeof id === "string" && id.length <= 64),
+    )
   );
 }

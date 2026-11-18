@@ -7,7 +7,7 @@ import { useSearch } from "./SearchProvider";
 type SearchBoxProps = {
   /** Hiện gợi ý phím tắt; tắt trong drawer mobile vì không có bàn phím. */
   showShortcut?: boolean;
-  /** Dưới lg chỉ hiện icon để nhường chỗ cho logo và tiêu đề trong header. */
+  /** Dưới lg chỉ hiện icon để nhường chỗ cho tiêu đề trong header. */
   compact?: boolean;
 };
 

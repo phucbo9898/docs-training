@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import LessonPageContent from "@/components/LessonPageContent";
 import { routing } from "@/i18n/routing";
 import { getAllLessons, getLesson, isIndexSlug } from "@/lib/content";
+import { trackPageTitle } from "@/lib/page-title";
 
 export async function generateStaticParams() {
   const perLocale = await Promise.all(
@@ -26,7 +27,9 @@ export async function generateMetadata({
   const { locale, module, lesson: slug } = await params;
   if (!hasLocale(routing.locales, locale) || isIndexSlug(slug)) return {};
   const lesson = await getLesson(locale, module, slug);
-  return lesson ? { title: lesson.title } : {};
+  return lesson
+    ? { title: await trackPageTitle(locale, lesson.track, lesson.title) }
+    : {};
 }
 
 export default function LessonPage({

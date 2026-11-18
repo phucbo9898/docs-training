@@ -1,7 +1,15 @@
+import "server-only";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { examErrors, isExam, isExamIndex } from "./guards";
-import type { Exam, ExamIndex, ExamIndexEntry, ExamSource } from "./types";
+import { toPublicExam } from "./public";
+import type {
+  Exam,
+  ExamIndex,
+  ExamIndexEntry,
+  ExamSource,
+  PublicExam,
+} from "./types";
 
 const EXAMS_DIR = path.join(process.cwd(), "content", "exams");
 
@@ -38,6 +46,9 @@ export function findExamEntry(
 }
 
 /**
+ * Chỉ gọi sau khi đã kiểm tra phiên (`requireExamUser`). `"use cache"` ở đây là
+ * cache phía server, không đưa dữ liệu vào trang tĩnh.
+ *
  * Một đề theo (bộ, số). Tra qua index nên tham số URL không đi thẳng vào
  * đường dẫn file; đề không có trong index trả về `null`, file có mà sai định
  * dạng hoặc lệch index thì throw.
@@ -77,5 +88,20 @@ export async function getExam(
       `exams: ${file} lệch với index.json ở: ${mismatch.join(", ")}`,
     );
   }
-  return exam;
+  return {
+    ...exam,
+    questions: exam.questions.map((question) => ({
+      ...question,
+      selectCount: question.correct.length,
+    })),
+  };
+}
+
+/** Đề cho Exam mode: không có đáp án, giải thích, gợi ý. */
+export async function getPublicExam(
+  source: string,
+  number: number,
+): Promise<PublicExam | null> {
+  const exam = await getExam(source, number);
+  return exam ? toPublicExam(exam) : null;
 }

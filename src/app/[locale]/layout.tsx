@@ -106,7 +106,7 @@ export default async function LocaleLayout({
                 >
                   {tc("skipToContent")}
                 </a>
-                <Header />
+                <Header tracks={tracks} />
                 <div className="mx-auto flex w-full max-w-[90rem] flex-1">
                   <Sidebar tracks={tracks} examSources={examIndex.sources} />
                   <main id="main" className="min-w-0 flex-1">

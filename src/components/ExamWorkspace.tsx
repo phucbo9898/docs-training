@@ -7,9 +7,13 @@ import {
   useMemo,
   useRef,
   useState,
+  useTransition,
 } from "react";
+import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { questionStatus } from "@/lib/exams/score";
+import { Link } from "@/i18n/navigation";
+import { submitExam } from "@/lib/exams/actions";
+import { gradeExam, questionStatus, type ExamGrade } from "@/lib/exams/score";
 import {
   clearProgress,
   loadProgress,
@@ -18,8 +22,15 @@ import {
   saveProgress,
   type ExamProgress,
 } from "@/lib/exams/session";
-import type { Exam, ExamMode, ExamQuestion } from "@/lib/exams/types";
+import type {
+  Exam,
+  ExamQuestion,
+  ExamQuestionPrompt,
+  ExamSessionData,
+} from "@/lib/exams/types";
 import ExamDialog from "./ExamDialog";
+import ExamFinishPrompt from "./ExamFinishPrompt";
+import ExamQuestionActions from "./ExamQuestionActions";
 import ExamQuestionList from "./ExamQuestionList";
 import ExamQuestionView from "./ExamQuestionView";
 import ExamResult from "./ExamResult";
@@ -28,15 +39,18 @@ import type { ExamItemStatus } from "./ExamStatusIcon";
 import ExamTimer from "./ExamTimer";
 import ExamToolbar from "./ExamToolbar";
 
-type ExamWorkspaceProps = {
-  exam: Exam;
-  mode: ExamMode;
-};
+type ExamWorkspaceProps = ExamSessionData;
 
 type Phase = "doing" | "result" | "review";
 
-/** Đã nộp: giữ lại bài làm để chấm và chữa. */
-type Finished = ExamProgress & { finishedAt: number };
+/** Đã nộp: giữ lại bài làm, đề đầy đủ đáp án và điểm để hiện kết quả, chữa đề. */
+type Finished = ExamProgress & {
+  finishedAt: number;
+  exam: Exam;
+  grade: ExamGrade;
+};
+
+type SubmitError = "unauthorized" | "failed";
 
 const MINUTE_MS = 60_000;
 
@@ -54,14 +68,14 @@ function isTextEntry(target: EventTarget | null): boolean {
   return false;
 }
 
-function isRevealed(
-  mode: ExamMode,
-  question: ExamQuestion,
-  selected: readonly string[] | undefined,
-): boolean {
-  return (
-    mode === "practice" && (selected?.length ?? 0) >= question.correct.length
-  );
+/** Practice mode, đã bấm "Kiểm tra đáp án": trả câu đầy đủ để hiện kết quả. */
+function revealedAnswer(
+  answerKey: ReadonlyMap<string, ExamQuestion> | null,
+  question: ExamQuestionPrompt,
+  checked: readonly string[],
+): ExamQuestion | null {
+  if (!answerKey || !checked.includes(question.id)) return null;
+  return answerKey.get(question.id) ?? null;
 }
 
 const buttonPrimary =
@@ -69,10 +83,25 @@ const buttonPrimary =
 const buttonSecondary =
   "inline-flex min-h-11 items-center gap-2 rounded-lg border border-border px-4 text-sm font-semibold text-text hover:bg-bg-subtle";
 
-export default function ExamWorkspace({ exam, mode }: ExamWorkspaceProps) {
+export default function ExamWorkspace(props: ExamWorkspaceProps) {
+  const { exam, mode } = props;
+  const questions: readonly ExamQuestionPrompt[] = exam.questions;
+  // Chỉ Practice mode có đáp án trên trình duyệt.
+  const practiceExam = props.mode === "practice" ? props.exam : null;
+  const answerKey = useMemo(
+    () =>
+      practiceExam
+        ? new Map(practiceExam.questions.map((q) => [q.id, q]))
+        : null,
+    [practiceExam],
+  );
   const t = useTranslations("Exams");
+  const pathname = usePathname();
+  const [submitting, startSubmit] = useTransition();
+  const [submitError, setSubmitError] = useState<SubmitError | null>(null);
+  const submittingRef = useRef(false);
   const key = progressKey(exam.source, exam.number, mode);
-  const total = exam.questions.length;
+  const total = questions.length;
 
   const [progress, setProgress] = useState<ExamProgress>(
     () => loadProgress(key) ?? newProgress(),
@@ -88,10 +117,10 @@ export default function ExamWorkspace({ exam, mode }: ExamWorkspaceProps) {
   const submitTitleId = useId();
 
   const current = Math.min(progress.current, total - 1);
-  const question = exam.questions[current];
+  const question = questions[current];
   const selected = question ? (progress.answers[question.id] ?? []) : [];
   const marked = useMemo(() => new Set(progress.marked), [progress.marked]);
-  const answeredCount = exam.questions.filter(
+  const answeredCount = questions.filter(
     (q) => (progress.answers[q.id]?.length ?? 0) > 0,
   ).length;
 
@@ -117,16 +146,17 @@ export default function ExamWorkspace({ exam, mode }: ExamWorkspaceProps) {
   );
 
   const toggleOption = useCallback(
-    (target: ExamQuestion, optionId: string) => {
+    (target: ExamQuestionPrompt, optionId: string) => {
       setProgress((prev) => {
         const picked = prev.answers[target.id] ?? [];
-        if (isRevealed(mode, target, picked)) return prev;
+        // Đã kiểm tra đáp án thì khóa câu.
+        if (prev.checked.includes(target.id)) return prev;
         let next: string[];
-        if (target.correct.length === 1) {
+        if (target.selectCount === 1) {
           next = [optionId];
         } else if (picked.includes(optionId)) {
           next = picked.filter((id) => id !== optionId);
-        } else if (picked.length >= target.correct.length) {
+        } else if (picked.length >= target.selectCount) {
           return prev;
         } else {
           next = [...picked, optionId];
@@ -134,8 +164,17 @@ export default function ExamWorkspace({ exam, mode }: ExamWorkspaceProps) {
         return { ...prev, answers: { ...prev.answers, [target.id]: next } };
       });
     },
-    [mode],
+    [],
   );
+
+  const checkAnswer = useCallback((target: ExamQuestionPrompt) => {
+    setProgress((prev) => {
+      const picked = prev.answers[target.id] ?? [];
+      if (picked.length < target.selectCount) return prev;
+      if (prev.checked.includes(target.id)) return prev;
+      return { ...prev, checked: [...prev.checked, target.id] };
+    });
+  }, []);
 
   const toggleMark = useCallback((id: string) => {
     setProgress((prev) => ({
@@ -146,22 +185,94 @@ export default function ExamWorkspace({ exam, mode }: ExamWorkspaceProps) {
     }));
   }, []);
 
+  const finish = useCallback(
+    (snapshot: ExamProgress, fullExam: Exam, grade: ExamGrade) => {
+      // Chỉ xóa bài làm dở khi đã chấm xong: nộp lỗi thì vẫn làm tiếp được.
+      clearProgress(key);
+      setFinished({
+        ...snapshot,
+        finishedAt: Date.now(),
+        exam: fullExam,
+        grade,
+      });
+      setPhase("result");
+      window.scrollTo({ top: 0 });
+    },
+    [key],
+  );
+
   const submit = useCallback(() => {
-    clearProgress(key);
+    // Hết giờ và bấm nộp có thể trùng nhau: chỉ gửi một lần.
+    if (submittingRef.current) return;
     setSubmitOpen(false);
     setListOpen(false);
-    setFinished({ ...progress, finishedAt: Date.now() });
-    setPhase("result");
-    window.scrollTo({ top: 0 });
-  }, [key, progress]);
+    setSubmitError(null);
+    const snapshot = progress;
 
-  function restart() {
+    if (practiceExam) {
+      finish(snapshot, practiceExam, gradeExam(practiceExam, snapshot.answers));
+      return;
+    }
+
+    submittingRef.current = true;
+    startSubmit(async () => {
+      try {
+        const result = await submitExam(
+          exam.source,
+          exam.number,
+          snapshot.answers,
+        );
+        if (result.ok) {
+          finish(snapshot, result.exam, result.grade);
+        } else {
+          setSubmitError(
+            result.error === "unauthorized" ? "unauthorized" : "failed",
+          );
+        }
+      } catch {
+        setSubmitError("failed");
+      } finally {
+        submittingRef.current = false;
+      }
+    });
+  }, [progress, practiceExam, finish, exam.source, exam.number]);
+
+  const resetAttempt = useCallback(() => {
     clearProgress(key);
+    setSubmitError(null);
     setProgress(newProgress());
     setFinished(null);
     setPhase("doing");
+    setListOpen(false);
+    setSubmitOpen(false);
+  }, [key]);
+
+  function restart() {
+    resetAttempt();
     window.scrollTo({ top: 0 });
   }
+
+  // Exam mode: rời trang đề là bỏ lượt làm, quay lại thì làm từ đầu với đồng hồ
+  // mới. Next (cacheComponents) giữ state trang vừa rời bằng <Activity>, nên
+  // phải tự reset khi trang hiện lại. Refresh không chạy cleanup nên vẫn giữ bài.
+  // Cleanup chỉ đánh dấu "đã rời" ở macrotask sau: StrictMode gỡ rồi gắn lại
+  // effect ngay lập tức nên không bị tính là rời trang.
+  const leftRef = useRef(false);
+  const leaveTimerRef = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    if (mode !== "exam") return;
+    window.clearTimeout(leaveTimerRef.current);
+    if (leftRef.current) {
+      leftRef.current = false;
+      resetAttempt();
+    }
+    return () => {
+      leaveTimerRef.current = window.setTimeout(() => {
+        leftRef.current = true;
+        clearProgress(key);
+      }, 0);
+    };
+  }, [mode, key, resetAttempt]);
 
   // Phím tắt: ←/→ chuyển câu, 1–9 chọn đáp án.
   useEffect(() => {
@@ -204,17 +315,18 @@ export default function ExamWorkspace({ exam, mode }: ExamWorkspaceProps) {
   }, [phase, question, current, goTo, toggleOption]);
 
   const statusOf = useCallback(
-    (q: ExamQuestion): ExamItemStatus => {
+    (q: ExamQuestionPrompt): ExamItemStatus => {
       const picked = progress.answers[q.id];
       if (!picked || picked.length === 0) return "unanswered";
-      if (isRevealed(mode, q, picked)) {
-        return questionStatus(q, picked) === "correct"
+      const answer = revealedAnswer(answerKey, q, progress.checked);
+      if (answer) {
+        return questionStatus(answer, picked) === "correct"
           ? "correct"
           : "incorrect";
       }
       return "answered";
     },
-    [mode, progress.answers],
+    [answerKey, progress.answers, progress.checked],
   );
 
   if (phase !== "doing" && finished) {
@@ -222,9 +334,9 @@ export default function ExamWorkspace({ exam, mode }: ExamWorkspaceProps) {
       <div className="page-fade mx-auto w-full max-w-6xl px-4 py-8 md:px-8">
         {phase === "result" ? (
           <ExamResult
-            exam={exam}
+            exam={finished.exam}
             mode={mode}
-            answers={finished.answers}
+            grade={finished.grade}
             startedAt={finished.startedAt}
             finishedAt={finished.finishedAt}
             onReview={() => {
@@ -235,7 +347,7 @@ export default function ExamWorkspace({ exam, mode }: ExamWorkspaceProps) {
           />
         ) : (
           <ExamReview
-            exam={exam}
+            exam={finished.exam}
             answers={finished.answers}
             marked={finished.marked}
             onBack={() => {
@@ -250,11 +362,18 @@ export default function ExamWorkspace({ exam, mode }: ExamWorkspaceProps) {
 
   if (!question) return null;
   const unanswered = total - answeredCount;
-  const revealed = isRevealed(mode, question, selected);
+  const reveal = revealedAnswer(answerKey, question, progress.checked);
+  const hint = reveal ? undefined : answerKey?.get(question.id)?.hint;
+
+  // Còn câu bỏ trống thì hỏi lại trước khi nộp.
+  function requestSubmit() {
+    if (unanswered > 0) setSubmitOpen(true);
+    else submit();
+  }
 
   const list = (
     <ExamQuestionList
-      questions={exam.questions}
+      questions={questions}
       current={current}
       statusOf={statusOf}
       marked={marked}
@@ -301,17 +420,42 @@ export default function ExamWorkspace({ exam, mode }: ExamWorkspaceProps) {
         </button>
         <button
           type="button"
-          onClick={() => (unanswered > 0 ? setSubmitOpen(true) : submit())}
-          className={buttonPrimary}
+          onClick={requestSubmit}
+          disabled={submitting}
+          aria-busy={submitting}
+          className={`${buttonPrimary} disabled:opacity-60`}
         >
-          {t("submit")}
+          {submitting ? t("submitting") : t("submit")}
         </button>
       </header>
+      {submitError ? (
+        <div
+          role="alert"
+          className="mt-4 rounded-lg border border-danger bg-danger/10 p-4 text-text"
+        >
+          {submitError === "unauthorized" ? (
+            <p>
+              {t("submitError.unauthorized")}{" "}
+              <Link
+                href={{
+                  pathname: "/login",
+                  query: { callbackUrl: `${pathname}?mode=${mode}` },
+                }}
+                className="font-semibold text-primary-text underline underline-offset-2"
+              >
+                {t("submitError.signIn")}
+              </Link>
+            </p>
+          ) : (
+            <p>{t("submitError.failed")}</p>
+          )}
+        </div>
+      ) : null}
 
       <div className="mt-6 lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-8">
         <div className="min-w-0 space-y-6">
           <ExamToolbar
-            number={current + 1}
+            number={question.number}
             total={total}
             marked={marked.has(question.id)}
             onPrev={() => goTo(current - 1)}
@@ -321,13 +465,31 @@ export default function ExamWorkspace({ exam, mode }: ExamWorkspaceProps) {
           <ExamQuestionView
             key={question.id}
             question={question}
-            number={current + 1}
+            number={question.number}
             selected={selected}
             onToggle={(optionId) => toggleOption(question, optionId)}
-            revealed={revealed}
-            showHint={mode === "practice" && !revealed}
+            reveal={reveal}
+            hint={hint}
             headingRef={headingRef}
           />
+          <ExamQuestionActions
+            mode={mode}
+            selectedCount={selected.length}
+            selectCount={question.selectCount}
+            checked={reveal !== null}
+            isLast={current === total - 1}
+            onSkip={() => goTo(current + 1, true)}
+            onCheck={() => checkAnswer(question)}
+            onNext={() => goTo(current + 1, true)}
+          />
+          {mode === "practice" &&
+          (unanswered === 0 || current === total - 1) ? (
+            <ExamFinishPrompt
+              total={total}
+              unanswered={unanswered}
+              onFinish={requestSubmit}
+            />
+          ) : null}
           <p className="text-sm text-text-muted">{t("shortcuts")}</p>
         </div>
         <aside aria-label={t("questionList")} className="hidden lg:block">
@@ -392,7 +554,12 @@ export default function ExamWorkspace({ exam, mode }: ExamWorkspaceProps) {
             >
               {t("submitConfirm.cancel")}
             </button>
-            <button type="button" onClick={submit} className={buttonPrimary}>
+            <button
+              type="button"
+              onClick={submit}
+              disabled={submitting}
+              className={`${buttonPrimary} disabled:opacity-60`}
+            >
               {t("submitConfirm.confirm")}
             </button>
           </div>

@@ -25,14 +25,15 @@ type ExamOption = { id: string; text: string };
 type ExamQuestion = {
   id: string;                 // duy nhất trong đề, dạng "bo-1-3-07"
   baseId: string;             // id câu gốc trong kho, dùng để nhận biết câu trùng giữa các đề
-  domain: ExamDomain;
+  domain: ExamDomain | string | null; // Bộ 1: ExamDomain (2 câu null = chưa phân loại);
+                              // Bộ 2: tên danh mục dịch vụ AWS, vd "AWS Compute"
   prompt: string;             // tiếng Anh, giống đề thật
   options: ExamOption[];      // 4 lựa chọn; câu Select TWO có 5
   correct: string[];          // 1 id, hoặc 2 id với câu Select TWO
   explanation: string;        // tiếng Việt, mấu chốt của câu
-  optionExplanations: Record<string, string>; // giải thích cho từng lựa chọn, key là option id
+  optionExplanations: Record<string, string>; // giải thích cho từng lựa chọn, key là option id; "" = không có
   hint?: string;
-  reviewPage?: string;        // slug trang ôn trong /aws-saa-c03/
+  reviewPage?: string;        // slug trang ôn trong /aws-saa-c03/; "" = không có
 };
 
 type Exam = {

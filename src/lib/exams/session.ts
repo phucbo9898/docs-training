@@ -5,6 +5,8 @@ export type ExamProgress = {
   answers: ExamAnswers;
   /** Id các câu đã đánh dấu. */
   marked: string[];
+  /** Practice mode: id các câu đã bấm "Kiểm tra đáp án" (đã hiện đúng/sai). */
+  checked: string[];
   /** Mốc bắt đầu (ms), đồng hồ Exam mode tính từ đây. */
   startedAt: number;
   /** Chỉ số câu đang xem (0-based). */
@@ -20,7 +22,13 @@ export function progressKey(
 }
 
 export function newProgress(): ExamProgress {
-  return { answers: {}, marked: [], startedAt: Date.now(), current: 0 };
+  return {
+    answers: {},
+    marked: [],
+    checked: [],
+    startedAt: Date.now(),
+    current: 0,
+  };
 }
 
 function isStringArray(value: unknown): value is string[] {
@@ -29,7 +37,10 @@ function isStringArray(value: unknown): value is string[] {
   );
 }
 
-function isProgress(value: unknown): value is ExamProgress {
+/** Bản lưu cũ chưa có `checked`: vẫn hợp lệ, đọc vào thì coi như rỗng. */
+function isProgress(
+  value: unknown,
+): value is Omit<ExamProgress, "checked"> & { checked?: string[] } {
   if (typeof value !== "object" || value === null) return false;
   const data = value as Record<string, unknown>;
   const answers = data.answers;
@@ -39,6 +50,7 @@ function isProgress(value: unknown): value is ExamProgress {
     !Array.isArray(answers) &&
     Object.values(answers).every(isStringArray) &&
     isStringArray(data.marked) &&
+    (data.checked === undefined || isStringArray(data.checked)) &&
     typeof data.startedAt === "number" &&
     Number.isFinite(data.startedAt) &&
     typeof data.current === "number" &&
@@ -53,7 +65,7 @@ export function loadProgress(key: string): ExamProgress | null {
     const raw = window.sessionStorage.getItem(key);
     if (!raw) return null;
     const data: unknown = JSON.parse(raw);
-    return isProgress(data) ? data : null;
+    return isProgress(data) ? { ...data, checked: data.checked ?? [] } : null;
   } catch {
     return null;
   }

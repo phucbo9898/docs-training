@@ -73,12 +73,16 @@ export default function ExamReviewItem({
       </h2>
       <div id={panelId} hidden={!open} className="space-y-4 px-4 pb-4">
         <p className="text-lg leading-relaxed text-text">{question.prompt}</p>
-        {question.correct.length > 1 ? (
+        {question.selectCount > 1 ? (
           <p className="text-sm font-semibold text-primary-text">
-            {t("selectN", { count: question.correct.length })}
+            {t("selectN", { count: question.selectCount })}
           </p>
         ) : null}
-        <ExamOptionList question={question} selected={selected} reveal />
+        <ExamOptionList
+          question={question}
+          selected={selected}
+          reveal={question}
+        />
         <ExamExplanation question={question} />
       </div>
     </li>

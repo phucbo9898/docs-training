@@ -1,21 +1,23 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { questionStatus, scoreByDomain, scoreExam } from "./score";
-import type { ExamDomain, ExamQuestion } from "./types";
+import type { ExamQuestion } from "./types";
 
 function question(
   id: string,
-  domain: ExamDomain,
+  domain: string | null,
   correct: string[],
 ): ExamQuestion {
   const ids = ["a", "b", "c", "d", "e"];
   return {
     id,
+    number: 1,
     baseId: id,
     domain,
     prompt: `Question ${id}`,
     options: ids.map((option) => ({ id: option, text: option })),
     correct,
+    selectCount: correct.length,
     explanation: "",
     optionExplanations: Object.fromEntries(ids.map((option) => [option, ""])),
   };
@@ -98,21 +100,44 @@ describe("scoreByDomain", () => {
       { questions },
       { q1: ["c"], q5: ["b"], q2: ["a"] },
     );
-    assert.deepEqual(result.secure, {
-      correct: 1,
-      incorrect: 1,
-      skipped: 0,
-      total: 2,
-      percent: 50,
-    });
-    assert.deepEqual(result.resilient, {
-      correct: 0,
-      incorrect: 1,
-      skipped: 0,
-      total: 1,
-      percent: 0,
-    });
-    assert.equal(result.performance, undefined);
-    assert.equal(result.cost, undefined);
+    assert.deepEqual(result, [
+      {
+        domain: "secure",
+        summary: {
+          correct: 1,
+          incorrect: 1,
+          skipped: 0,
+          total: 2,
+          percent: 50,
+        },
+      },
+      {
+        domain: "resilient",
+        summary: { correct: 0, incorrect: 1, skipped: 0, total: 1, percent: 0 },
+      },
+    ]);
+  });
+
+  it("domain chuẩn trước, danh mục AWS theo thứ tự xuất hiện, null cuối", () => {
+    const questions = [
+      question("q1", null, ["a"]),
+      question("q2", "AWS Storage", ["a"]),
+      question("q3", "cost", ["a"]),
+      question("q4", "AWS Compute", ["a"]),
+      question("q5", "secure", ["a"]),
+      question("q6", "AWS Storage", ["a"]),
+    ];
+    const result = scoreByDomain({ questions }, { q1: ["a"] });
+    assert.deepEqual(
+      result.map((item) => [item.domain, item.summary.total]),
+      [
+        ["secure", 1],
+        ["cost", 1],
+        ["AWS Storage", 2],
+        ["AWS Compute", 1],
+        [null, 1],
+      ],
+    );
+    assert.equal(result.at(-1)?.summary.correct, 1);
   });
 });

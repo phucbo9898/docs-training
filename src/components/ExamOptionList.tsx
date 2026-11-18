@@ -1,15 +1,18 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { ExamQuestion } from "@/lib/exams/types";
+import type { ExamQuestion, ExamQuestionPrompt } from "@/lib/exams/types";
 
 type ExamOptionListProps = {
-  question: ExamQuestion;
+  question: ExamQuestionPrompt;
   selected: readonly string[];
   /** Không truyền thì danh sách chỉ để xem (màn chữa đề). */
   onToggle?: (optionId: string) => void;
-  /** Hiện đúng/sai và giải thích từng lựa chọn. */
-  reveal: boolean;
+  /**
+   * Có đáp án thì hiện đúng/sai và giải thích từng lựa chọn. Exam mode chưa
+   * nộp bài không có dữ liệu này.
+   */
+  reveal?: ExamQuestion | null;
 };
 
 type OptionState =
@@ -33,6 +36,28 @@ const BOX: Record<OptionState, string> = {
   wrongPicked: "border-danger bg-danger/10",
 };
 
+/** Màu chấm/ô đã chọn: chưa chấm là màu chính, đã chấm theo đúng/sai. */
+const MARK: Record<OptionState, string> = {
+  neutral: "checked:border-primary checked:bg-primary",
+  selected: "checked:border-primary checked:bg-primary",
+  correctPicked: "checked:border-success checked:bg-success",
+  correctMissed: "checked:border-success checked:bg-success",
+  wrongPicked: "checked:border-danger checked:bg-danger",
+};
+
+/**
+ * Radio/checkbox tự vẽ: input `disabled` gốc (sau khi hiện đáp án, màn chữa
+ * đề) bị trình duyệt tô xám và bỏ qua `accent-color`, gần như không thấy chấm.
+ * Chế độ tương phản cao (forced colors) dùng lại giao diện gốc.
+ */
+const INPUT_BASE =
+  "mt-1 size-4 shrink-0 appearance-none border-2 border-text-muted bg-bg forced-colors:appearance-auto";
+
+const RADIO = "rounded-full checked:shadow-[inset_0_0_0_2px_var(--bg)]";
+
+const CHECKBOX =
+  "relative rounded-sm checked:before:absolute checked:before:top-px checked:before:left-1 checked:before:h-2 checked:before:w-1 checked:before:rotate-45 checked:before:border-r-2 checked:before:border-b-2 checked:before:border-bg checked:before:content-['']";
+
 const TAG: Record<OptionState, string> = {
   neutral: "",
   selected: "",
@@ -52,19 +77,21 @@ export default function ExamOptionList({
   reveal,
 }: ExamOptionListProps) {
   const t = useTranslations("Exams");
-  const multi = question.correct.length > 1;
-  const full = selected.length >= question.correct.length;
-  const readOnly = !onToggle || reveal;
+  const multi = question.selectCount > 1;
+  const full = selected.length >= question.selectCount;
+  const readOnly = !onToggle || Boolean(reveal);
 
   return (
     <ul className="space-y-3">
       {question.options.map((option, index) => {
         const isSelected = selected.includes(option.id);
-        const isCorrect = question.correct.includes(option.id);
-        const state = optionState(reveal, isCorrect, isSelected);
+        const isCorrect = reveal?.correct.includes(option.id) ?? false;
+        const state = optionState(Boolean(reveal), isCorrect, isSelected);
         const disabled = readOnly || (multi && full && !isSelected);
         const inputId = `${question.id}-${option.id}`;
         const explanationId = `${inputId}-explanation`;
+        // "" là lựa chọn không có giải thích riêng: không hiện khung trống.
+        const explanation = reveal?.optionExplanations[option.id]?.trim() ?? "";
         const tag =
           state === "correctPicked"
             ? t("option.correctPicked")
@@ -100,8 +127,11 @@ export default function ExamOptionList({
                 checked={isSelected}
                 disabled={disabled}
                 onChange={() => onToggle?.(option.id)}
-                aria-describedby={reveal ? explanationId : undefined}
-                className="mt-1.5 size-4 shrink-0 accent-primary"
+                aria-describedby={explanation ? explanationId : undefined}
+                className={`${INPUT_BASE} ${multi ? CHECKBOX : RADIO} ${MARK[state]} ${
+                  // Câu chọn nhiều đã đủ số đáp án: làm mờ các lựa chọn còn lại.
+                  disabled && !reveal && !isSelected ? "opacity-50" : ""
+                }`}
               />
               <span className="min-w-0 flex-1 text-text">
                 <span
@@ -113,12 +143,12 @@ export default function ExamOptionList({
                 {option.text}
               </span>
             </label>
-            {reveal ? (
+            {explanation ? (
               <p
                 id={explanationId}
                 className="mt-2 border-t border-border pt-2 pl-7 text-sm text-text-muted"
               >
-                {question.optionExplanations[option.id]}
+                {explanation}
               </p>
             ) : null}
           </li>

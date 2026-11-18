@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { useFormatter, useTranslations } from "next-intl";
-import { scoreByDomain, scoreExam } from "@/lib/exams/score";
-import type { Exam, ExamAnswers, ExamMode } from "@/lib/exams/types";
+import type { ExamGrade } from "@/lib/exams/score";
+import type { Exam, ExamMode } from "@/lib/exams/types";
 import ExamDomainBars from "./ExamDomainBars";
 import ExamDonut from "./ExamDonut";
 import ExamScoreLegend from "./ExamScoreLegend";
@@ -11,7 +11,8 @@ import ExamScoreLegend from "./ExamScoreLegend";
 type ExamResultProps = {
   exam: Exam;
   mode: ExamMode;
-  answers: ExamAnswers;
+  /** Điểm đã chấm: Exam mode chấm ở server, Practice mode chấm ngay trên trình duyệt. */
+  grade: ExamGrade;
   startedAt: number;
   finishedAt: number;
   onReview: () => void;
@@ -23,7 +24,7 @@ const MINUTE_MS = 60_000;
 export default function ExamResult({
   exam,
   mode,
-  answers,
+  grade,
   startedAt,
   finishedAt,
   onReview,
@@ -32,8 +33,7 @@ export default function ExamResult({
   const t = useTranslations("Exams");
   const format = useFormatter();
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const score = scoreExam(exam, answers);
-  const byDomain = scoreByDomain(exam, answers);
+  const { score, byDomain } = grade;
   const minutes = Math.max(1, Math.round((finishedAt - startedAt) / MINUTE_MS));
 
   // Vừa nộp bài: đưa focus về đầu màn kết quả.

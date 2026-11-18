@@ -7,12 +7,53 @@ import { EXAM_MODES, type ExamMode, type ExamSource } from "@/lib/exams/types";
 
 type ExamSetupFormProps = {
   sources: ExamSource[];
-  /** Chọn sẵn khi mở form từ trang một đề (chưa có `?mode=`). */
-  initialSource?: string;
-  initialNumber?: number;
+  /**
+   * Mở từ trang một đề (chưa có `?mode=`): đề đã chọn ở sidebar nên cố định,
+   * ẩn phần chọn bộ/đề, chỉ còn chọn chế độ.
+   */
+  fixed?: { source: string; number: number };
 };
 
 const fieldsetClass = "space-y-3";
+const badgeClass =
+  "inline-flex min-h-9 items-center gap-2 rounded-full border border-primary bg-primary/10 px-4 text-base font-semibold text-primary-text tabular-nums";
+
+function ListIcon() {
+  return (
+    <svg
+      width={18}
+      height={18}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+    </svg>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg
+      width={18}
+      height={18}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx={12} cy={12} r={9} />
+      <path d="M12 7v5l3 2" />
+    </svg>
+  );
+}
 const legendClass = "mb-2 text-lg font-bold text-text";
 
 function choiceClass(checked: boolean): string {
@@ -23,24 +64,20 @@ function choiceClass(checked: boolean): string {
   }`;
 }
 
-/** Chọn bộ → đề → chế độ, rồi chuyển sang trang làm bài. */
-export default function ExamSetupForm({
-  sources,
-  initialSource,
-  initialNumber,
-}: ExamSetupFormProps) {
+/** Chọn bộ → đề → chế độ (hoặc chỉ chế độ khi đề cố định), rồi chuyển sang trang làm bài. */
+export default function ExamSetupForm({ sources, fixed }: ExamSetupFormProps) {
   const t = useTranslations("Exams");
   const router = useRouter();
   const examSelectId = useId();
 
   const [sourceId, setSourceId] = useState(
-    sources.find((source) => source.id === initialSource)?.id ??
+    sources.find((source) => source.id === fixed?.source)?.id ??
       sources[0]?.id ??
       "",
   );
   const source = sources.find((item) => item.id === sourceId) ?? sources[0];
   const [number, setNumber] = useState(
-    source?.exams.find((exam) => exam.number === initialNumber)?.number ??
+    source?.exams.find((exam) => exam.number === fixed?.number)?.number ??
       source?.exams[0]?.number ??
       1,
   );
@@ -67,57 +104,77 @@ export default function ExamSetupForm({
 
   return (
     <form onSubmit={onSubmit} className="space-y-8">
-      <fieldset className={fieldsetClass}>
-        <legend className={legendClass}>{t("setup.source")}</legend>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {sources.map((item) => (
-            <label key={item.id} className={choiceClass(item.id === sourceId)}>
-              <input
-                type="radio"
-                name="source"
-                value={item.id}
-                checked={item.id === sourceId}
-                onChange={() => onSourceChange(item.id)}
-                className="mt-1 size-4 accent-primary"
-              />
-              <span>
-                <span className="block font-semibold text-text">
-                  {item.title}
-                </span>
-                <span className="block text-sm text-text-muted">
-                  {t("setup.sourceMeta", { exams: item.exams.length })}
-                </span>
-              </span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
+      {fixed ? (
+        exam ? (
+          <ul className="flex flex-wrap gap-2">
+            <li className={badgeClass}>
+              <ListIcon />
+              {t("setup.questionsBadge", { count: exam.questionCount })}
+            </li>
+            <li className={badgeClass}>
+              <ClockIcon />
+              {t("setup.minutesBadge", { minutes: exam.durationMinutes })}
+            </li>
+          </ul>
+        ) : null
+      ) : (
+        <>
+          <fieldset className={fieldsetClass}>
+            <legend className={legendClass}>{t("setup.source")}</legend>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {sources.map((item) => (
+                <label
+                  key={item.id}
+                  className={choiceClass(item.id === sourceId)}
+                >
+                  <input
+                    type="radio"
+                    name="source"
+                    value={item.id}
+                    checked={item.id === sourceId}
+                    onChange={() => onSourceChange(item.id)}
+                    className="mt-1 size-4 accent-primary"
+                  />
+                  <span>
+                    <span className="block font-semibold text-text">
+                      {item.title}
+                    </span>
+                    <span className="block text-sm text-text-muted">
+                      {t("setup.sourceMeta", { exams: item.exams.length })}
+                    </span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
 
-      <div className="space-y-2">
-        <label htmlFor={examSelectId} className={`block ${legendClass}`}>
-          {t("setup.exam")}
-        </label>
-        <select
-          id={examSelectId}
-          value={exam?.number}
-          onChange={(event) => setNumber(Number(event.target.value))}
-          className="min-h-11 w-full rounded-lg border border-border bg-bg px-3 text-text sm:w-64"
-        >
-          {source.exams.map((item) => (
-            <option key={item.number} value={item.number}>
-              {t("examLabel", { number: item.number })}
-            </option>
-          ))}
-        </select>
-        {exam ? (
-          <p className="text-sm text-text-muted">
-            {t("setup.examMeta", {
-              count: exam.questionCount,
-              minutes: exam.durationMinutes,
-            })}
-          </p>
-        ) : null}
-      </div>
+          <div className="space-y-2">
+            <label htmlFor={examSelectId} className={`block ${legendClass}`}>
+              {t("setup.exam")}
+            </label>
+            <select
+              id={examSelectId}
+              value={exam?.number}
+              onChange={(event) => setNumber(Number(event.target.value))}
+              className="min-h-11 w-full rounded-lg border border-border bg-bg px-3 text-text sm:w-64"
+            >
+              {source.exams.map((item) => (
+                <option key={item.number} value={item.number}>
+                  {t("examLabel", { number: item.number })}
+                </option>
+              ))}
+            </select>
+            {exam ? (
+              <p className="text-sm text-text-muted">
+                {t("setup.examMeta", {
+                  count: exam.questionCount,
+                  minutes: exam.durationMinutes,
+                })}
+              </p>
+            ) : null}
+          </div>
+        </>
+      )}
 
       <fieldset className={fieldsetClass}>
         <legend className={legendClass}>{t("setup.mode")}</legend>

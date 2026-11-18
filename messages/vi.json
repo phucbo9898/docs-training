@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "siteName": "Intern Backend Training",
-    "description": "Tài liệu training Backend Developer: PHP, SQL, HTML/CSS/JavaScript và Laravel."
+    "siteName": "Tài liệu học tập",
+    "description": "Tài liệu training Backend Developer, ôn thi và luyện đề AWS SAA-C03."
   },
   "ThemeToggle": {
     "label": "Giao diện",
@@ -109,6 +109,7 @@
     "skipToContent": "Bỏ qua đến nội dung chính"
   },
   "Header": {
+    "siteName": "Tài liệu học tập",
     "home": "Trang chủ",
     "openMenu": "Mở menu điều hướng",
     "closeMenu": "Đóng menu điều hướng"
@@ -162,7 +163,7 @@
   },
   "Tracks": {
     "heading": "Bạn muốn học gì hôm nay?",
-    "intro": "Chọn một nội dung để bắt đầu. Bạn có thể quay lại màn này bất cứ lúc nào qua logo hoặc mục “Tất cả nội dung” trong menu.",
+    "intro": "Chọn một nội dung để bắt đầu. Bạn có thể quay lại màn này bất cứ lúc nào qua mục “Tất cả nội dung” trong menu.",
     "all": "Tất cả nội dung",
     "label": "Danh sách nội dung",
     "open": "Vào xem",
@@ -196,18 +197,21 @@
     "loading": "Đang tải đề…",
     "examLabel": "Đề {number}",
     "questionCount": "{count} câu",
+    "sidebarHeading": "Bộ đề",
     "setup": {
       "source": "Chọn bộ đề",
       "sourceMeta": "{exams} đề",
       "exam": "Chọn đề",
       "examMeta": "{count} câu · {minutes} phút",
+      "questionsBadge": "{count} câu hỏi",
+      "minutesBadge": "{minutes} phút",
       "mode": "Chế độ làm bài",
       "start": "Bắt đầu làm bài"
     },
     "mode": {
       "practice": "Practice mode",
       "exam": "Exam mode",
-      "practiceDescription": "Chọn đáp án là thấy đúng/sai và giải thích ngay. Không tính giờ.",
+      "practiceDescription": "Chọn đáp án là thấy đúng/sai và giải thích ngay. Không tính giờ. Nộp bài để xem điểm theo domain và chữa đề.",
       "examDescription": "Đếm ngược {minutes} phút, chỉ xem đáp án sau khi nộp bài."
     },
     "domain": {
@@ -216,6 +220,7 @@
       "performance": "Design High-Performing Architectures",
       "cost": "Design Cost-Optimized Architectures"
     },
+    "domainNone": "Chưa phân loại",
     "mockBadge": "Dữ liệu mẫu",
     "answered": "Đã làm {count}/{total}",
     "position": "Câu {number}/{total}",
@@ -228,6 +233,17 @@
     "mark": "Đánh dấu",
     "unmark": "Bỏ đánh dấu",
     "submit": "Nộp bài",
+    "finishPrompt": {
+      "done": "Bạn đã làm hết {total} câu. Nộp bài để xem điểm, kết quả theo domain và chữa đề.",
+      "last": "Đây là câu cuối, còn {count} câu chưa làm. Nộp bài để xem điểm, kết quả theo domain và chữa đề.",
+      "action": "Nộp bài và xem kết quả"
+    },
+    "actions": {
+      "skip": "Bỏ qua",
+      "check": "Kiểm tra đáp án",
+      "next": "Câu tiếp",
+      "selectMore": "Chọn thêm {count} đáp án để kiểm tra."
+    },
     "shortcuts": "Phím tắt: ← / → chuyển câu, 1–5 chọn đáp án.",
     "timeLeft": "Còn khoảng {minutes} phút",
     "showHint": "Gợi ý",
@@ -291,6 +307,24 @@
       "collapseAll": "Thu gọn tất cả",
       "expandAll": "Mở rộng tất cả",
       "empty": "Không có câu nào khớp bộ lọc."
+    },
+    "submitting": "Đang nộp…",
+    "submitError": {
+      "failed": "Nộp bài không thành công. Bài làm vẫn được giữ, hãy thử lại.",
+      "unauthorized": "Phiên đăng nhập đã hết hạn. Bài làm vẫn được giữ trên trình duyệt này.",
+      "signIn": "Đăng nhập lại"
     }
+  },
+  "Auth": {
+    "title": "Đăng nhập",
+    "intro": "Tab Luyện đề AWS chỉ dành cho thành viên được cấp quyền. Hãy đăng nhập bằng tài khoản Google đã được đăng ký.",
+    "loading": "Đang kiểm tra phiên đăng nhập…",
+    "signInWithGoogle": "Đăng nhập bằng Google",
+    "error": {
+      "notAllowed": "Email này chưa được cấp quyền vào tab Luyện đề. Hãy dùng tài khoản khác hoặc liên hệ người quản lý.",
+      "generic": "Đăng nhập không thành công. Vui lòng thử lại."
+    },
+    "signedInAs": "Đang đăng nhập: {email}",
+    "signOut": "Đăng xuất"
   }
 }
