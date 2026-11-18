@@ -29,6 +29,7 @@ import type {
   ExamSessionData,
 } from "@/lib/exams/types";
 import ExamDialog from "./ExamDialog";
+import ExamFinishPrompt from "./ExamFinishPrompt";
 import ExamQuestionList from "./ExamQuestionList";
 import ExamQuestionView from "./ExamQuestionView";
 import ExamResult from "./ExamResult";
@@ -355,6 +356,12 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
   const reveal = revealedAnswer(answerKey, question, selected);
   const hint = reveal ? undefined : answerKey?.get(question.id)?.hint;
 
+  // Còn câu bỏ trống thì hỏi lại trước khi nộp.
+  function requestSubmit() {
+    if (unanswered > 0) setSubmitOpen(true);
+    else submit();
+  }
+
   const list = (
     <ExamQuestionList
       questions={questions}
@@ -404,7 +411,7 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
         </button>
         <button
           type="button"
-          onClick={() => (unanswered > 0 ? setSubmitOpen(true) : submit())}
+          onClick={requestSubmit}
           disabled={submitting}
           aria-busy={submitting}
           className={`${buttonPrimary} disabled:opacity-60`}
@@ -456,6 +463,14 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
             hint={hint}
             headingRef={headingRef}
           />
+          {mode === "practice" &&
+          (unanswered === 0 || current === total - 1) ? (
+            <ExamFinishPrompt
+              total={total}
+              unanswered={unanswered}
+              onFinish={requestSubmit}
+            />
+          ) : null}
           <p className="text-sm text-text-muted">{t("shortcuts")}</p>
         </div>
         <aside aria-label={t("questionList")} className="hidden lg:block">

@@ -209,7 +209,7 @@
     "mode": {
       "practice": "Practice mode",
       "exam": "Exam mode",
-      "practiceDescription": "See right/wrong and explanations as soon as you answer. No timer.",
+      "practiceDescription": "See right/wrong and explanations as soon as you answer. No timer. Submit to get a per-domain score and answer review.",
       "examDescription": "{minutes}-minute countdown; answers are shown only after you submit."
     },
     "domain": {
@@ -230,6 +230,11 @@
     "mark": "Mark",
     "unmark": "Unmark",
     "submit": "Submit",
+    "finishPrompt": {
+      "done": "You have answered all {total} questions. Submit to see your score, per-domain results and answer review.",
+      "last": "This is the last question; {count, plural, one {# question is} other {# questions are}} still unanswered. Submit to see your score, per-domain results and answer review.",
+      "action": "Submit and see results"
+    },
     "shortcuts": "Shortcuts: ← / → to change question, 1–5 to pick an answer.",
     "timeLeft": "About {minutes} minutes left",
     "showHint": "Hint",

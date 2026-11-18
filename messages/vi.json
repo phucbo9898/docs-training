@@ -209,7 +209,7 @@
     "mode": {
       "practice": "Practice mode",
       "exam": "Exam mode",
-      "practiceDescription": "Chọn đáp án là thấy đúng/sai và giải thích ngay. Không tính giờ.",
+      "practiceDescription": "Chọn đáp án là thấy đúng/sai và giải thích ngay. Không tính giờ. Nộp bài để xem điểm theo domain và chữa đề.",
       "examDescription": "Đếm ngược {minutes} phút, chỉ xem đáp án sau khi nộp bài."
     },
     "domain": {
@@ -230,6 +230,11 @@
     "mark": "Đánh dấu",
     "unmark": "Bỏ đánh dấu",
     "submit": "Nộp bài",
+    "finishPrompt": {
+      "done": "Bạn đã làm hết {total} câu. Nộp bài để xem điểm, kết quả theo domain và chữa đề.",
+      "last": "Đây là câu cuối, còn {count} câu chưa làm. Nộp bài để xem điểm, kết quả theo domain và chữa đề.",
+      "action": "Nộp bài và xem kết quả"
+    },
     "shortcuts": "Phím tắt: ← / → chuyển câu, 1–5 chọn đáp án.",
     "timeLeft": "Còn khoảng {minutes} phút",
     "showHint": "Gợi ý",
