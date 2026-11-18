@@ -1,0 +1,88 @@
+{
+  "sources": [
+    {
+      "id": "bo-1",
+      "title": "Bộ 1",
+      "exams": [
+        {
+          "number": 1,
+          "title": "Bộ 1 – Đề 1",
+          "questionCount": 65,
+          "durationMinutes": 130
+        },
+        {
+          "number": 2,
+          "title": "Bộ 1 – Đề 2",
+          "questionCount": 65,
+          "durationMinutes": 130
+        },
+        {
+          "number": 3,
+          "title": "Bộ 1 – Đề 3",
+          "questionCount": 65,
+          "durationMinutes": 130
+        },
+        {
+          "number": 4,
+          "title": "Bộ 1 – Đề 4",
+          "questionCount": 65,
+          "durationMinutes": 130
+        },
+        {
+          "number": 5,
+          "title": "Bộ 1 – Đề 5",
+          "questionCount": 65,
+          "durationMinutes": 130
+        },
+        {
+          "number": 6,
+          "title": "Bộ 1 – Đề 6",
+          "questionCount": 65,
+          "durationMinutes": 130
+        }
+      ]
+    },
+    {
+      "id": "bo-2",
+      "title": "Bộ 2",
+      "exams": [
+        {
+          "number": 1,
+          "title": "Bộ 2 – Đề 1",
+          "questionCount": 65,
+          "durationMinutes": 130
+        },
+        {
+          "number": 2,
+          "title": "Bộ 2 – Đề 2",
+          "questionCount": 65,
+          "durationMinutes": 130
+        },
+        {
+          "number": 3,
+          "title": "Bộ 2 – Đề 3",
+          "questionCount": 65,
+          "durationMinutes": 130
+        },
+        {
+          "number": 4,
+          "title": "Bộ 2 – Đề 4",
+          "questionCount": 65,
+          "durationMinutes": 130
+        },
+        {
+          "number": 5,
+          "title": "Bộ 2 – Đề 5",
+          "questionCount": 65,
+          "durationMinutes": 130
+        },
+        {
+          "number": 6,
+          "title": "Bộ 2 – Đề 6",
+          "questionCount": 65,
+          "durationMinutes": 130
+        }
+      ]
+    }
+  ]
+}

@@ -181,6 +181,116 @@
           "title": "Keywords & traps – 6 exams"
         }
       ]
+    },
+    "exams": {
+      "title": "AWS SAA-C03 Practice Exams",
+      "description": "65-question exams like the real test: Practice mode with instant explanations, timed Exam mode, per-domain scoring and answer review.",
+      "meta": "{sets} sets · {exams} exams"
+    }
+  },
+  "Exams": {
+    "title": "AWS SAA-C03 Practice Exams",
+    "intro": "Pick a set, an exam and a mode. Each exam has 65 questions in 130 minutes, like the real test.",
+    "reviewLink": "Want to review first? See the <link>keywords and traps sheet</link>.",
+    "chooseMode": "Choose a mode to start this exam.",
+    "loading": "Loading exam…",
+    "examLabel": "Exam {number}",
+    "questionCount": "{count} questions",
+    "setup": {
+      "source": "Choose a set",
+      "sourceMeta": "{exams} exams",
+      "exam": "Choose an exam",
+      "examMeta": "{count} questions · {minutes} minutes",
+      "mode": "Mode",
+      "start": "Start exam"
+    },
+    "mode": {
+      "practice": "Practice mode",
+      "exam": "Exam mode",
+      "practiceDescription": "See right/wrong and explanations as soon as you answer. No timer.",
+      "examDescription": "{minutes}-minute countdown; answers are shown only after you submit."
+    },
+    "domain": {
+      "secure": "Design Secure Architectures",
+      "resilient": "Design Resilient Architectures",
+      "performance": "Design High-Performing Architectures",
+      "cost": "Design Cost-Optimized Architectures"
+    },
+    "mockBadge": "Sample data",
+    "answered": "Answered {count}/{total}",
+    "position": "Question {number}/{total}",
+    "questionNumber": "Question {number}",
+    "selectN": "Select {count}",
+    "questionList": "Question list",
+    "close": "Close",
+    "prev": "Previous",
+    "next": "Next",
+    "mark": "Mark",
+    "unmark": "Unmark",
+    "submit": "Submit",
+    "shortcuts": "Shortcuts: ← / → to change question, 1–5 to pick an answer.",
+    "timeLeft": "About {minutes} minutes left",
+    "showHint": "Hint",
+    "hideHint": "Hide hint",
+    "explanation": "Explanation",
+    "reviewKeywords": "Review keywords",
+    "status": {
+      "unanswered": "Not answered",
+      "answered": "Answered",
+      "correct": "Correct",
+      "incorrect": "Incorrect",
+      "marked": "Marked"
+    },
+    "verdict": {
+      "correct": "Correct",
+      "incorrect": "Incorrect",
+      "skipped": "Skipped"
+    },
+    "option": {
+      "correctPicked": "Your selection is correct",
+      "correctMissed": "Correct answer",
+      "wrongPicked": "Your selection is incorrect"
+    },
+    "submitConfirm": {
+      "title": "Submit exam?",
+      "body": "You have {count} unanswered questions. They will count as skipped.",
+      "cancel": "Keep going",
+      "confirm": "Submit"
+    },
+    "legend": {
+      "correct": "Correct",
+      "incorrect": "Incorrect",
+      "skipped": "Skipped / unanswered"
+    },
+    "domainHeading": "{domain} ({count} questions)",
+    "domainSummary": "{correct} correct, {incorrect} incorrect, {skipped} skipped",
+    "result": {
+      "heading": "{title} – Results",
+      "passed": "Passed",
+      "failed": "Failed",
+      "passMark": "(estimated pass mark about {percent}%)",
+      "correctOf": "correct ({correct}/{total})",
+      "minutes": "{minutes} minutes",
+      "review": "Review questions",
+      "restart": "Retake",
+      "domains": "Domains"
+    },
+    "review": {
+      "heading": "{title} – Review",
+      "back": "Back to results",
+      "domainFilter": "Domain",
+      "allDomains": "All domains",
+      "statusFilter": "Filter by result",
+      "filter": {
+        "all": "All ({count})",
+        "correct": "Correct ({count})",
+        "incorrect": "Incorrect ({count})",
+        "skipped": "Skipped ({count})",
+        "marked": "Marked ({count})"
+      },
+      "collapseAll": "Collapse all",
+      "expandAll": "Expand all",
+      "empty": "No questions match this filter."
     }
   }
 }

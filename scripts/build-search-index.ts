@@ -1,5 +1,7 @@
 /**
  * Sinh public/search-index.<locale>.json từ content/<locale>/**.
+ * Chỉ quét thư mục theo locale: dữ liệu luyện đề ở content/exams/ cố ý không
+ * được index (tìm kiếm không được lộ câu hỏi và đáp án).
  * Chạy: npm run build:search (tự chạy trước dev và build). File sinh ra là file
  * tĩnh, không commit; script chỉ đọc content/, không ghi vào đó.
  *

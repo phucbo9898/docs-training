@@ -16,7 +16,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "next typegen && tsc --noEmit",
-    "import:notion": "tsx scripts/import-notion.ts"
+    "import:notion": "tsx scripts/import-notion.ts",
+    "test": "tsx --test $(find src -name '*.test.ts')"
   },
   "dependencies": {
     "fuse.js": "^7.5.0",

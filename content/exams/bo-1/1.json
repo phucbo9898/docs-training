@@ -1,0 +1,2390 @@
+{
+  "source": "bo-1",
+  "number": 1,
+  "title": "Bộ 1 – Đề 1",
+  "durationMinutes": 130,
+  "passPercent": 72,
+  "mock": true,
+  "questions": [
+    {
+      "id": "bo-1-1-01",
+      "baseId": "tt1-03",
+      "domain": "resilient",
+      "prompt": "An order system uses an SQS standard queue. Orders are occasionally processed twice and out of sequence. Each customer’s orders must be processed exactly once and in the order they were placed. What should be done?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Replace the queue with an SNS standard topic"
+        },
+        {
+          "id": "b",
+          "text": "Use Amazon Data Firehose"
+        },
+        {
+          "id": "c",
+          "text": "Use an SQS FIFO queue with the customer ID as the message group ID"
+        },
+        {
+          "id": "d",
+          "text": "Increase the visibility timeout of the standard queue"
+        }
+      ],
+      "correct": [
+        "c"
+      ],
+      "explanation": "FIFO đảm bảo exactly-once và đúng thứ tự trong cùng message group; dùng customer ID làm group ID để giữ thứ tự theo từng khách.",
+      "optionExplanations": {
+        "d": "Visibility timeout không đảm bảo thứ tự và vẫn có thể giao trùng.",
+        "b": "Firehose đổ dữ liệu vào nơi lưu trữ, không phải hàng đợi xử lý đơn hàng.",
+        "c": "FIFO + message group ID theo khách hàng.",
+        "a": "SNS standard không đảm bảo thứ tự hay exactly-once."
+      },
+      "reviewPage": "resilient",
+      "hint": "Exactly-once + đúng thứ tự theo từng khách hàng."
+    },
+    {
+      "id": "bo-1-1-02",
+      "baseId": "tt2-01",
+      "domain": "resilient",
+      "prompt": "An e-commerce application runs on EC2 instances in an Auto Scaling group in a single AZ behind an ALB. It uses a single-AZ RDS MySQL instance. The company must make the application highly available with the LEAST changes. What should be done?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Deploy a second copy of the stack in another Region with active-active routing"
+        },
+        {
+          "id": "b",
+          "text": "Add a read replica in another AZ and increase the instance size"
+        },
+        {
+          "id": "c",
+          "text": "Configure the Auto Scaling group to span multiple AZs and enable RDS Multi-AZ"
+        },
+        {
+          "id": "d",
+          "text": "Add a second ALB in another AZ"
+        }
+      ],
+      "correct": [
+        "c"
+      ],
+      "explanation": "ASG trải nhiều AZ cho tầng web; RDS Multi-AZ cho DB failover tự động. Đề không yêu cầu multi-region.",
+      "optionExplanations": {
+        "b": "Read replica không tự failover, và tăng instance size không tạo HA.",
+        "c": "nhiều AZ cho cả tầng web lẫn DB, ít thay đổi nhất.",
+        "d": "ALB vốn đã trải nhiều AZ; vấn đề nằm ở EC2 và RDS chỉ ở một AZ.",
+        "a": "Multi-region active-active quá tay và đắt so với yêu cầu."
+      },
+      "reviewPage": "resilient",
+      "hint": "HA trong một region."
+    },
+    {
+      "id": "bo-1-1-03",
+      "baseId": "th4-09",
+      "domain": "secure",
+      "prompt": "The security team must be notified automatically when credit card numbers are found in S3 buckets. Which solution fits?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Inspector → SNS"
+        },
+        {
+          "id": "b",
+          "text": "CloudTrail → SNS"
+        },
+        {
+          "id": "c",
+          "text": "GuardDuty → SNS"
+        },
+        {
+          "id": "d",
+          "text": "Amazon Macie → EventBridge → SNS"
+        }
+      ],
+      "correct": [
+        "d"
+      ],
+      "explanation": "Macie tìm dữ liệu nhạy cảm trong S3, EventBridge bắt finding và SNS gửi thông báo. Câu chọn hai cần cả phát hiện lẫn thông báo.",
+      "optionExplanations": {
+        "a": "Inspector quét lỗ hổng phần mềm.",
+        "d": "Macie phát hiện, EventBridge bắt finding, SNS gửi thông báo.",
+        "c": "GuardDuty phát hiện mối đe dọa, không quét nội dung S3 tìm số thẻ.",
+        "b": "CloudTrail ghi API call, không đọc nội dung object."
+      },
+      "reviewPage": "secure",
+      "hint": "PII trong S3 + thông báo."
+    },
+    {
+      "id": "bo-1-1-04",
+      "baseId": "th4-02",
+      "domain": "secure",
+      "prompt": "An application must connect to RDS MySQL using short-lived credentials tied to IAM roles instead of a stored password. What should be used?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Parameter Store SecureString"
+        },
+        {
+          "id": "b",
+          "text": "KMS encryption"
+        },
+        {
+          "id": "c",
+          "text": "Secrets Manager with rotation"
+        },
+        {
+          "id": "d",
+          "text": "IAM database authentication"
+        }
+      ],
+      "correct": [
+        "d"
+      ],
+      "explanation": "IAM DB Authentication tạo token 15 phút từ IAM. Secrets Manager xoay vòng password, không tạo token.",
+      "optionExplanations": {
+        "d": "token 15 phút từ IAM, không lưu password.",
+        "b": "KMS mã hóa dữ liệu, không xác thực kết nối DB.",
+        "a": "Parameter Store vẫn là lưu password.",
+        "c": "Secrets Manager xoay vòng password, không tạo credential ngắn hạn gắn IAM role."
+      },
+      "reviewPage": "secure",
+      "hint": "Token 15 phút."
+    },
+    {
+      "id": "bo-1-1-05",
+      "baseId": "th5-05",
+      "domain": "performance",
+      "prompt": "A Kinesis Data Streams application receives ProvisionedThroughputExceeded errors as data volume grows. What should be done?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Increase the retention period"
+        },
+        {
+          "id": "b",
+          "text": "Increase the number of shards with UpdateShardCount"
+        },
+        {
+          "id": "c",
+          "text": "Configure a step scaling policy on the stream"
+        },
+        {
+          "id": "d",
+          "text": "Switch consumers to long polling"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "Throughput của Kinesis tính theo shard (mỗi shard ghi 1 MB/s, đọc 2 MB/s). Tăng shard bằng UpdateShardCount; scaling policy là của EC2.",
+      "optionExplanations": {
+        "b": "throughput tính theo shard, tăng shard bằng UpdateShardCount.",
+        "d": "Long polling là tính năng của SQS, không phải Kinesis.",
+        "c": "Kinesis không có step scaling policy như EC2 Auto Scaling.",
+        "a": "Retention chỉ quyết định giữ dữ liệu bao lâu, không tăng throughput."
+      },
+      "reviewPage": "high-performing",
+      "hint": "Kinesis scale bằng gì?"
+    },
+    {
+      "id": "bo-1-1-06",
+      "baseId": "th2-10",
+      "domain": "resilient",
+      "prompt": "A global application on Aurora needs cross-Region disaster recovery with replication lag under 1 second and fast regional failover. What should be used?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Cross-Region read replica of RDS MySQL"
+        },
+        {
+          "id": "b",
+          "text": "Multi-AZ Aurora cluster"
+        },
+        {
+          "id": "c",
+          "text": "Aurora Global Database"
+        },
+        {
+          "id": "d",
+          "text": "Hourly cross-Region snapshots"
+        }
+      ],
+      "correct": [
+        "c"
+      ],
+      "explanation": "Aurora Global Database replicate cross-region với lag thường dưới 1 giây. Multi-AZ luôn trong 1 region.",
+      "optionExplanations": {
+        "c": "Global Database lag dưới 1 giây, failover region nhanh.",
+        "a": "RDS MySQL cross-region replica lag cao hơn, failover chậm hơn.",
+        "b": "Multi-AZ chỉ nằm trong 1 region.",
+        "d": "Snapshot hằng giờ cho RPO tới 1 giờ."
+      },
+      "reviewPage": "resilient",
+      "hint": "Aurora + lag < 1 giây."
+    },
+    {
+      "id": "bo-1-1-07",
+      "baseId": "tt1-08",
+      "domain": "performance",
+      "prompt": "Users around the world upload video files of several gigabytes to an S3 bucket in us-east-1. Users in Asia report very slow uploads. What should be done to improve upload performance?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Configure S3 Cross-Region Replication to an Asian Region"
+        },
+        {
+          "id": "b",
+          "text": "Put CloudFront in front of the bucket with a long cache TTL"
+        },
+        {
+          "id": "c",
+          "text": "Enable S3 Transfer Acceleration and use multipart upload"
+        },
+        {
+          "id": "d",
+          "text": "Place AWS Global Accelerator in front of the bucket"
+        }
+      ],
+      "correct": [
+        "c"
+      ],
+      "explanation": "Transfer Acceleration đưa upload vào edge gần nhất rồi đi trên mạng AWS; multipart chia file lớn thành nhiều phần song song.",
+      "optionExplanations": {
+        "a": "CRR sao chép sau khi upload xong, không làm upload nhanh hơn.",
+        "d": "Global Accelerator không đặt trước S3 theo cách này.",
+        "b": "Cache TTL phục vụ download, không tăng tốc upload.",
+        "c": "Transfer Acceleration cho đường xa, multipart cho file lớn."
+      },
+      "reviewPage": "high-performing",
+      "hint": "Upload đường xa + file lớn."
+    },
+    {
+      "id": "bo-1-1-08",
+      "baseId": "th2-04",
+      "domain": "cost",
+      "prompt": "Temporary processing files in S3 are deleted after about 12 hours. Which storage class is the MOST cost-effective?",
+      "options": [
+        {
+          "id": "a",
+          "text": "S3 Standard"
+        },
+        {
+          "id": "b",
+          "text": "S3 Standard-IA"
+        },
+        {
+          "id": "c",
+          "text": "S3 Glacier Instant Retrieval"
+        },
+        {
+          "id": "d",
+          "text": "S3 One Zone-IA"
+        }
+      ],
+      "correct": [
+        "a"
+      ],
+      "explanation": "IA tính tối thiểu 30 ngày, Glacier IR 90 ngày. Dữ liệu sống vài giờ thì S3 Standard rẻ nhất.",
+      "optionExplanations": {
+        "b": "Standard-IA tính tối thiểu 30 ngày.",
+        "d": "One Zone-IA tính tối thiểu 30 ngày.",
+        "c": "Glacier IR tính tối thiểu 90 ngày.",
+        "a": "S3 Standard không tính thời gian lưu tối thiểu."
+      },
+      "reviewPage": "cost-optimized",
+      "hint": "Thời gian lưu tối thiểu."
+    },
+    {
+      "id": "bo-1-1-09",
+      "baseId": "s2-07",
+      "domain": "resilient",
+      "prompt": "A static website in an S3 bucket in us-east-1 is served through CloudFront. It must keep working if the primary bucket becomes unavailable. Which TWO steps should be taken? (Select TWO.)",
+      "options": [
+        {
+          "id": "a",
+          "text": "Enable S3 Cross-Region Replication to a bucket in another Region"
+        },
+        {
+          "id": "b",
+          "text": "Enable S3 Transfer Acceleration"
+        },
+        {
+          "id": "c",
+          "text": "Increase the CloudFront cache TTL to one year"
+        },
+        {
+          "id": "d",
+          "text": "Configure Route 53 latency-based routing to the buckets"
+        },
+        {
+          "id": "e",
+          "text": "Configure a CloudFront origin group with the primary bucket and the replica bucket"
+        }
+      ],
+      "correct": [
+        "a",
+        "e"
+      ],
+      "explanation": "CRR tạo bản sao dữ liệu; origin group giúp CloudFront tự chuyển sang bản sao khi origin chính lỗi.",
+      "optionExplanations": {
+        "a": "tạo bucket dự phòng có cùng dữ liệu ở region khác.",
+        "b": "Transfer Acceleration tăng tốc upload, không phải failover.",
+        "c": "TTL dài không thay thế được origin dự phòng khi cache hết hạn hoặc chưa có.",
+        "d": "Người dùng đi qua CloudFront, nên failover phải nằm trong CloudFront chứ không ở DNS tới bucket.",
+        "e": "CloudFront tự chuyển sang bucket replica khi bucket chính trả lỗi."
+      },
+      "reviewPage": "resilient"
+    },
+    {
+      "id": "bo-1-1-10",
+      "baseId": "th3-01",
+      "domain": "cost",
+      "prompt": "Thumbnails can be regenerated from originals if lost. They are rarely accessed but must load in milliseconds. Which class is cheapest?",
+      "options": [
+        {
+          "id": "a",
+          "text": "S3 Glacier Deep Archive"
+        },
+        {
+          "id": "b",
+          "text": "S3 Standard"
+        },
+        {
+          "id": "c",
+          "text": "S3 Standard-IA"
+        },
+        {
+          "id": "d",
+          "text": "S3 One Zone-IA"
+        }
+      ],
+      "correct": [
+        "d"
+      ],
+      "explanation": "Không cần lưu nhiều AZ nên One Zone-IA rẻ hơn Standard-IA khoảng 20%, vẫn lấy trong mili giây.",
+      "optionExplanations": {
+        "b": "Standard đắt nhất cho dữ liệu ít truy cập.",
+        "a": "Deep Archive phải chờ 12–48 giờ.",
+        "d": "rẻ hơn khoảng 20%, vẫn lấy trong mili giây.",
+        "c": "Standard-IA đắt hơn vì lưu nhiều AZ, không cần thiết."
+      },
+      "reviewPage": "cost-optimized",
+      "hint": "Dữ liệu tạo lại được."
+    },
+    {
+      "id": "bo-1-1-11",
+      "baseId": "tt1-04",
+      "domain": "resilient",
+      "prompt": "An order service publishes events that the inventory, shipping and email services must each process independently. If one service is down, its events must not be lost and the other services must not be affected. What should be done?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Publish to an SNS topic that fans out to a separate SQS queue for each service"
+        },
+        {
+          "id": "b",
+          "text": "Orchestrate the three services with Step Functions"
+        },
+        {
+          "id": "c",
+          "text": "Have the order service call each service’s API synchronously with retries"
+        },
+        {
+          "id": "d",
+          "text": "Use a single SQS queue shared by all three services"
+        }
+      ],
+      "correct": [
+        "a"
+      ],
+      "explanation": "SNS gửi bản sao event tới từng SQS queue; service nào chết thì event vẫn nằm chờ trong queue của nó.",
+      "optionExplanations": {
+        "c": "Gọi đồng bộ làm các service phụ thuộc chặt vào nhau; một bên chết ảnh hưởng cả luồng.",
+        "b": "Step Functions điều phối tuần tự, không tách rời các service như fan-out.",
+        "a": "mỗi service một queue riêng, độc lập và không mất event.",
+        "d": "Một queue chung: mỗi message chỉ được một consumer xử lý."
+      },
+      "reviewPage": "resilient",
+      "hint": "Fan-out + không mất khi một bên chết."
+    },
+    {
+      "id": "bo-1-1-12",
+      "baseId": "lch2-08",
+      "domain": "resilient",
+      "prompt": "A static website on S3 is served through CloudFront. It must fail over to a replica bucket in another Region if the primary returns errors. What should be configured?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A CloudFront origin group with the primary bucket and a CRR replica bucket"
+        },
+        {
+          "id": "b",
+          "text": "S3 Transfer Acceleration"
+        },
+        {
+          "id": "c",
+          "text": "Route 53 failover records pointing at the buckets"
+        },
+        {
+          "id": "d",
+          "text": "Lambda@Edge to retry requests"
+        }
+      ],
+      "correct": [
+        "a"
+      ],
+      "explanation": "Origin group gồm bucket chính và bucket replica (CRR); CloudFront tự chuyển khi origin chính lỗi.",
+      "optionExplanations": {
+        "a": "origin group 2 bucket, bucket phụ được CRR từ bucket chính.",
+        "c": "Người dùng đi qua CloudFront nên failover phải nằm ở origin của CloudFront.",
+        "b": "Transfer Acceleration tăng tốc upload, không failover.",
+        "d": "Tự viết retry là tự build, không phải cơ chế failover chuẩn."
+      },
+      "reviewPage": "resilient",
+      "hint": "Nội dung tĩnh, failover trong CloudFront."
+    },
+    {
+      "id": "bo-1-1-13",
+      "baseId": "lch3-04",
+      "domain": "secure",
+      "prompt": "An RDS for SQL Server instance must reject any client connection that is not encrypted in transit. What should be done?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Enable Transparent Data Encryption"
+        },
+        {
+          "id": "b",
+          "text": "Enable encryption at rest with KMS"
+        },
+        {
+          "id": "c",
+          "text": "Enable IAM database authentication"
+        },
+        {
+          "id": "d",
+          "text": "Set rds.force_ssl to 1 in the parameter group"
+        }
+      ],
+      "correct": [
+        "d"
+      ],
+      "explanation": "rds.force_ssl ép mọi kết nối dùng SSL/TLS. IAM DB auth không hỗ trợ SQL Server và cũng không phải mã hóa.",
+      "optionExplanations": {
+        "b": "KMS là mã hóa at-rest.",
+        "c": "IAM DB auth là cách đăng nhập, không hỗ trợ SQL Server, không ép mã hóa.",
+        "d": "ép SSL/TLS cho mọi kết nối.",
+        "a": "TDE là mã hóa at-rest."
+      },
+      "reviewPage": "secure",
+      "hint": "In-transit."
+    },
+    {
+      "id": "bo-1-1-14",
+      "baseId": "tt2-05",
+      "domain": "secure",
+      "prompt": "A company must encrypt all objects in S3 using keys that it controls, with automatic yearly key rotation and an audit trail of every key use. What should be used?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Client-side encryption with keys in a local HSM"
+        },
+        {
+          "id": "b",
+          "text": "SSE-KMS with a customer managed key and automatic rotation enabled"
+        },
+        {
+          "id": "c",
+          "text": "SSE-C with keys stored on premises"
+        },
+        {
+          "id": "d",
+          "text": "SSE-S3"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "Customer managed key trong KMS: khách hàng kiểm soát policy, bật auto rotation hằng năm, mọi lần dùng key ghi vào CloudTrail.",
+      "optionExplanations": {
+        "c": "SSE-C phải tự xoay vòng key, không có audit tập trung.",
+        "a": "Client-side với HSM local phải tự làm mọi thứ, không có auto rotation.",
+        "b": "kiểm soát key, auto rotation, audit qua CloudTrail.",
+        "d": "SSE-S3 do AWS quản lý key, khách hàng không kiểm soát và không có audit theo key."
+      },
+      "reviewPage": "secure",
+      "hint": "Kiểm soát key + auto rotation + audit."
+    },
+    {
+      "id": "bo-1-1-15",
+      "baseId": "th3-07",
+      "domain": "resilient",
+      "prompt": "A company wants low-cost DR for its on-premises servers with an RPO of seconds and an RTO of minutes. Which service fits?",
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Backup with daily snapshots"
+        },
+        {
+          "id": "b",
+          "text": "AWS Elastic Disaster Recovery"
+        },
+        {
+          "id": "c",
+          "text": "Multi-site active-active"
+        },
+        {
+          "id": "d",
+          "text": "Warm standby with RDS and DMS running"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "Elastic Disaster Recovery replicate liên tục vào staging rẻ, khi cần mới dựng server (pilot light). Warm standby chạy sẵn nên đắt hơn.",
+      "optionExplanations": {
+        "b": "Elastic DR replicate liên tục vào staging rẻ, RPO giây, RTO phút.",
+        "a": "Snapshot hằng ngày cho RPO tới 24 giờ.",
+        "d": "Warm standby chạy sẵn RDS và DMS nên đắt hơn.",
+        "c": "Active-active đắt nhất."
+      },
+      "reviewPage": "resilient",
+      "hint": "Pilot light rẻ, RPO giây."
+    },
+    {
+      "id": "bo-1-1-16",
+      "baseId": "th1-09",
+      "domain": "performance",
+      "prompt": "A Linux ML training cluster needs a high-performance file system that reads a large dataset directly from an S3 bucket and writes results back. Which service fits best?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon EFS with Bursting throughput"
+        },
+        {
+          "id": "b",
+          "text": "Amazon EBS gp3"
+        },
+        {
+          "id": "c",
+          "text": "Amazon FSx for Lustre linked to the bucket"
+        },
+        {
+          "id": "d",
+          "text": "S3 File Gateway"
+        }
+      ],
+      "correct": [
+        "c"
+      ],
+      "explanation": "FSx for Lustre liên kết trực tiếp với S3, hiệu năng rất cao cho HPC/ML trên Linux.",
+      "optionExplanations": {
+        "b": "gp3 là block storage gắn 1 instance, không chia sẻ cho cả cluster.",
+        "a": "EFS không liên kết trực tiếp với S3 và không đạt hiệu năng HPC như Lustre.",
+        "d": "S3 File Gateway phục vụ on-prem truy cập S3, không phải HPC trên AWS.",
+        "c": "Lustre liên kết S3, đọc dataset và ghi kết quả về S3, hiệu năng HPC."
+      },
+      "reviewPage": "high-performing",
+      "hint": "HPC Linux + S3."
+    },
+    {
+      "id": "bo-1-1-17",
+      "baseId": "th6-09",
+      "domain": "cost",
+      "prompt": "Production, test and development each use Multi-AZ RDS. How can costs be reduced without affecting mission-critical systems?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Switch production to Spot"
+        },
+        {
+          "id": "b",
+          "text": "Remove the load balancer"
+        },
+        {
+          "id": "c",
+          "text": "Disable Multi-AZ for development and test databases"
+        },
+        {
+          "id": "d",
+          "text": "Downgrade production to a smaller instance"
+        }
+      ],
+      "correct": [
+        "c"
+      ],
+      "explanation": "Dev/test không cần HA nên bỏ Multi-AZ ở đó; production giữ nguyên.",
+      "optionExplanations": {
+        "a": "Spot cho production critical có thể bị thu hồi.",
+        "d": "Giảm cấu hình production ảnh hưởng hiệu năng.",
+        "b": "ELB cần cho HA của production.",
+        "c": "dev/test không cần HA."
+      },
+      "reviewPage": "cost-optimized",
+      "hint": "Môi trường nào không cần HA?"
+    },
+    {
+      "id": "bo-1-1-18",
+      "baseId": "s2-08",
+      "domain": "cost",
+      "prompt": "A company runs a steady baseline of web servers 24/7 for the next 3 years, plus nightly batch jobs that can be interrupted and restarted. Which TWO purchasing options are MOST cost-effective? (Select TWO.)",
+      "options": [
+        {
+          "id": "a",
+          "text": "Spot Instances for the nightly batch jobs"
+        },
+        {
+          "id": "b",
+          "text": "Dedicated Hosts for the web servers"
+        },
+        {
+          "id": "c",
+          "text": "On-Demand Capacity Reservations for the batch jobs"
+        },
+        {
+          "id": "d",
+          "text": "On-Demand Instances for everything"
+        },
+        {
+          "id": "e",
+          "text": "A Savings Plan covering the baseline web servers"
+        }
+      ],
+      "correct": [
+        "a",
+        "e"
+      ],
+      "explanation": "Phần ổn định dài hạn → cam kết (Savings Plan/RI); phần chịu gián đoạn → Spot.",
+      "optionExplanations": {
+        "c": "Capacity Reservations tính giá On-Demand, không rẻ hơn.",
+        "d": "On-Demand đắt nhất cho cả hai loại workload.",
+        "b": "Dedicated Hosts đắt, chỉ cần cho license BYOL.",
+        "a": "batch chịu gián đoạn nên dùng Spot rẻ nhất.",
+        "e": "cam kết dài hạn cho phần chạy ổn định."
+      },
+      "reviewPage": "cost-optimized"
+    },
+    {
+      "id": "bo-1-1-19",
+      "baseId": "lch1-05",
+      "domain": "resilient",
+      "prompt": "A critical application must recover within a few minutes, using a scaled-down but fully functional copy of the stack already running in another Region. Which strategy is this?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Multi-site active-active"
+        },
+        {
+          "id": "b",
+          "text": "Warm standby"
+        },
+        {
+          "id": "c",
+          "text": "Backup and restore"
+        },
+        {
+          "id": "d",
+          "text": "Pilot light"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "Warm standby là bản thu nhỏ chạy đầy đủ, khi sự cố chỉ cần scale lên.",
+      "optionExplanations": {
+        "d": "Pilot light chỉ chạy phần lõi (DB), server tắt.",
+        "a": "Active-active chạy bản đầy đủ và nhận traffic thật.",
+        "b": "bản thu nhỏ chạy sẵn, RTO vài phút.",
+        "c": "Backup and restore không có gì chạy sẵn, RTO hàng giờ."
+      },
+      "reviewPage": "resilient",
+      "hint": "Bản thu nhỏ đang chạy."
+    },
+    {
+      "id": "bo-1-1-20",
+      "baseId": "lch3-01",
+      "domain": "resilient",
+      "prompt": "An internal reporting tool can be unavailable for up to 24 hours after a Regional outage. The company wants the cheapest DR approach. What should be used?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Pilot light"
+        },
+        {
+          "id": "b",
+          "text": "Backup and restore"
+        },
+        {
+          "id": "c",
+          "text": "Warm standby"
+        },
+        {
+          "id": "d",
+          "text": "Multi-site active-active"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "RTO 24 giờ thì không cần gì chạy sẵn; backup and restore rẻ nhất.",
+      "optionExplanations": {
+        "a": "Pilot light trả tiền cho DB replicate liên tục, không cần thiết.",
+        "d": "Active-active đắt nhất.",
+        "b": "chỉ lưu backup ở region khác, rẻ nhất.",
+        "c": "Warm standby đắt hơn nhiều mức cần."
+      },
+      "reviewPage": "resilient",
+      "hint": "RTO 24 giờ."
+    },
+    {
+      "id": "bo-1-1-21",
+      "baseId": "th3-08",
+      "domain": "performance",
+      "prompt": "An ALB serves two AZs with 2 instances in one AZ and 8 in the other. Traffic should be spread evenly across all 10 instances. What should be enabled?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Connection draining"
+        },
+        {
+          "id": "b",
+          "text": "Cross-zone load balancing"
+        },
+        {
+          "id": "c",
+          "text": "Sticky sessions"
+        },
+        {
+          "id": "d",
+          "text": "Path-based routing"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "Cross-zone load balancing chia đều request cho mọi instance bất kể AZ.",
+      "optionExplanations": {
+        "a": "Connection draining chỉ giữ kết nối khi gỡ instance.",
+        "b": "cross-zone chia đều request cho mọi instance bất kể AZ.",
+        "d": "Path routing chia theo URL, không cân bằng giữa các AZ.",
+        "c": "Sticky sessions gắn user vào 1 instance, càng làm lệch tải."
+      },
+      "reviewPage": "high-performing",
+      "hint": "Chia đều giữa các AZ."
+    },
+    {
+      "id": "bo-1-1-22",
+      "baseId": "th4-07",
+      "domain": "performance",
+      "prompt": "Launching additional instances into an existing cluster placement group fails with an insufficient capacity error. What is the recommended fix?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Stop and then start all instances in the placement group, then try again"
+        },
+        {
+          "id": "b",
+          "text": "Create a new spread placement group"
+        },
+        {
+          "id": "c",
+          "text": "Use a different AWS Region"
+        },
+        {
+          "id": "d",
+          "text": "Switch to a partition placement group"
+        }
+      ],
+      "correct": [
+        "a"
+      ],
+      "explanation": "Stop rồi start toàn bộ instance để AWS tìm phần cứng có đủ chỗ cho cả nhóm, sau đó launch lại.",
+      "optionExplanations": {
+        "b": "Spread placement group trải instance ra phần cứng khác nhau, làm mất độ trễ thấp của cluster.",
+        "a": "stop/start toàn bộ để AWS đặt cả nhóm lên phần cứng còn đủ chỗ.",
+        "c": "Đổi region là quá tay và không cần thiết.",
+        "d": "Partition placement group phục vụ HDFS/Cassandra, không giải quyết lỗi capacity."
+      },
+      "reviewPage": "high-performing",
+      "hint": "Cluster placement group thiếu capacity."
+    },
+    {
+      "id": "bo-1-1-23",
+      "baseId": "th6-10",
+      "domain": "secure",
+      "prompt": "An IAM policy allows ec2:* but also has a Deny on ec2:* with a condition matching source IP 203.0.113.0/24. A user from 203.0.113.10 tries to launch an instance. What happens?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The request succeeds because Allow is evaluated first"
+        },
+        {
+          "id": "b",
+          "text": "The request is denied because the explicit Deny matches"
+        },
+        {
+          "id": "c",
+          "text": "The result depends on the instance type"
+        },
+        {
+          "id": "d",
+          "text": "The request succeeds only with MFA"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "Condition trong Deny khớp nghĩa là IP đó bị chặn. Explicit Deny luôn thắng Allow.",
+      "optionExplanations": {
+        "a": "Không có chuyện Allow được xét trước; explicit Deny luôn thắng.",
+        "d": "Policy không có điều kiện MFA.",
+        "c": "Instance type không liên quan đến việc đánh giá policy này.",
+        "b": "Deny khớp điều kiện IP nên request bị chặn."
+      },
+      "reviewPage": "secure",
+      "hint": "Condition nằm trong Deny."
+    },
+    {
+      "id": "bo-1-1-24",
+      "baseId": "lch3-03",
+      "domain": "performance",
+      "prompt": "Requests for images.example.com and api.example.com must go to different target groups behind one load balancer. What should be used?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Gateway Load Balancer"
+        },
+        {
+          "id": "b",
+          "text": "Two separate CloudFront distributions"
+        },
+        {
+          "id": "c",
+          "text": "Application Load Balancer with host-based routing rules"
+        },
+        {
+          "id": "d",
+          "text": "Network Load Balancer with two listeners"
+        }
+      ],
+      "correct": [
+        "c"
+      ],
+      "explanation": "ALB đọc được header Host nên định tuyến theo tên miền (host) hoặc URL (path).",
+      "optionExplanations": {
+        "d": "NLB là layer 4, không đọc được tên miền trong HTTP.",
+        "a": "GWLB chỉ dùng để chèn firewall appliance, không định tuyến theo tên miền.",
+        "b": "Hai distribution là thừa, và CloudFront vẫn cần origin phía sau làm việc định tuyến.",
+        "c": "ALB host conditions chia request theo tên miền."
+      },
+      "reviewPage": "high-performing",
+      "hint": "Định tuyến theo tên miền."
+    },
+    {
+      "id": "bo-1-1-25",
+      "baseId": "th3-03",
+      "domain": "performance",
+      "prompt": "A GraphQL API must read from and write to several DynamoDB tables in a single request. Which solution has the least custom code?",
+      "options": [
+        {
+          "id": "a",
+          "text": "DynamoDB Streams"
+        },
+        {
+          "id": "b",
+          "text": "AWS AppSync with pipeline resolvers"
+        },
+        {
+          "id": "c",
+          "text": "API Gateway with one Lambda per table"
+        },
+        {
+          "id": "d",
+          "text": "Athena Federated Query"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "AppSync pipeline resolvers chạy nhiều bước trong 1 request GraphQL. Athena Federated Query chỉ đọc, không ghi.",
+      "optionExplanations": {
+        "c": "Nhiều Lambda tự viết tốn code và vận hành.",
+        "b": "AppSync pipeline resolvers chạy nhiều bước đọc/ghi trong 1 request.",
+        "d": "Athena Federated Query chỉ đọc, không ghi và không phải GraphQL.",
+        "a": "Streams bắt thay đổi dữ liệu, không phục vụ API."
+      },
+      "reviewPage": "high-performing",
+      "hint": "GraphQL + nhiều bảng."
+    },
+    {
+      "id": "bo-1-1-26",
+      "baseId": "lch2-06",
+      "domain": "performance",
+      "prompt": "Analysts run complex aggregations over years of sales data from many sources for BI dashboards. Which service fits?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon Redshift"
+        },
+        {
+          "id": "b",
+          "text": "Amazon Aurora"
+        },
+        {
+          "id": "c",
+          "text": "Amazon DynamoDB"
+        },
+        {
+          "id": "d",
+          "text": "Amazon ElastiCache"
+        }
+      ],
+      "correct": [
+        "a"
+      ],
+      "explanation": "Phân tích tổng hợp, BI, dữ liệu nhiều năm là OLAP → Redshift.",
+      "optionExplanations": {
+        "a": "data warehouse columnar cho BI.",
+        "c": "DynamoDB là key-value, không hợp với truy vấn tổng hợp phức tạp.",
+        "b": "Aurora tối ưu cho giao dịch (OLTP), không phải phân tích quy mô lớn.",
+        "d": "ElastiCache là cache."
+      },
+      "reviewPage": "high-performing",
+      "hint": "OLAP."
+    },
+    {
+      "id": "bo-1-1-27",
+      "baseId": "tt2-06",
+      "domain": "cost",
+      "prompt": "An analytics team runs ad hoc SQL queries once a month on 5 TB of CSV files in S3. A Redshift cluster currently runs 24/7 only for this purpose. How can costs be reduced the MOST?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Run an EMR cluster 24/7 instead"
+        },
+        {
+          "id": "b",
+          "text": "Load the data into an RDS instance"
+        },
+        {
+          "id": "c",
+          "text": "Buy a Reserved Instance for the Redshift cluster"
+        },
+        {
+          "id": "d",
+          "text": "Query the data with Amazon Athena and convert the files to Parquet"
+        }
+      ],
+      "correct": [
+        "d"
+      ],
+      "explanation": "Athena serverless, chỉ trả tiền theo dữ liệu quét; Parquet giảm lượng dữ liệu quét thêm nữa.",
+      "optionExplanations": {
+        "a": "EMR chạy 24/7 cũng lãng phí như Redshift.",
+        "d": "chỉ trả khi query, Parquet giảm chi phí quét.",
+        "c": "RI vẫn trả tiền cho cluster chạy cả tháng để dùng một lần.",
+        "b": "RDS không hợp để phân tích 5 TB và vẫn chạy liên tục."
+      },
+      "reviewPage": "cost-optimized",
+      "hint": "Truy vấn thỉnh thoảng trên S3."
+    },
+    {
+      "id": "bo-1-1-28",
+      "baseId": "tt1-09",
+      "domain": "secure",
+      "prompt": "A mobile app lets users sign in with Google or Facebook and upload photos to an S3 bucket. Each user must be able to access only their own folder in the bucket. The solution must scale to millions of users. What should be done?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Use Amazon Cognito user pools and identity pools, and grant an IAM role whose policy uses the Cognito identity ID as a prefix variable"
+        },
+        {
+          "id": "b",
+          "text": "Make the bucket public and validate uploads with Lambda"
+        },
+        {
+          "id": "c",
+          "text": "Create an IAM user for each app user"
+        },
+        {
+          "id": "d",
+          "text": "Embed one set of access keys in the mobile app"
+        }
+      ],
+      "correct": [
+        "a"
+      ],
+      "explanation": "Cognito liên kết đăng nhập mạng xã hội, cấp credential tạm qua identity pool; policy variable giới hạn mỗi user vào thư mục riêng.",
+      "optionExplanations": {
+        "b": "Bucket public là vi phạm bảo mật nghiêm trọng.",
+        "c": "IAM user cho hàng triệu người dùng không khả thi và trái best practice.",
+        "a": "Cognito cấp credential tạm, policy variable giới hạn theo từng user.",
+        "d": "Access key nhúng trong app sẽ bị lộ và ai cũng truy cập được mọi thư mục."
+      },
+      "reviewPage": "secure",
+      "hint": "Người dùng cuối + social login."
+    },
+    {
+      "id": "bo-1-1-29",
+      "baseId": "lch1-08",
+      "domain": "cost",
+      "prompt": "A company runs SQL Server licensed per physical core (BYOL). Instances must stay on the same physical server after stop and start. Which option meets this?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Dedicated Instances"
+        },
+        {
+          "id": "b",
+          "text": "Spot Instances"
+        },
+        {
+          "id": "c",
+          "text": "On-Demand Capacity Reservations"
+        },
+        {
+          "id": "d",
+          "text": "Dedicated Hosts with host affinity"
+        }
+      ],
+      "correct": [
+        "d"
+      ],
+      "explanation": "Dedicated Hosts cho thấy socket/core vật lý; host affinity ghim instance vào đúng server đó.",
+      "optionExplanations": {
+        "a": "Dedicated Instances chạy phần cứng riêng nhưng không cho thấy core và không ghim được vào server.",
+        "c": "Capacity Reservations chỉ giữ chỗ, vẫn chạy chung phần cứng.",
+        "b": "Spot không liên quan license và có thể bị thu hồi.",
+        "d": "thấy core vật lý và ghim instance bằng host affinity."
+      },
+      "reviewPage": "cost-optimized",
+      "hint": "License theo core + giữ đúng server."
+    },
+    {
+      "id": "bo-1-1-30",
+      "baseId": "tt1-05",
+      "domain": "secure",
+      "prompt": "A company has dozens of AWS accounts in AWS Organizations, and new accounts are created every month. The security team must ensure that no S3 bucket in any account, including future accounts, can ever be made public. The solution must have the LEAST operational overhead. What should a solutions architect do?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Deploy an AWS Config rule with Lambda remediation in every account"
+        },
+        {
+          "id": "b",
+          "text": "Enable S3 Block Public Access at the account level and attach an SCP that denies changes to the Block Public Access settings"
+        },
+        {
+          "id": "c",
+          "text": "Attach an IAM policy that denies public ACLs to every IAM user in each account"
+        },
+        {
+          "id": "d",
+          "text": "Enable Amazon Macie in every account to detect public buckets"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "Block Public Access chặn public ở mức account; SCP gắn vào OU tự áp dụng cho cả account mới và không cho ai tắt nó đi.",
+      "optionExplanations": {
+        "b": "chặn trước, tự áp dụng cho account mới qua OU, không ai tắt được.",
+        "c": "Policy trên từng user không bao gồm root user và user mới tạo sau này.",
+        "a": "Config chỉ phát hiện rồi sửa sau, phải triển khai từng account, tốn vận hành.",
+        "d": "Macie chỉ phát hiện dữ liệu nhạy cảm, không ngăn bucket bị public."
+      },
+      "reviewPage": "secure",
+      "hint": "Chặn trước, cả account hiện tại và tương lai."
+    },
+    {
+      "id": "bo-1-1-31",
+      "baseId": "th5-10",
+      "domain": "resilient",
+      "prompt": "An application needs at least 6 running instances even if one of 3 AZs fails. What is the MOST cost-effective distribution?",
+      "options": [
+        {
+          "id": "a",
+          "text": "3 per AZ"
+        },
+        {
+          "id": "b",
+          "text": "4 per AZ"
+        },
+        {
+          "id": "c",
+          "text": "2 per AZ"
+        },
+        {
+          "id": "d",
+          "text": "6 per AZ"
+        }
+      ],
+      "correct": [
+        "a"
+      ],
+      "explanation": "3-3-3: mất 1 AZ còn 6. Mẹo: mỗi AZ = N / (số AZ − 1) = 6 / 2 = 3.",
+      "optionExplanations": {
+        "c": "2-2-2: mất 1 AZ còn 4, thiếu.",
+        "b": "4-4-4 đủ nhưng thừa 3 instance.",
+        "d": "6 mỗi AZ thừa rất nhiều.",
+        "a": "3-3-3 mất 1 AZ còn 6, tổng 9 là ít nhất."
+      },
+      "reviewPage": "resilient",
+      "hint": "Tổng − AZ lớn nhất ≥ 6."
+    },
+    {
+      "id": "bo-1-1-32",
+      "baseId": "th6-04",
+      "domain": "resilient",
+      "prompt": "A CloudFront distribution serves dynamic content from EC2. The origin must stay available if one AZ fails. What should be configured?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Lambda@Edge to retry requests"
+        },
+        {
+          "id": "b",
+          "text": "An origin group with two EC2/ALB origins in different AZs"
+        },
+        {
+          "id": "c",
+          "text": "An S3 bucket as the secondary origin"
+        },
+        {
+          "id": "d",
+          "text": "Longer cache TTL"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "Nội dung động cần origin là EC2/ALB; origin group gồm 2 origin khác AZ. S3 chỉ phục vụ nội dung tĩnh.",
+      "optionExplanations": {
+        "d": "TTL dài không áp dụng cho nội dung động.",
+        "b": "origin group gồm 2 origin EC2/ALB ở khác AZ.",
+        "c": "S3 chỉ phục vụ nội dung tĩnh, không chạy được nội dung động.",
+        "a": "Lambda@Edge tự retry là tự build, không phải failover chuẩn."
+      },
+      "reviewPage": "resilient",
+      "hint": "Static hay dynamic?"
+    },
+    {
+      "id": "bo-1-1-33",
+      "baseId": "lch3-06",
+      "domain": "resilient",
+      "prompt": "A dynamic API behind CloudFront runs on ALBs in us-east-1 and us-west-2. CloudFront must switch to the second ALB when the first returns 5xx errors. What should be configured?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A CloudFront origin group with both ALBs"
+        },
+        {
+          "id": "b",
+          "text": "Global Accelerator in front of CloudFront"
+        },
+        {
+          "id": "c",
+          "text": "An S3 bucket as the secondary origin"
+        },
+        {
+          "id": "d",
+          "text": "A longer cache TTL"
+        }
+      ],
+      "correct": [
+        "a"
+      ],
+      "explanation": "Nội dung động cần origin cùng loại; origin group gồm hai ALB.",
+      "optionExplanations": {
+        "b": "Không đặt Global Accelerator trước CloudFront.",
+        "d": "TTL dài không áp dụng cho API động.",
+        "a": "origin group với hai ALB, failover khi gặp 5xx.",
+        "c": "S3 không chạy được API động."
+      },
+      "reviewPage": "resilient",
+      "hint": "Nội dung động."
+    },
+    {
+      "id": "bo-1-1-34",
+      "baseId": "lch3-02",
+      "domain": "performance",
+      "prompt": "An e-commerce checkout handles many small concurrent transactions, needs MySQL compatibility and high availability. Which service fits?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon Athena"
+        },
+        {
+          "id": "b",
+          "text": "Amazon Aurora MySQL"
+        },
+        {
+          "id": "c",
+          "text": "Amazon Neptune"
+        },
+        {
+          "id": "d",
+          "text": "Amazon Redshift"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "Nhiều giao dịch nhỏ, ACID, tương thích MySQL → Aurora MySQL.",
+      "optionExplanations": {
+        "c": "Neptune là graph database.",
+        "b": "OLTP, tương thích MySQL, HA với replica.",
+        "a": "Athena query file trên S3, không xử lý giao dịch.",
+        "d": "Redshift là OLAP, không dùng cho giao dịch."
+      },
+      "reviewPage": "high-performing",
+      "hint": "OLTP."
+    },
+    {
+      "id": "bo-1-1-35",
+      "baseId": "lch1-01",
+      "domain": "performance",
+      "prompt": "A clustered database runs on two EC2 instances in the same AZ and needs shared block storage with very high IOPS, using a cluster-aware file system. What should be used?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon S3"
+        },
+        {
+          "id": "b",
+          "text": "EBS gp3 with Multi-Attach"
+        },
+        {
+          "id": "c",
+          "text": "EBS io2 with Multi-Attach"
+        },
+        {
+          "id": "d",
+          "text": "Amazon EFS"
+        }
+      ],
+      "correct": [
+        "c"
+      ],
+      "explanation": "Cùng AZ, block storage, IOPS cao → io2 Multi-Attach (cần cluster-aware file system).",
+      "optionExplanations": {
+        "a": "S3 là object storage.",
+        "b": "gp3 không hỗ trợ Multi-Attach.",
+        "d": "EFS là file storage, đề cần block.",
+        "c": "io2 Multi-Attach cho nhiều instance trong cùng AZ."
+      },
+      "reviewPage": "high-performing",
+      "hint": "Cùng AZ + block."
+    },
+    {
+      "id": "bo-1-1-36",
+      "baseId": "tt2-08",
+      "domain": "secure",
+      "prompt": "An application on EC2 instances in a private subnet writes to an Amazon DynamoDB table. Traffic must not traverse the internet, and the table must be accessible only from this VPC. Which solution is MOST cost-effective?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Create an interface VPC endpoint for S3"
+        },
+        {
+          "id": "b",
+          "text": "Create a gateway VPC endpoint for DynamoDB and use a policy condition on aws:sourceVpce"
+        },
+        {
+          "id": "c",
+          "text": "Peer the VPC with the DynamoDB service VPC"
+        },
+        {
+          "id": "d",
+          "text": "Add a NAT gateway and restrict the table with an IAM policy"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "Gateway endpoint cho DynamoDB miễn phí, traffic đi trong mạng AWS; điều kiện aws:sourceVpce chỉ cho truy cập từ endpoint đó.",
+      "optionExplanations": {
+        "c": "Không tồn tại việc peering với VPC của dịch vụ DynamoDB.",
+        "a": "S3 endpoint không phục vụ DynamoDB.",
+        "d": "NAT gateway đưa traffic ra Internet và tốn phí.",
+        "b": "gateway endpoint miễn phí, giới hạn truy cập bằng aws:sourceVpce."
+      },
+      "reviewPage": "secure",
+      "hint": "DynamoDB + không qua Internet + rẻ."
+    },
+    {
+      "id": "bo-1-1-37",
+      "baseId": "s2-06",
+      "domain": "secure",
+      "prompt": "A new RDS for PostgreSQL database must keep data encrypted at rest and reject any unencrypted client connections. Which TWO actions meet these requirements? (Select TWO.)",
+      "options": [
+        {
+          "id": "a",
+          "text": "Enable Performance Insights"
+        },
+        {
+          "id": "b",
+          "text": "Set the rds.force_ssl parameter to 1"
+        },
+        {
+          "id": "c",
+          "text": "Enable encryption with a KMS key when creating the DB instance"
+        },
+        {
+          "id": "d",
+          "text": "Enable Multi-AZ deployment"
+        },
+        {
+          "id": "e",
+          "text": "Enable IAM database authentication"
+        }
+      ],
+      "correct": [
+        "b",
+        "c"
+      ],
+      "explanation": "Hai yêu cầu, hai cơ chế: KMS cho at rest (phải bật khi tạo), rds.force_ssl cho in transit.",
+      "optionExplanations": {
+        "a": "Performance Insights dùng để phân tích hiệu năng.",
+        "d": "Multi-AZ phục vụ HA, không liên quan mã hóa.",
+        "b": "ép mọi kết nối dùng SSL/TLS (in transit).",
+        "e": "IAM DB auth là cách đăng nhập, không ép mã hóa kết nối.",
+        "c": "mã hóa at rest phải bật lúc tạo instance."
+      },
+      "reviewPage": "secure"
+    },
+    {
+      "id": "bo-1-1-38",
+      "baseId": "th5-02",
+      "domain": "secure",
+      "prompt": "A database password must rotate automatically every 30 days without custom code. Where should it be stored?",
+      "options": [
+        {
+          "id": "a",
+          "text": "S3 with SSE-KMS"
+        },
+        {
+          "id": "b",
+          "text": "Parameter Store SecureString"
+        },
+        {
+          "id": "c",
+          "text": "Encrypted Lambda environment variable"
+        },
+        {
+          "id": "d",
+          "text": "AWS Secrets Manager"
+        }
+      ],
+      "correct": [
+        "d"
+      ],
+      "explanation": "Chỉ Secrets Manager có auto rotation tích hợp sẵn. Parameter Store không tự xoay vòng.",
+      "optionExplanations": {
+        "c": "Env var của Lambda không tự xoay vòng.",
+        "d": "Secrets Manager có xoay vòng tích hợp sẵn.",
+        "a": "S3 chỉ lưu file, phải tự viết code xoay vòng.",
+        "b": "Parameter Store không có auto rotation."
+      },
+      "reviewPage": "secure",
+      "hint": "Auto rotation."
+    },
+    {
+      "id": "bo-1-1-39",
+      "baseId": "th5-09",
+      "domain": "resilient",
+      "prompt": "All traffic must go to the primary Region and switch to a secondary Region only when the primary is unhealthy. Which Route 53 policy fits?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Latency"
+        },
+        {
+          "id": "b",
+          "text": "Failover with health checks"
+        },
+        {
+          "id": "c",
+          "text": "Multivalue answer"
+        },
+        {
+          "id": "d",
+          "text": "Weighted"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "Failover routing gửi traffic tới primary, chỉ chuyển sang secondary khi health check báo lỗi.",
+      "optionExplanations": {
+        "c": "Multivalue trả nhiều record ngẫu nhiên.",
+        "a": "Latency chọn region gần nhất, cả hai cùng nhận traffic.",
+        "d": "Weighted chia tỉ lệ, không phải dự phòng.",
+        "b": "failover chỉ chuyển khi primary unhealthy."
+      },
+      "reviewPage": "resilient",
+      "hint": "Active-passive."
+    },
+    {
+      "id": "bo-1-1-40",
+      "baseId": "tt1-10",
+      "domain": "cost",
+      "prompt": "A company runs a production workload on m5 instances 24/7 and will keep it for 3 years. Development instances run only on weekdays from 9 AM to 6 PM. Which combination is MOST cost-effective?",
+      "options": [
+        {
+          "id": "a",
+          "text": "On-Demand for both"
+        },
+        {
+          "id": "b",
+          "text": "Reserved Instances for both production and development"
+        },
+        {
+          "id": "c",
+          "text": "Reserved Instances or Savings Plans for production, and schedule development instances to stop outside working hours"
+        },
+        {
+          "id": "d",
+          "text": "Spot Instances for production and On-Demand for development"
+        }
+      ],
+      "correct": [
+        "c"
+      ],
+      "explanation": "Production ổn định 24/7 → cam kết dài hạn. Dev chỉ chạy khoảng 45 giờ/tuần → tắt ngoài giờ rẻ hơn mua RI.",
+      "optionExplanations": {
+        "a": "On-Demand đắt nhất cho production chạy 24/7.",
+        "c": "cam kết cho phần ổn định, tắt dev ngoài giờ.",
+        "b": "RI cho dev tính tiền 24/7 trong khi dev chỉ chạy khoảng 27% thời gian.",
+        "d": "Spot cho production có thể bị thu hồi."
+      },
+      "reviewPage": "cost-optimized",
+      "hint": "Hai kiểu sử dụng khác nhau."
+    },
+    {
+      "id": "bo-1-1-41",
+      "baseId": "lch4-01",
+      "domain": "secure",
+      "prompt": "An existing unencrypted RDS instance must be encrypted at rest. What should be done?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Enable IAM database authentication"
+        },
+        {
+          "id": "b",
+          "text": "Set rds.force_ssl to 1"
+        },
+        {
+          "id": "c",
+          "text": "Take a snapshot, copy it with encryption enabled, and restore a new instance from the copy"
+        },
+        {
+          "id": "d",
+          "text": "Modify the instance and enable encryption"
+        }
+      ],
+      "correct": [
+        "c"
+      ],
+      "explanation": "Không bật mã hóa at-rest cho instance có sẵn được; phải snapshot → copy có mã hóa → restore.",
+      "optionExplanations": {
+        "d": "Không thể bật mã hóa cho instance đã tạo, tính năng không tồn tại.",
+        "b": "force_ssl là in-transit, không mã hóa dữ liệu lưu trữ.",
+        "a": "IAM DB auth là xác thực, không phải mã hóa.",
+        "c": "snapshot, copy có mã hóa, restore instance mới."
+      },
+      "reviewPage": "secure",
+      "hint": "At-rest, bật sau khi tạo được không?"
+    },
+    {
+      "id": "bo-1-1-42",
+      "baseId": "th6-02",
+      "domain": "resilient",
+      "prompt": "Reporting queries slow down a production RDS MySQL instance. The database must also fail over automatically if an AZ fails. Which combination meets both needs?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Multi-AZ only, sending reports to the standby"
+        },
+        {
+          "id": "b",
+          "text": "A read replica for reports and Multi-AZ for failover"
+        },
+        {
+          "id": "c",
+          "text": "Aurora Backtrack and snapshots"
+        },
+        {
+          "id": "d",
+          "text": "Two read replicas and no Multi-AZ"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "Read Replica gánh truy vấn đọc, Multi-AZ lo failover. Standby của Multi-AZ không đọc được.",
+      "optionExplanations": {
+        "b": "Read Replica gánh đọc, Multi-AZ lo failover.",
+        "d": "Read replica không tự failover như Multi-AZ.",
+        "a": "Standby của Multi-AZ (dạng instance) không phục vụ đọc.",
+        "c": "Backtrack và snapshot không giải quyết tải đọc hay HA."
+      },
+      "reviewPage": "resilient",
+      "hint": "Hai nhu cầu, hai công cụ."
+    },
+    {
+      "id": "bo-1-1-43",
+      "baseId": "th2-06",
+      "domain": "performance",
+      "prompt": "Requests to /api/android must go to one target group and /api/ios to another, behind the existing Application Load Balancer. What should be done?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Use path conditions in ALB listener rules"
+        },
+        {
+          "id": "b",
+          "text": "Use host conditions on the ALB"
+        },
+        {
+          "id": "c",
+          "text": "Replace the ALB with a Network Load Balancer"
+        },
+        {
+          "id": "d",
+          "text": "Replace the ALB with a Gateway Load Balancer"
+        }
+      ],
+      "correct": [
+        "a"
+      ],
+      "explanation": "ALB path conditions định tuyến theo URL. Host conditions theo tên miền. GWLB dành cho firewall appliance, NLB là layer 4.",
+      "optionExplanations": {
+        "a": "path conditions chia request theo URL path.",
+        "d": "GWLB dành cho firewall appliance, không định tuyến theo URL.",
+        "c": "NLB là layer 4, không đọc được URL.",
+        "b": "Host conditions định tuyến theo tên miền, không theo path."
+      },
+      "reviewPage": "high-performing",
+      "hint": "Route theo URL path."
+    },
+    {
+      "id": "bo-1-1-44",
+      "baseId": "th2-03",
+      "domain": "secure",
+      "prompt": "Partner accounts upload objects into a company bucket. The company must own and fully control every uploaded object. What is the simplest solution?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Ask partners to make objects public"
+        },
+        {
+          "id": "b",
+          "text": "Enable Requester Pays"
+        },
+        {
+          "id": "c",
+          "text": "Set S3 Object Ownership to bucket owner enforced"
+        },
+        {
+          "id": "d",
+          "text": "Enable S3 Versioning"
+        }
+      ],
+      "correct": [
+        "c"
+      ],
+      "explanation": "Bucket owner enforced tắt ACL và chủ bucket tự động sở hữu mọi object.",
+      "optionExplanations": {
+        "a": "Public object là rủi ro bảo mật và không cho quyền sở hữu.",
+        "b": "Requester Pays liên quan chi phí tải.",
+        "c": "bucket owner enforced tắt ACL, chủ bucket sở hữu mọi object.",
+        "d": "Versioning giữ phiên bản, không đổi chủ sở hữu."
+      },
+      "reviewPage": "secure",
+      "hint": "Chủ bucket sở hữu object."
+    },
+    {
+      "id": "bo-1-1-45",
+      "baseId": "s2-04",
+      "domain": "performance",
+      "prompt": "An application on Amazon EKS must automatically add pods when CPU usage rises and add worker nodes when pods cannot be scheduled, with the LEAST operational overhead. Which TWO components should be used? (Select TWO.)",
+      "options": [
+        {
+          "id": "a",
+          "text": "Vertical scaling to larger instance types by hand"
+        },
+        {
+          "id": "b",
+          "text": "Manually resizing node groups every morning"
+        },
+        {
+          "id": "c",
+          "text": "A CloudWatch alarm that reboots nodes"
+        },
+        {
+          "id": "d",
+          "text": "Karpenter"
+        },
+        {
+          "id": "e",
+          "text": "Horizontal Pod Autoscaler with Metrics Server"
+        }
+      ],
+      "correct": [
+        "d",
+        "e"
+      ],
+      "explanation": "Scale pod và scale node là hai tầng khác nhau: HPA lo pod, Karpenter lo node.",
+      "optionExplanations": {
+        "c": "Reboot node không thêm capacity.",
+        "a": "Thủ công và không tăng số pod.",
+        "b": "Thủ công, trái yêu cầu tự động và least overhead.",
+        "d": "Karpenter tự thêm node khi pod không có chỗ chạy, không cần quản lý node group.",
+        "e": "HPA tăng số pod theo CPU, cần Metrics Server cung cấp metric."
+      },
+      "reviewPage": "high-performing"
+    },
+    {
+      "id": "bo-1-1-46",
+      "baseId": "s2-02",
+      "domain": "secure",
+      "prompt": "The security team must automatically detect personally identifiable information (PII) stored in S3 buckets and be notified by email when it is found. Which TWO services should be used together? (Select TWO.)",
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon GuardDuty"
+        },
+        {
+          "id": "b",
+          "text": "Amazon EventBridge rule targeting an SNS topic"
+        },
+        {
+          "id": "c",
+          "text": "Amazon Inspector"
+        },
+        {
+          "id": "d",
+          "text": "Amazon Macie"
+        },
+        {
+          "id": "e",
+          "text": "AWS CloudTrail"
+        }
+      ],
+      "correct": [
+        "b",
+        "d"
+      ],
+      "explanation": "Câu Select TWO thường cần hai vai trò bổ sung nhau: Macie phát hiện, EventBridge + SNS thông báo.",
+      "optionExplanations": {
+        "a": "GuardDuty phát hiện mối đe dọa từ log, không quét nội dung S3 tìm PII.",
+        "d": "Macie quét S3 để phát hiện PII.",
+        "c": "Inspector quét lỗ hổng phần mềm trên EC2, ECR, Lambda.",
+        "b": "EventBridge bắt finding của Macie và gửi tới SNS để email cho team.",
+        "e": "CloudTrail ghi API call, không đọc nội dung object."
+      },
+      "reviewPage": "secure"
+    },
+    {
+      "id": "bo-1-1-47",
+      "baseId": "lch4-08",
+      "domain": "secure",
+      "prompt": "All inbound traffic to a VPC must pass transparently through third-party virtual firewall appliances that scale automatically. What should be used?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Gateway Load Balancer"
+        },
+        {
+          "id": "b",
+          "text": "NLB with TLS listeners"
+        },
+        {
+          "id": "c",
+          "text": "ALB with path-based routing"
+        },
+        {
+          "id": "d",
+          "text": "CloudFront with AWS WAF"
+        }
+      ],
+      "correct": [
+        "a"
+      ],
+      "explanation": "GWLB sinh ra để chèn và scale các appliance (firewall, IDS/IPS) vào luồng traffic một cách trong suốt.",
+      "optionExplanations": {
+        "a": "GWLB phân phối traffic qua các firewall appliance và tự scale.",
+        "d": "WAF lọc HTTP ở layer 7, không phải firewall appliance bên thứ ba.",
+        "c": "ALB định tuyến theo URL, không chèn appliance vào luồng traffic.",
+        "b": "NLB cân bằng TCP/UDP, không dành cho appliance kiểm tra traffic."
+      },
+      "reviewPage": "secure",
+      "hint": "Firewall appliance bên thứ ba."
+    },
+    {
+      "id": "bo-1-1-48",
+      "baseId": "lch4-06",
+      "domain": "performance",
+      "prompt": "A chat tool must call one Lambda function through an HTTPS webhook. The function validates requests itself. Which option needs the LEAST effort?",
+      "options": [
+        {
+          "id": "a",
+          "text": "CloudFront with CloudFront Functions"
+        },
+        {
+          "id": "b",
+          "text": "API Gateway REST API"
+        },
+        {
+          "id": "c",
+          "text": "Lambda function URL"
+        },
+        {
+          "id": "d",
+          "text": "Application Load Balancer"
+        }
+      ],
+      "correct": [
+        "c"
+      ],
+      "explanation": "Function URL cho Lambda một endpoint HTTPS riêng, không cần dịch vụ nào khác.",
+      "optionExplanations": {
+        "d": "ALB tốn phí và cấu hình hơn mức cần.",
+        "a": "CloudFront Functions xử lý request ở edge, không gọi được Lambda làm backend.",
+        "b": "API Gateway chạy được nhưng thừa cho một webhook đơn giản.",
+        "c": "endpoint HTTPS có sẵn cho Lambda, ít công nhất."
+      },
+      "reviewPage": "high-performing",
+      "hint": "Một Lambda + webhook đơn giản."
+    },
+    {
+      "id": "bo-1-1-49",
+      "baseId": "th1-11",
+      "domain": "cost",
+      "prompt": "A company runs critical web servers 24/7 and separate batch jobs that tolerate interruptions. What is the MOST cost-effective purchasing mix?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Reserved Instances for the web servers and Spot for the batch jobs"
+        },
+        {
+          "id": "b",
+          "text": "Spot for everything"
+        },
+        {
+          "id": "c",
+          "text": "Dedicated Hosts for everything"
+        },
+        {
+          "id": "d",
+          "text": "On-Demand for everything"
+        }
+      ],
+      "correct": [
+        "a"
+      ],
+      "explanation": "Phần critical, ổn định dùng Reserved/Savings Plans; phần chịu gián đoạn dùng Spot.",
+      "optionExplanations": {
+        "d": "On-Demand đắt nhất cho workload ổn định.",
+        "b": "Spot cho web server critical có thể bị thu hồi.",
+        "c": "Dedicated Hosts đắt, chỉ cần cho BYOL.",
+        "a": "Reserved cho phần critical, Spot cho phần chịu gián đoạn."
+      },
+      "reviewPage": "cost-optimized",
+      "hint": "Hai loại workload."
+    },
+    {
+      "id": "bo-1-1-50",
+      "baseId": "lch2-05",
+      "domain": "secure",
+      "prompt": "Developers in one account may create IAM roles for their Lambda functions, but those roles must never exceed a defined set of permissions. Administrators in the same account still need full access. What should be used?",
+      "options": [
+        {
+          "id": "a",
+          "text": "An IAM permissions boundary required on roles created by developers"
+        },
+        {
+          "id": "b",
+          "text": "An AWS Config rule"
+        },
+        {
+          "id": "c",
+          "text": "AWS Control Tower guardrails"
+        },
+        {
+          "id": "d",
+          "text": "A service control policy on the account"
+        }
+      ],
+      "correct": [
+        "a"
+      ],
+      "explanation": "Permissions boundary đặt mức quyền tối đa cho từng user/role cụ thể; SCP sẽ giới hạn luôn cả admin trong account.",
+      "optionExplanations": {
+        "a": "boundary giới hạn quyền tối đa của các role developer tạo ra.",
+        "c": "Guardrail của Control Tower áp ở mức account/OU, không nhắm riêng role của developer.",
+        "d": "SCP áp cho cả account, sẽ giới hạn luôn administrator.",
+        "b": "Config chỉ phát hiện sau, không giới hạn quyền."
+      },
+      "reviewPage": "secure",
+      "hint": "Giới hạn quyền tối đa cho role do developer tạo, không ảnh hưởng admin."
+    },
+    {
+      "id": "bo-1-1-51",
+      "baseId": "th1-07",
+      "domain": "performance",
+      "prompt": "An Auto Scaling group must add more instances the further CPU exceeds a threshold, using a set of adjustments, and new instances need time to warm up. Which policy fits?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Target tracking"
+        },
+        {
+          "id": "b",
+          "text": "Scheduled scaling"
+        },
+        {
+          "id": "c",
+          "text": "Predictive scaling"
+        },
+        {
+          "id": "d",
+          "text": "Step scaling with instance warm-up"
+        }
+      ],
+      "correct": [
+        "d"
+      ],
+      "explanation": "Step scaling cho phép tăng nhiều hay ít tùy mức vượt ngưỡng; warm-up tránh tính metric của instance đang khởi động.",
+      "optionExplanations": {
+        "c": "Predictive dựa trên dự báo, không theo mức vượt ngưỡng.",
+        "d": "step scaling + warm-up đúng mô tả.",
+        "b": "Scheduled chạy theo giờ cố định.",
+        "a": "Target tracking giữ metric ở một mức, không có set of adjustments theo mức vượt."
+      },
+      "reviewPage": "high-performing",
+      "hint": "“Set of adjustments” + threshold."
+    },
+    {
+      "id": "bo-1-1-52",
+      "baseId": "lch1-02",
+      "domain": "secure",
+      "prompt": "All users in member accounts, including the root user, must be prevented from disabling Amazon GuardDuty. What should be used?",
+      "options": [
+        {
+          "id": "a",
+          "text": "An IAM group policy with an explicit deny"
+        },
+        {
+          "id": "b",
+          "text": "An AWS Config rule with auto-remediation"
+        },
+        {
+          "id": "c",
+          "text": "An IAM permissions boundary on every user"
+        },
+        {
+          "id": "d",
+          "text": "A service control policy attached to the OUs"
+        }
+      ],
+      "correct": [
+        "d"
+      ],
+      "explanation": "Chỉ SCP áp lên toàn bộ account thành viên, kể cả root user, và chặn trước khi hành động xảy ra.",
+      "optionExplanations": {
+        "c": "Permissions boundary chỉ áp cho IAM user/role, không áp được root user.",
+        "d": "SCP chặn trước cho cả account, kể cả root user.",
+        "a": "Group policy chỉ áp cho user trong group, root user không thuộc group nào.",
+        "b": "Config phát hiện rồi sửa sau, không ngăn được hành động."
+      },
+      "reviewPage": "secure",
+      "hint": "Cả root user."
+    },
+    {
+      "id": "bo-1-1-53",
+      "baseId": "th1-03",
+      "domain": "secure",
+      "prompt": "Only EC2 instances in the application tier’s Auto Scaling group may connect to the database on port 5432. How should the database security group be configured?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Add a NACL rule referencing the app tier security group"
+        },
+        {
+          "id": "b",
+          "text": "Allow 5432 from the app tier security group ID"
+        },
+        {
+          "id": "c",
+          "text": "Allow 5432 from each instance ID"
+        },
+        {
+          "id": "d",
+          "text": "Allow 5432 from 0.0.0.0/0"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "Source là SG ID của app tier sẽ tự áp dụng cho mọi instance mới. SG không nhận instance ID; NACL chỉ dùng CIDR.",
+      "optionExplanations": {
+        "b": "source là SG ID tự áp dụng cho mọi instance mới.",
+        "c": "SG không nhận instance ID làm source, và instance trong ASG thay đổi liên tục.",
+        "a": "NACL chỉ dùng CIDR, không tham chiếu được SG.",
+        "d": "Mở 0.0.0.0/0 vi phạm bảo mật."
+      },
+      "reviewPage": "secure",
+      "hint": "Instance trong ASG thay đổi liên tục."
+    },
+    {
+      "id": "bo-1-1-54",
+      "baseId": "s2-05",
+      "domain": "cost",
+      "prompt": "Athena queries on daily CSV log files in S3 scan the entire dataset every time and are becoming expensive. Which TWO actions will reduce cost the MOST? (Select TWO.)",
+      "options": [
+        {
+          "id": "a",
+          "text": "Convert the data to a columnar format such as Parquet"
+        },
+        {
+          "id": "b",
+          "text": "Enable S3 Versioning"
+        },
+        {
+          "id": "c",
+          "text": "Move the data to S3 Glacier Deep Archive"
+        },
+        {
+          "id": "d",
+          "text": "Partition the data by date and filter on the partition column"
+        },
+        {
+          "id": "e",
+          "text": "Run a Redshift cluster 24/7 for these queries"
+        }
+      ],
+      "correct": [
+        "a",
+        "d"
+      ],
+      "explanation": "Athena tính tiền theo dữ liệu quét: Parquet chỉ đọc cột cần, partition chỉ đọc ngày cần.",
+      "optionExplanations": {
+        "d": "partition theo ngày giúp truy vấn bỏ qua các ngày không liên quan.",
+        "a": "định dạng columnar giảm mạnh lượng dữ liệu phải quét.",
+        "e": "Cluster chạy 24/7 đắt hơn nhiều so với query thỉnh thoảng.",
+        "c": "Dữ liệu ở Deep Archive không query trực tiếp bằng Athena được.",
+        "b": "Versioning làm tăng dung lượng lưu trữ, không giảm chi phí query."
+      },
+      "reviewPage": "cost-optimized"
+    },
+    {
+      "id": "bo-1-1-55",
+      "baseId": "th6-03",
+      "domain": "secure",
+      "prompt": "All connections to an RDS for PostgreSQL instance must be encrypted in transit. What should be done?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Enable encryption at rest with KMS"
+        },
+        {
+          "id": "b",
+          "text": "Enable IAM database authentication only"
+        },
+        {
+          "id": "c",
+          "text": "Set the rds.force_ssl parameter to 1 and use the RDS root CA"
+        },
+        {
+          "id": "d",
+          "text": "Enable Transparent Data Encryption"
+        }
+      ],
+      "correct": [
+        "c"
+      ],
+      "explanation": "rds.force_ssl ép mọi kết nối dùng SSL/TLS (in-transit). KMS và TDE là mã hóa at-rest.",
+      "optionExplanations": {
+        "d": "TDE là at-rest, và không có trên PostgreSQL.",
+        "a": "KMS là mã hóa at-rest.",
+        "b": "IAM DB auth là xác thực, không ép mã hóa mọi kết nối.",
+        "c": "rds.force_ssl ép SSL/TLS cho mọi kết nối (in-transit)."
+      },
+      "reviewPage": "secure",
+      "hint": "In-transit hay at-rest?"
+    },
+    {
+      "id": "bo-1-1-56",
+      "baseId": "th2-01",
+      "domain": "secure",
+      "prompt": "A website must block requests from certain countries but still allow a few partner IP addresses located in those countries. What should be configured?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Security group deny rules"
+        },
+        {
+          "id": "b",
+          "text": "Network Firewall domain list"
+        },
+        {
+          "id": "c",
+          "text": "Route 53 geolocation routing"
+        },
+        {
+          "id": "d",
+          "text": "AWS WAF with an IP set Allow rule at higher priority and a geo match Block rule"
+        }
+      ],
+      "correct": [
+        "d"
+      ],
+      "explanation": "WAF geo match chặn theo quốc gia, IP set Allow đặt priority cao hơn để ngoại lệ. Network Firewall domain list lọc FQDN.",
+      "optionExplanations": {
+        "b": "Network Firewall domain list lọc FQDN outbound, không chặn client theo quốc gia.",
+        "d": "IP set Allow (priority cao) + geo match Block.",
+        "c": "Geolocation routing chỉ điều hướng DNS, không chặn request.",
+        "a": "SG không có Deny và không chặn theo quốc gia."
+      },
+      "reviewPage": "secure",
+      "hint": "Chặn inbound theo quốc gia."
+    },
+    {
+      "id": "bo-1-1-57",
+      "baseId": "th1-10",
+      "domain": "secure",
+      "prompt": "A company wants every new EBS volume in a Region to be encrypted automatically, with no action from developers. What should be done?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Create an SCP that denies unencrypted volumes only"
+        },
+        {
+          "id": "b",
+          "text": "Enable EBS encryption by default for the Region"
+        },
+        {
+          "id": "c",
+          "text": "Encrypt each volume manually at creation"
+        },
+        {
+          "id": "d",
+          "text": "Use AWS Config to detect unencrypted volumes"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "EBS encryption by default bật theo region, mọi volume mới tự được mã hóa. Config chỉ phát hiện sau.",
+      "optionExplanations": {
+        "a": "SCP chỉ chặn tạo volume chưa mã hóa, không tự mã hóa giúp developer.",
+        "b": "bật theo region, mọi volume mới tự mã hóa.",
+        "c": "Mã hóa thủ công dễ sót, trái yêu cầu tự động.",
+        "d": "Config chỉ phát hiện sau khi đã tạo."
+      },
+      "reviewPage": "secure",
+      "hint": "Tự động, mọi volume mới."
+    },
+    {
+      "id": "bo-1-1-58",
+      "baseId": "s2-01",
+      "domain": "resilient",
+      "prompt": "Some SQS messages are processed twice because processing sometimes takes longer than expected. A few malformed messages also fail on every attempt and keep returning to the queue. Which TWO actions should be taken? (Select TWO.)",
+      "options": [
+        {
+          "id": "a",
+          "text": "Replace the queue with an SNS topic"
+        },
+        {
+          "id": "b",
+          "text": "Configure a dead-letter queue with an appropriate maxReceiveCount"
+        },
+        {
+          "id": "c",
+          "text": "Enable long polling on the queue"
+        },
+        {
+          "id": "d",
+          "text": "Set the visibility timeout longer than the maximum processing time"
+        },
+        {
+          "id": "e",
+          "text": "Delete each message before processing it"
+        }
+      ],
+      "correct": [
+        "b",
+        "d"
+      ],
+      "explanation": "Visibility timeout đủ dài để message không hiện lại khi còn đang xử lý; DLQ tách các message lỗi lặp lại ra khỏi queue chính.",
+      "optionExplanations": {
+        "e": "Xóa trước khi xử lý sẽ mất message nếu xử lý thất bại.",
+        "c": "Long polling chỉ giảm số lần poll rỗng, không liên quan đến xử lý trùng hay message lỗi.",
+        "b": "message lỗi quá maxReceiveCount lần sẽ chuyển sang DLQ, queue chính không bị nghẽn.",
+        "a": "SNS không lưu message để retry, còn làm mất message khi consumer lỗi.",
+        "d": "message không hiện lại cho consumer khác khi đang xử lý, tránh xử lý trùng."
+      },
+      "reviewPage": "resilient"
+    },
+    {
+      "id": "bo-1-1-59",
+      "baseId": "lch4-07",
+      "domain": "cost",
+      "prompt": "Signed legal contracts are the only copy, rarely accessed, must survive the loss of an AZ, and must be retrieved in milliseconds. Which class is the MOST cost-effective?",
+      "options": [
+        {
+          "id": "a",
+          "text": "S3 Standard-IA"
+        },
+        {
+          "id": "b",
+          "text": "S3 Glacier Deep Archive"
+        },
+        {
+          "id": "c",
+          "text": "S3 Standard"
+        },
+        {
+          "id": "d",
+          "text": "S3 One Zone-IA"
+        }
+      ],
+      "correct": [
+        "a"
+      ],
+      "explanation": "Bản duy nhất và phải chịu được AZ sập nên cần lưu nhiều AZ; Standard-IA là rẻ nhất trong nhóm đó mà vẫn lấy ngay.",
+      "optionExplanations": {
+        "a": "lưu nhiều AZ, lấy trong mili giây, rẻ hơn Standard.",
+        "c": "Standard đắt hơn Standard-IA cho dữ liệu ít truy cập.",
+        "d": "One Zone-IA chỉ lưu 1 AZ, mất AZ là mất bản duy nhất.",
+        "b": "Deep Archive phải chờ nhiều giờ."
+      },
+      "reviewPage": "cost-optimized",
+      "hint": "Bản duy nhất + chịu AZ sập."
+    },
+    {
+      "id": "bo-1-1-60",
+      "baseId": "th4-10",
+      "domain": "performance",
+      "prompt": "Lambda functions connecting to an RDS PostgreSQL database cause “too many connections” errors during traffic spikes. What is the BEST solution?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Add a read replica"
+        },
+        {
+          "id": "b",
+          "text": "Use Amazon RDS Proxy"
+        },
+        {
+          "id": "c",
+          "text": "Increase the DB instance size"
+        },
+        {
+          "id": "d",
+          "text": "Increase Lambda reserved concurrency"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "RDS Proxy gom và tái sử dụng connection. Tăng instance hay thêm replica không giải quyết gốc vấn đề.",
+      "optionExplanations": {
+        "d": "Giới hạn concurrency làm Lambda bị throttle, ảnh hưởng người dùng.",
+        "a": "Read replica giảm tải đọc nhưng không giảm số connection Lambda mở.",
+        "b": "RDS Proxy gom và tái sử dụng connection.",
+        "c": "Instance lớn hơn chỉ nâng giới hạn tạm thời, không giải quyết gốc."
+      },
+      "reviewPage": "high-performing",
+      "hint": "Lambda + RDS + connections."
+    },
+    {
+      "id": "bo-1-1-61",
+      "baseId": "th3-09",
+      "domain": "cost",
+      "prompt": "A company must guarantee EC2 capacity in a specific AZ for an upcoming event, without a 1- or 3-year commitment. What should be used?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Reserved Instances"
+        },
+        {
+          "id": "b",
+          "text": "On-Demand Capacity Reservations"
+        },
+        {
+          "id": "c",
+          "text": "Dedicated Hosts"
+        },
+        {
+          "id": "d",
+          "text": "Spot Fleet"
+        }
+      ],
+      "correct": [
+        "b"
+      ],
+      "explanation": "On-Demand Capacity Reservations giữ capacity theo AZ, hủy được bất cứ lúc nào.",
+      "optionExplanations": {
+        "b": "giữ capacity theo AZ, hủy bất cứ lúc nào.",
+        "a": "RI cần cam kết 1–3 năm.",
+        "d": "Spot có thể không có capacity và bị thu hồi.",
+        "c": "Dedicated Hosts đắt và dành cho BYOL."
+      },
+      "reviewPage": "cost-optimized",
+      "hint": "Giữ chỗ theo AZ, không cam kết dài."
+    },
+    {
+      "id": "bo-1-1-62",
+      "baseId": "lch2-01",
+      "domain": "cost",
+      "prompt": "An m5.xlarge workload in eu-west-1 runs 24/7 and will not change for 3 years. Which option gives the GREATEST discount?",
+      "options": [
+        {
+          "id": "a",
+          "text": "On-Demand Instances"
+        },
+        {
+          "id": "b",
+          "text": "Spot Instances"
+        },
+        {
+          "id": "c",
+          "text": "3-year Standard Reserved Instances, all upfront"
+        },
+        {
+          "id": "d",
+          "text": "Compute Savings Plans"
+        }
+      ],
+      "correct": [
+        "c"
+      ],
+      "explanation": "Không đổi gì trong 3 năm thì Standard RI 3 năm trả trước giảm nhiều nhất; linh hoạt hơn thì giảm ít hơn.",
+      "optionExplanations": {
+        "c": "cam kết chặt nhất, giảm nhiều nhất.",
+        "a": "On-Demand đắt nhất.",
+        "d": "Compute Savings Plans linh hoạt hơn nên giảm ít hơn.",
+        "b": "Spot có thể bị thu hồi, không hợp 24/7 ổn định."
+      },
+      "reviewPage": "cost-optimized",
+      "hint": "Không cần linh hoạt."
+    },
+    {
+      "id": "bo-1-1-63",
+      "baseId": "lch4-05",
+      "domain": "resilient",
+      "prompt": "A company needs DR for 200 on-premises VMware servers with continuous block-level replication, an RPO of seconds and low cost; servers are launched in AWS only during a disaster. What should be used?",
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Elastic Disaster Recovery"
+        },
+        {
+          "id": "b",
+          "text": "AWS DataSync every hour"
+        },
+        {
+          "id": "c",
+          "text": "AWS Backup with daily backups"
+        },
+        {
+          "id": "d",
+          "text": "A warm standby EC2 fleet running in AWS"
+        }
+      ],
+      "correct": [
+        "a"
+      ],
+      "explanation": "Elastic DR replicate liên tục vào vùng staging rẻ, chỉ dựng server khi cần, RPO tính bằng giây.",
+      "optionExplanations": {
+        "b": "DataSync đồng bộ file theo lịch, không replicate cả server và RPO tới 1 giờ.",
+        "a": "replicate liên tục, chi phí thấp, RPO giây, RTO phút.",
+        "c": "Backup hằng ngày cho RPO tới 24 giờ.",
+        "d": "Fleet chạy sẵn là warm standby, đắt hơn yêu cầu low cost."
+      },
+      "reviewPage": "resilient",
+      "hint": "Replicate liên tục, chỉ dựng khi có sự cố."
+    },
+    {
+      "id": "bo-1-1-64",
+      "baseId": "th1-05",
+      "domain": "resilient",
+      "prompt": "An EC2 consumer crashes after receiving an SQS message but before deleting it. What happens to the message?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It moves to the dead-letter queue immediately"
+        },
+        {
+          "id": "b",
+          "text": "It is lost"
+        },
+        {
+          "id": "c",
+          "text": "It stays reserved for the same instance"
+        },
+        {
+          "id": "d",
+          "text": "It becomes visible again after the visibility timeout and another consumer can process it"
+        }
+      ],
+      "correct": [
+        "d"
+      ],
+      "explanation": "Hết visibility timeout, message hiện lại cho consumer khác. DLQ chỉ nhận message sau khi vượt maxReceiveCount.",
+      "optionExplanations": {
+        "a": "DLQ chỉ nhận message sau khi vượt maxReceiveCount.",
+        "d": "hết visibility timeout, message hiện lại cho consumer khác.",
+        "b": "Message không mất khi chưa bị xóa.",
+        "c": "SQS không giữ chỗ cho một instance cụ thể."
+      },
+      "reviewPage": "resilient",
+      "hint": "SQS không giữ chỗ cho instance."
+    },
+    {
+      "id": "bo-1-1-65",
+      "baseId": "s2-03",
+      "domain": "performance",
+      "prompt": "Applications in a VPC in us-east-1 must communicate privately with applications in a VPC in eu-west-1. The CIDR ranges do not overlap. Which TWO steps are required? (Select TWO.)",
+      "options": [
+        {
+          "id": "a",
+          "text": "Attach an internet gateway to both VPCs"
+        },
+        {
+          "id": "b",
+          "text": "Order an AWS Direct Connect connection"
+        },
+        {
+          "id": "c",
+          "text": "Create a NAT gateway in each VPC"
+        },
+        {
+          "id": "d",
+          "text": "Create an inter-Region VPC peering connection"
+        },
+        {
+          "id": "e",
+          "text": "Add routes for the peer VPC CIDR to the route tables in both VPCs"
+        }
+      ],
+      "correct": [
+        "d",
+        "e"
+      ],
+      "explanation": "Peering chỉ tạo kết nối; traffic chỉ chạy khi route table ở cả hai phía trỏ tới peering connection.",
+      "optionExplanations": {
+        "c": "NAT gateway dùng cho private subnet ra Internet.",
+        "d": "VPC peering hỗ trợ kết nối riêng giữa hai region.",
+        "a": "Internet gateway đưa traffic ra Internet, trái yêu cầu kết nối riêng.",
+        "e": "phải thêm route ở cả hai phía thì traffic mới đi qua peering.",
+        "b": "Direct Connect nối on-prem với AWS, không dùng để nối hai VPC."
+      },
+      "reviewPage": "high-performing"
+    }
+  ]
+}
