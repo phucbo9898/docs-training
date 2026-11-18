@@ -227,14 +227,42 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
     });
   }, [progress, practiceExam, finish, exam.source, exam.number]);
 
-  function restart() {
+  const resetAttempt = useCallback(() => {
     clearProgress(key);
     setSubmitError(null);
     setProgress(newProgress());
     setFinished(null);
     setPhase("doing");
+    setListOpen(false);
+    setSubmitOpen(false);
+  }, [key]);
+
+  function restart() {
+    resetAttempt();
     window.scrollTo({ top: 0 });
   }
+
+  // Exam mode: rời trang đề là bỏ lượt làm, quay lại thì làm từ đầu với đồng hồ
+  // mới. Next (cacheComponents) giữ state trang vừa rời bằng <Activity>, nên
+  // phải tự reset khi trang hiện lại. Refresh không chạy cleanup nên vẫn giữ bài.
+  // Cleanup chỉ đánh dấu "đã rời" ở macrotask sau: StrictMode gỡ rồi gắn lại
+  // effect ngay lập tức nên không bị tính là rời trang.
+  const leftRef = useRef(false);
+  const leaveTimerRef = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    if (mode !== "exam") return;
+    window.clearTimeout(leaveTimerRef.current);
+    if (leftRef.current) {
+      leftRef.current = false;
+      resetAttempt();
+    }
+    return () => {
+      leaveTimerRef.current = window.setTimeout(() => {
+        leftRef.current = true;
+        clearProgress(key);
+      }, 0);
+    };
+  }, [mode, key, resetAttempt]);
 
   // Phím tắt: ←/→ chuyển câu, 1–9 chọn đáp án.
   useEffect(() => {
