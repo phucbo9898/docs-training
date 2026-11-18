@@ -3,21 +3,21 @@
 import type { RefObject } from "react";
 import { useTranslations } from "next-intl";
 import { questionStatus } from "@/lib/exams/score";
-import type { ExamQuestion } from "@/lib/exams/types";
+import type { ExamQuestion, ExamQuestionPrompt } from "@/lib/exams/types";
 import ExamExplanation from "./ExamExplanation";
 import ExamHint from "./ExamHint";
 import ExamOptionList from "./ExamOptionList";
 import ExamVerdict from "./ExamVerdict";
 
 type ExamQuestionViewProps = {
-  question: ExamQuestion;
+  question: ExamQuestionPrompt;
   number: number;
   selected: readonly string[];
   onToggle: (optionId: string) => void;
-  /** Practice mode, đã chọn đủ số đáp án: khóa lựa chọn và hiện kết quả. */
-  revealed: boolean;
-  /** Practice mode và chưa trả lời thì mới có nút gợi ý. */
-  showHint: boolean;
+  /** Practice mode, đã chọn đủ số đáp án: câu đầy đủ đáp án để khóa lựa chọn và hiện kết quả. */
+  reveal: ExamQuestion | null;
+  /** Practice mode và chưa trả lời thì mới có gợi ý. */
+  hint: string | undefined;
   headingRef: RefObject<HTMLHeadingElement | null>;
 };
 
@@ -26,13 +26,13 @@ export default function ExamQuestionView({
   number,
   selected,
   onToggle,
-  revealed,
-  showHint,
+  reveal,
+  hint,
   headingRef,
 }: ExamQuestionViewProps) {
   const t = useTranslations("Exams");
   const promptId = `${question.id}-prompt`;
-  const pick = question.correct.length;
+  const pick = question.selectCount;
 
   return (
     <section aria-labelledby={promptId} className="space-y-5">
@@ -49,21 +49,21 @@ export default function ExamQuestionView({
             {t("selectN", { count: pick })}
           </span>
         ) : null}
-        {revealed ? (
-          <ExamVerdict status={questionStatus(question, selected)} />
+        {reveal ? (
+          <ExamVerdict status={questionStatus(reveal, selected)} />
         ) : null}
       </div>
       <p id={promptId} className="text-lg leading-relaxed text-text">
         {question.prompt}
       </p>
-      {showHint && question.hint ? <ExamHint hint={question.hint} /> : null}
+      {hint ? <ExamHint hint={hint} /> : null}
       <ExamOptionList
         question={question}
         selected={selected}
         onToggle={onToggle}
-        reveal={revealed}
+        reveal={reveal}
       />
-      {revealed ? <ExamExplanation question={question} /> : null}
+      {reveal ? <ExamExplanation question={reveal} /> : null}
     </section>
   );
 }

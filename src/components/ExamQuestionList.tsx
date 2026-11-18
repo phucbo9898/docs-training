@@ -1,14 +1,14 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { ExamQuestion } from "@/lib/exams/types";
+import type { ExamQuestionPrompt } from "@/lib/exams/types";
 import ExamFlagIcon from "./ExamFlagIcon";
 import ExamStatusIcon, { type ExamItemStatus } from "./ExamStatusIcon";
 
 type ExamQuestionListProps = {
-  questions: ExamQuestion[];
+  questions: readonly ExamQuestionPrompt[];
   current: number;
-  statusOf: (question: ExamQuestion) => ExamItemStatus;
+  statusOf: (question: ExamQuestionPrompt) => ExamItemStatus;
   marked: ReadonlySet<string>;
   onSelect: (index: number) => void;
 };

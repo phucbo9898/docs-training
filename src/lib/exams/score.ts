@@ -6,7 +6,10 @@ import {
   type ExamQuestion,
 } from "./types";
 
-/** Hàm thuần, không đọc file: dùng được ở Client Component và unit test. */
+/**
+ * Hàm thuần, không đọc file: dùng được ở server (Server Action chấm Exam mode),
+ * Client Component (Practice mode đã có sẵn đáp án) và unit test.
+ */
 
 export type QuestionStatus = "correct" | "incorrect" | "skipped";
 
@@ -20,6 +23,12 @@ export type ScoreSummary = {
 };
 
 export type ExamScore = ScoreSummary & { passed: boolean };
+
+/** Điểm cả đề và theo domain: màn kết quả cần cả hai. */
+export type ExamGrade = {
+  score: ExamScore;
+  byDomain: Partial<Record<ExamDomain, ScoreSummary>>;
+};
 
 /** Câu nhiều đáp án chỉ đúng khi chọn khớp toàn bộ tập đáp án, không thừa không thiếu. */
 export function questionStatus(
@@ -74,4 +83,14 @@ export function scoreByDomain(
     if (questions.length > 0) result[domain] = summarize(questions, answers);
   }
   return result;
+}
+
+export function gradeExam(
+  exam: Pick<Exam, "questions" | "passPercent">,
+  answers: ExamAnswers,
+): ExamGrade {
+  return {
+    score: scoreExam(exam, answers),
+    byDomain: scoreByDomain(exam, answers),
+  };
 }

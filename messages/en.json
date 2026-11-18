@@ -291,6 +291,12 @@
       "collapseAll": "Collapse all",
       "expandAll": "Expand all",
       "empty": "No questions match this filter."
+    },
+    "submitting": "Submitting…",
+    "submitError": {
+      "failed": "Could not submit. Your answers are kept, please try again.",
+      "unauthorized": "Your session has expired. Your answers are kept in this browser.",
+      "signIn": "Sign in again"
     }
   },
   "Auth": {

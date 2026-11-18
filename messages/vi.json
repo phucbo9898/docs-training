@@ -291,6 +291,12 @@
       "collapseAll": "Thu gọn tất cả",
       "expandAll": "Mở rộng tất cả",
       "empty": "Không có câu nào khớp bộ lọc."
+    },
+    "submitting": "Đang nộp…",
+    "submitError": {
+      "failed": "Nộp bài không thành công. Bài làm vẫn được giữ, hãy thử lại.",
+      "unauthorized": "Phiên đăng nhập đã hết hạn. Bài làm vẫn được giữ trên trình duyệt này.",
+      "signIn": "Đăng nhập lại"
     }
   },
   "Auth": {

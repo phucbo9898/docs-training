@@ -3,7 +3,12 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { requireExamUser } from "@/lib/auth/session";
-import { findExamEntry, getExam, getExamIndex } from "@/lib/exams/load";
+import {
+  findExamEntry,
+  getExam,
+  getExamIndex,
+  getPublicExam,
+} from "@/lib/exams/load";
 import { isExamMode } from "@/lib/exams/types";
 import ExamSession from "./ExamSession";
 import ExamSetupForm from "./ExamSetupForm";
@@ -18,7 +23,7 @@ const EXAM_NUMBER = /^[1-9][0-9]*$/;
 
 /**
  * Phần động của trang một đề. Thứ tự cố định: kiểm tra phiên trước, đọc đề
- * sau.
+ * sau. Exam mode chỉ nhận đề không có đáp án; Practice mode nhận đủ.
  */
 export default async function ExamPagePanel({
   params,
@@ -49,14 +54,25 @@ export default async function ExamPagePanel({
 
   const accountBar = <ExamsAccountBar user={user} locale={locale} />;
 
-  if (mode) {
+  if (mode === "practice") {
     const exam = await getExam(source, number);
     if (!exam) notFound();
     return (
       <>
         {accountBar}
         {/* `key`: đổi chế độ là phiên mới, không trộn state hai chế độ. */}
-        <ExamSession key={mode} exam={exam} mode={mode} />
+        <ExamSession key={mode} mode={mode} exam={exam} />
+      </>
+    );
+  }
+
+  if (mode === "exam") {
+    const exam = await getPublicExam(source, number);
+    if (!exam) notFound();
+    return (
+      <>
+        {accountBar}
+        <ExamSession key={mode} mode={mode} exam={exam} />
       </>
     );
   }

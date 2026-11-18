@@ -2,7 +2,14 @@ import "server-only";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { examErrors, isExam, isExamIndex } from "./guards";
-import type { Exam, ExamIndex, ExamIndexEntry, ExamSource } from "./types";
+import { toPublicExam } from "./public";
+import type {
+  Exam,
+  ExamIndex,
+  ExamIndexEntry,
+  ExamSource,
+  PublicExam,
+} from "./types";
 
 const EXAMS_DIR = path.join(process.cwd(), "content", "exams");
 
@@ -81,5 +88,20 @@ export async function getExam(
       `exams: ${file} lệch với index.json ở: ${mismatch.join(", ")}`,
     );
   }
-  return exam;
+  return {
+    ...exam,
+    questions: exam.questions.map((question) => ({
+      ...question,
+      selectCount: question.correct.length,
+    })),
+  };
+}
+
+/** Đề cho Exam mode: không có đáp án, giải thích, gợi ý. */
+export async function getPublicExam(
+  source: string,
+  number: number,
+): Promise<PublicExam | null> {
+  const exam = await getExam(source, number);
+  return exam ? toPublicExam(exam) : null;
 }

@@ -16,6 +16,7 @@ function question(
     prompt: `Question ${id}`,
     options: ids.map((option) => ({ id: option, text: option })),
     correct,
+    selectCount: correct.length,
     explanation: "",
     optionExplanations: Object.fromEntries(ids.map((option) => [option, ""])),
   };

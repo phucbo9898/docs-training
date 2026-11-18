@@ -1,15 +1,18 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { ExamQuestion } from "@/lib/exams/types";
+import type { ExamQuestion, ExamQuestionPrompt } from "@/lib/exams/types";
 
 type ExamOptionListProps = {
-  question: ExamQuestion;
+  question: ExamQuestionPrompt;
   selected: readonly string[];
   /** Không truyền thì danh sách chỉ để xem (màn chữa đề). */
   onToggle?: (optionId: string) => void;
-  /** Hiện đúng/sai và giải thích từng lựa chọn. */
-  reveal: boolean;
+  /**
+   * Có đáp án thì hiện đúng/sai và giải thích từng lựa chọn. Exam mode chưa
+   * nộp bài không có dữ liệu này.
+   */
+  reveal?: ExamQuestion | null;
 };
 
 type OptionState =
@@ -52,16 +55,16 @@ export default function ExamOptionList({
   reveal,
 }: ExamOptionListProps) {
   const t = useTranslations("Exams");
-  const multi = question.correct.length > 1;
-  const full = selected.length >= question.correct.length;
-  const readOnly = !onToggle || reveal;
+  const multi = question.selectCount > 1;
+  const full = selected.length >= question.selectCount;
+  const readOnly = !onToggle || Boolean(reveal);
 
   return (
     <ul className="space-y-3">
       {question.options.map((option, index) => {
         const isSelected = selected.includes(option.id);
-        const isCorrect = question.correct.includes(option.id);
-        const state = optionState(reveal, isCorrect, isSelected);
+        const isCorrect = reveal?.correct.includes(option.id) ?? false;
+        const state = optionState(Boolean(reveal), isCorrect, isSelected);
         const disabled = readOnly || (multi && full && !isSelected);
         const inputId = `${question.id}-${option.id}`;
         const explanationId = `${inputId}-explanation`;
@@ -118,7 +121,7 @@ export default function ExamOptionList({
                 id={explanationId}
                 className="mt-2 border-t border-border pt-2 pl-7 text-sm text-text-muted"
               >
-                {question.optionExplanations[option.id]}
+                {reveal.optionExplanations[option.id]}
               </p>
             ) : null}
           </li>
