@@ -181,6 +181,116 @@
           "title": "Keyword và bẫy – 6 đề"
         }
       ]
+    },
+    "exams": {
+      "title": "Luyện đề AWS SAA-C03",
+      "description": "Làm đề 65 câu như thi thật: Practice mode có giải thích ngay, Exam mode có đồng hồ, chấm điểm theo domain và chữa đề.",
+      "meta": "{sets} bộ · {exams} đề"
+    }
+  },
+  "Exams": {
+    "title": "Luyện đề AWS SAA-C03",
+    "intro": "Chọn bộ đề, số đề và chế độ làm bài. Mỗi đề 65 câu trong 130 phút, giống đề thi thật.",
+    "reviewLink": "Cần ôn lại trước? Xem <link>bảng keyword và bẫy</link>.",
+    "chooseMode": "Chọn chế độ để bắt đầu làm đề này.",
+    "loading": "Đang tải đề…",
+    "examLabel": "Đề {number}",
+    "questionCount": "{count} câu",
+    "setup": {
+      "source": "Chọn bộ đề",
+      "sourceMeta": "{exams} đề",
+      "exam": "Chọn đề",
+      "examMeta": "{count} câu · {minutes} phút",
+      "mode": "Chế độ làm bài",
+      "start": "Bắt đầu làm bài"
+    },
+    "mode": {
+      "practice": "Practice mode",
+      "exam": "Exam mode",
+      "practiceDescription": "Chọn đáp án là thấy đúng/sai và giải thích ngay. Không tính giờ.",
+      "examDescription": "Đếm ngược {minutes} phút, chỉ xem đáp án sau khi nộp bài."
+    },
+    "domain": {
+      "secure": "Design Secure Architectures",
+      "resilient": "Design Resilient Architectures",
+      "performance": "Design High-Performing Architectures",
+      "cost": "Design Cost-Optimized Architectures"
+    },
+    "mockBadge": "Dữ liệu mẫu",
+    "answered": "Đã làm {count}/{total}",
+    "position": "Câu {number}/{total}",
+    "questionNumber": "Câu {number}",
+    "selectN": "Chọn {count}",
+    "questionList": "Danh sách câu",
+    "close": "Đóng",
+    "prev": "Trước",
+    "next": "Sau",
+    "mark": "Đánh dấu",
+    "unmark": "Bỏ đánh dấu",
+    "submit": "Nộp bài",
+    "shortcuts": "Phím tắt: ← / → chuyển câu, 1–5 chọn đáp án.",
+    "timeLeft": "Còn khoảng {minutes} phút",
+    "showHint": "Gợi ý",
+    "hideHint": "Ẩn gợi ý",
+    "explanation": "Giải thích",
+    "reviewKeywords": "Ôn lại keyword",
+    "status": {
+      "unanswered": "Chưa làm",
+      "answered": "Đã chọn",
+      "correct": "Đúng",
+      "incorrect": "Sai",
+      "marked": "Đã đánh dấu"
+    },
+    "verdict": {
+      "correct": "Đúng",
+      "incorrect": "Sai",
+      "skipped": "Bỏ qua"
+    },
+    "option": {
+      "correctPicked": "Bạn chọn đúng",
+      "correctMissed": "Đáp án đúng",
+      "wrongPicked": "Bạn chọn sai"
+    },
+    "submitConfirm": {
+      "title": "Nộp bài?",
+      "body": "Bạn còn {count} câu chưa làm. Câu bỏ trống sẽ tính là bỏ qua.",
+      "cancel": "Làm tiếp",
+      "confirm": "Nộp bài"
+    },
+    "legend": {
+      "correct": "Đúng",
+      "incorrect": "Sai",
+      "skipped": "Bỏ qua / chưa làm"
+    },
+    "domainHeading": "{domain} ({count} câu)",
+    "domainSummary": "Đúng {correct}, sai {incorrect}, bỏ qua {skipped}",
+    "result": {
+      "heading": "{title} – Kết quả",
+      "passed": "Đậu",
+      "failed": "Trượt",
+      "passMark": "(mốc ước lượng khoảng {percent}%)",
+      "correctOf": "đúng ({correct}/{total})",
+      "minutes": "{minutes} phút",
+      "review": "Chữa đề",
+      "restart": "Làm lại",
+      "domains": "Theo domain"
+    },
+    "review": {
+      "heading": "{title} – Chữa đề",
+      "back": "Quay lại kết quả",
+      "domainFilter": "Domain",
+      "allDomains": "Tất cả domain",
+      "statusFilter": "Lọc theo kết quả",
+      "filter": {
+        "all": "Tất cả ({count})",
+        "correct": "Đúng ({count})",
+        "incorrect": "Sai ({count})",
+        "skipped": "Bỏ qua ({count})",
+        "marked": "Đánh dấu ({count})"
+      },
+      "collapseAll": "Thu gọn tất cả",
+      "expandAll": "Mở rộng tất cả",
+      "empty": "Không có câu nào khớp bộ lọc."
     }
   }
 }

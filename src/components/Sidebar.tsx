@@ -3,11 +3,13 @@
 import { useEffect, useRef, type MouseEvent } from "react";
 import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
+import type { ExamSource } from "@/lib/exams/types";
 import type { NavTrack } from "@/lib/navigation";
 import { findTrackByPath } from "@/lib/track-path";
 import LanguageSwitcher from "./LanguageSwitcher";
 import SearchBox from "./SearchBox";
 import { useSidebar } from "./SidebarProvider";
+import SidebarExamLinks from "./SidebarExamLinks";
 import SidebarModule from "./SidebarModule";
 import SidebarTrackHeader from "./SidebarTrackHeader";
 import SidebarTrackLinks from "./SidebarTrackLinks";
@@ -19,7 +21,13 @@ const FOCUS_DELAY_MS = 50;
  * Từ md trở lên là cột cố định (hẹp ở tablet, rộng hơn ở desktop); dưới md là
  * drawer trượt từ trái, ẩn hẳn khi đóng để không nhận focus.
  */
-export default function Sidebar({ tracks }: { tracks: NavTrack[] }) {
+type SidebarProps = {
+  tracks: NavTrack[];
+  /** Danh sách bộ đề cho sidebar của track luyện đề. */
+  examSources: ExamSource[];
+};
+
+export default function Sidebar({ tracks, examSources }: SidebarProps) {
   const t = useTranslations("Sidebar");
   const th = useTranslations("Header");
   const pathname = usePathname();
@@ -102,6 +110,9 @@ export default function Sidebar({ tracks }: { tracks: NavTrack[] }) {
           ) : (
             <SidebarTrackLinks tracks={tracks} />
           )}
+          {track?.id === "exams" ? (
+            <SidebarExamLinks sources={examSources} pathname={pathname} />
+          ) : null}
           {track?.phases.map((phase) => (
             <section key={phase.phase} aria-label={phase.label}>
               <h2 className="px-3 text-xs font-bold tracking-wide text-text-muted uppercase">

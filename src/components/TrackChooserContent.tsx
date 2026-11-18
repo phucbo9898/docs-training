@@ -2,7 +2,8 @@ import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
-import { countPages, getNavTree } from "@/lib/navigation";
+import { getExamIndex } from "@/lib/exams/load";
+import { countPages, getNavTree, type NavTrack } from "@/lib/navigation";
 import TrackCard from "./TrackCard";
 
 type TrackChooserContentProps = {
@@ -16,10 +17,25 @@ export default async function TrackChooserContent({
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
-  const [t, tracks] = await Promise.all([
+  const [t, tracks, examIndex] = await Promise.all([
     getTranslations("Tracks"),
     getNavTree(locale),
+    getExamIndex(),
   ]);
+
+  // Track luyện đề không có trang nội dung: đếm bộ và đề thay cho module/trang.
+  function meta(track: NavTrack): string {
+    if (track.id === "exams") {
+      return t("exams.meta", {
+        sets: examIndex.sources.length,
+        exams: examIndex.sources.reduce(
+          (sum, source) => sum + source.exams.length,
+          0,
+        ),
+      });
+    }
+    return t(`${track.id}.meta`, countPages(track));
+  }
 
   return (
     <div className="page-fade mx-auto w-full max-w-4xl px-4 py-8 md:px-8 md:py-12">
@@ -28,19 +44,16 @@ export default async function TrackChooserContent({
       </h1>
       <p className="mt-3 text-lg text-text-muted">{t("intro")}</p>
       <ul aria-label={t("label")} className="mt-8 grid gap-4 sm:grid-cols-2">
-        {tracks.map((track) => {
-          const counts = countPages(track);
-          return (
-            <TrackCard
-              key={track.id}
-              title={t(`${track.id}.title`)}
-              description={t(`${track.id}.description`)}
-              meta={t(`${track.id}.meta`, counts)}
-              href={track.home}
-              cta={t("open")}
-            />
-          );
-        })}
+        {tracks.map((track) => (
+          <TrackCard
+            key={track.id}
+            title={t(`${track.id}.title`)}
+            description={t(`${track.id}.description`)}
+            meta={meta(track)}
+            href={track.home}
+            cta={t("open")}
+          />
+        ))}
       </ul>
     </div>
   );

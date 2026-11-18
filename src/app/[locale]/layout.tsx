@@ -13,6 +13,7 @@ import Sidebar from "@/components/Sidebar";
 import SidebarProvider from "@/components/SidebarProvider";
 import ThemeProvider from "@/components/ThemeProvider";
 import { routing } from "@/i18n/routing";
+import { getExamIndex } from "@/lib/exams/load";
 import { getNavTree } from "@/lib/navigation";
 import "@/styles/globals.css";
 
@@ -64,9 +65,11 @@ export default async function LocaleLayout({
     Sidebar: sidebar,
     CodeBlock,
     Tracks,
+    Exams,
   } = await getMessages();
-  const [tracks, tc] = await Promise.all([
+  const [tracks, examIndex, tc] = await Promise.all([
     getNavTree(locale),
+    getExamIndex(),
     getTranslations("Common"),
   ]);
 
@@ -92,6 +95,7 @@ export default async function LocaleLayout({
               Sidebar: sidebar,
               CodeBlock,
               Tracks,
+              Exams,
             }}
           >
             <SidebarProvider>
@@ -104,7 +108,7 @@ export default async function LocaleLayout({
                 </a>
                 <Header />
                 <div className="mx-auto flex w-full max-w-[90rem] flex-1">
-                  <Sidebar tracks={tracks} />
+                  <Sidebar tracks={tracks} examSources={examIndex.sources} />
                   <main id="main" className="min-w-0 flex-1">
                     {children}
                   </main>

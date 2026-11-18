@@ -6,7 +6,7 @@ import {
   type LessonMeta,
   type LessonType,
 } from "./content";
-import { TRACKS, type TrackId } from "./tracks";
+import { isStaticTrack, TRACKS, type TrackId } from "./tracks";
 
 export type NavItem = {
   href: string;
@@ -107,6 +107,7 @@ export async function getNavTree(locale: Locale): Promise<NavTrack[]> {
   const phaseCopy: Record<TrackId, readonly PhaseCopy[]> = {
     backend: messages.Home.roadmap.phases,
     aws: messages.Tracks.aws.phases,
+    exams: [],
   };
 
   return TRACKS.map((track) => ({
@@ -116,7 +117,7 @@ export async function getNavTree(locale: Locale): Promise<NavTrack[]> {
       lessons.filter((lesson) => lesson.track === track.id),
       phaseCopy[track.id],
     ),
-  })).filter((track) => track.phases.length > 0);
+  })).filter((track) => track.phases.length > 0 || isStaticTrack(track.id));
 }
 
 export function getTrack(
