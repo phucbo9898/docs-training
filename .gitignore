@@ -43,3 +43,6 @@ next-env.d.ts
 
 # generated search index (npm run build:search)
 /public/search-index.*.json
+
+# mã khôi phục cá nhân, không bao giờ commit
+recovery-codes.txt
