@@ -4,12 +4,12 @@ slug: "confusing-pairs"
 module: "aws-saa-c03"
 track: "aws"
 phase: 1
-order: 2
+order: 3
 type: lesson
-summary: "20 cặp dịch vụ hay bị đặt cạnh nhau trong đáp án: Multi-AZ vs Read Replica, SQS vs Kinesis, Config vs CloudTrail, CloudFront vs Global Accelerator…"
+summary: "47 cặp dịch vụ hay bị đặt cạnh nhau trong đáp án: Multi-AZ vs Read Replica, SQS vs Kinesis, KMS vs CloudHSM, Network Firewall vs WAF, Aurora vs Redshift…"
 ---
 
-Những cặp dịch vụ hay xuất hiện cùng lúc trong 4 đáp án. Nắm điểm khác nhau cốt lõi là loại được ngay một nửa.
+Những cặp dịch vụ hay xuất hiện cùng lúc trong 4 đáp án. Nắm điểm khác nhau cốt lõi là loại được ngay một nửa. Khi vẫn phân vân, dùng trang [Câu hỏi phân loại nhanh](/vi/aws-saa-c03/classification-questions) để chốt.
 
 ## Bảng phân biệt nhanh
 
@@ -26,8 +26,8 @@ Những cặp dịch vụ hay xuất hiện cùng lúc trong 4 đáp án. Nắm 
 | Lambda@Edge vs CloudFront Functions | **CloudFront Functions**: <mark>logic rất nhẹ</mark> (header, URL), rẻ. **Lambda@Edge**: <mark>logic phức tạp hơn</mark> |
 | Transit Gateway vs Peering vs PrivateLink | **TGW**: <mark>hub nhiều VPC</mark> + VPN + DX, <mark>transitive</mark>. **Peering**: <mark>1-1</mark>, không bắc cầu. **PrivateLink**: <mark>chỉ mở 1 dịch vụ</mark> |
 | DataSync vs Storage Gateway | **DataSync**: <mark>di chuyển, đồng bộ dữ liệu</mark>. **Storage Gateway**: on-prem dùng cloud storage <mark>lâu dài</mark> |
-| ENI vs ENA vs EFA | **ENI**: <mark>card mạng ảo cơ bản</mark>. **ENA**: <mark>Enhanced Networking</mark> (SR-IOV). **EFA**: <mark>HPC</mark>, <mark>OS-bypass</mark> |
-| SSE-S3 vs SSE-KMS vs SSE-C | **SSE-S3**: header `AES256`, <mark>AWS tự xoay key</mark>. **SSE-KMS**: header `aws:kms`, <mark>có audit CloudTrail</mark>. **SSE-C**: <mark>bạn tự giữ key</mark> |
+| ENI vs ENA vs EFA | **ENI**: <mark>card mạng ảo cơ bản</mark>. **ENA**: <mark>Enhanced Networking</mark> (SR-IOV), <mark>cả Windows</mark>. **EFA**: <mark>HPC</mark>, <mark>OS-bypass</mark>, chỉ Linux và instance hỗ trợ (t3a không có) |
+| SSE-S3 vs SSE-KMS vs SSE-C | **SSE-S3**: header `AES256`, <mark>AWS tự xoay key</mark>. **SSE-KMS**: header `aws:kms`, <mark>có audit CloudTrail</mark>. **SSE-C**: <mark>khách hàng tự giữ key</mark> |
 | ACM public vs Private CA vs self-signed vs import | **Public**: <mark>miễn phí</mark>, được tin cậy, <mark>tự gia hạn</mark>. **Private CA**: <mark>nội bộ</mark>. **Self-signed**: <mark>không được tin cậy</mark>. **Import**: <mark>không tự gia hạn</mark> |
 | CloudWatch metric chuẩn vs agent / Enhanced Monitoring | **Metric chuẩn** <mark>từ hypervisor</mark> (CPU, network). <mark>Memory, process</mark> cần **agent** hoặc **Enhanced Monitoring** |
 | Predictive vs Scheduled vs Dynamic scaling | **Predictive**: <mark>ML dự báo</mark>, launch trước. **Scheduled**: <mark>giờ cố định</mark>. **Dynamic**: <mark>phản ứng sau</mark> khi tải tăng |
@@ -35,3 +35,30 @@ Những cặp dịch vụ hay xuất hiện cùng lúc trong 4 đáp án. Nắm 
 | RDS snapshot + terminate vs stop | **Stop** <mark>vẫn tính phí storage</mark>, <mark>tự start sau 7 ngày</mark>. **Snapshot + terminate** <mark>rẻ nhất</mark> cho DB dùng không thường xuyên |
 | Instance metadata vs user-data | **Metadata**: <mark>thông tin instance</mark> (IP, ID, AZ). **User-data**: <mark>script bootstrap</mark> |
 | MGN vs Discovery Service vs VM Import | **MGN**: <mark>rehost</mark>, <mark>replicate liên tục</mark>. **Discovery**: <mark>chỉ khảo sát</mark>. **VM Import**: <mark>import một lần</mark> |
+| Aurora vs Redshift | **Aurora**: <mark>OLTP</mark>, giao dịch, ACID (tới 128 TiB). **Redshift**: <mark>OLAP</mark>, BI, <mark>columnar</mark> |
+| Dịch vụ lưu trữ vs xử lý | <mark>"store results"</mark> → **S3**, **Redshift**, **DynamoDB**. **EMR**, **Glue** là <mark>xử lý, không phải nơi lưu</mark> |
+| Kinesis Data Streams vs S3 + EMR | <mark>Real-time + replay</mark> → **Kinesis**. **S3 + EMR** là <mark>batch</mark> |
+| CloudTrail vs X-Ray vs ALB access logs | **CloudTrail**: <mark>audit API call</mark>. **X-Ray**: <mark>tracing microservices</mark>. **ALB access logs**: <mark>chi tiết HTTP request</mark>, IP client |
+| Secrets Manager vs IAM DB Auth | **Secrets Manager**: <mark>xoay vòng password</mark>. **IAM DB Auth**: <mark>token 15 phút</mark> gắn IAM user/role |
+| Global Accelerator vs Route 53 Weighted | **GA**: endpoint <mark>chỉ là tài nguyên AWS</mark>. Chia % traffic <mark>có on-prem</mark> → **Route 53 Weighted** |
+| Network Firewall vs WAF | **Network Firewall**: <mark>lọc cấp VPC</mark>, FQDN, IDS/IPS. **WAF**: <mark>HTTP layer 7</mark>, geo match, SQLi, XSS |
+| CNAME vs Alias | <mark>Zone apex</mark> (root domain) → **Alias A record**. **CNAME** <mark>không dùng được ở zone apex</mark> |
+| Volume Gateway cached vs stored vs Tape Gateway | **Cached**: <mark>dữ liệu chính ở S3</mark>, cache local. **Stored**: <mark>dữ liệu chính on-prem</mark>. **Tape**: <mark>thay tape backup</mark> |
+| Volume Gateway cached vs ElastiCache | <mark>Cache dữ liệu on-prem</mark> → **Volume Gateway cached**. **ElastiCache** <mark>chạy trong AWS</mark> |
+| Target tracking vs Step vs Simple scaling | **Target tracking**: <mark>giữ metric ở X%</mark>. **Step**: tự đặt threshold + <mark>set of adjustments</mark>. **Simple**: <mark>1 alarm, 1 hành động</mark> |
+| Cluster Autoscaler vs Karpenter | **Karpenter**: scale node, <mark>least overhead</mark>, <mark>không cần node group</mark> |
+| Fargate vs AWS Batch | **Fargate** <mark>tối đa 16 vCPU / 120 GB</mark> mỗi task. Batch job lớn, song song, <mark>job queue</mark> → **AWS Batch** |
+| Athena Federated Query vs AppSync pipeline resolvers | **Athena Federated**: <mark>query (đọc) nhiều nguồn</mark>. **AppSync pipeline resolvers**: <mark>GraphQL đọc + ghi</mark> nhiều bảng |
+| App Runner vs SSM Run Command | **App Runner**: <mark>chạy web app container</mark>. **Run Command**: <mark>cấu hình EC2 không cần SSH/RDP</mark> |
+| KMS vs CloudHSM | **KMS**: <mark>managed</mark>, tích hợp dịch vụ AWS. **CloudHSM**: <mark>HSM riêng</mark>, kiểm soát độc quyền, <mark>mất key là mất hẳn</mark> |
+| ElastiCache Memcached vs Redis | **Memcached**: <mark>multithreaded</mark>, cache đơn giản, Auto Discovery. **Redis**: <mark>persistence, replication</mark>, leaderboard, Global Datastore |
+| Aurora cloning vs snapshot vs Backtrack | **Cloning**: <mark>copy-on-write</mark>, tạo DB test gần như tức thì. **Snapshot**: chậm hơn. **Backtrack**: <mark>tua ngược DB tại chỗ</mark>, không restore |
+| Dedicated Hosts vs Capacity Reservations | **Dedicated Hosts**: <mark>BYOL theo socket/core</mark>. **On-Demand Capacity Reservations**: <mark>giữ chỗ capacity theo AZ</mark> |
+| API Gateway vs Lambda Function URL | **Function URL**: <mark>webhook đơn giản</mark>, least overhead. **API Gateway**: REST API đầy đủ (<mark>auth, throttling, cache</mark>) |
+| Step Functions vs SQS | **Step Functions**: <mark>điều phối workflow</mark>. **SQS**: <mark>buffer, decouple</mark> (Step Functions không làm buffer) |
+| Elastic Disaster Recovery vs RDS + DMS | **Elastic DR**: <mark>pilot light rẻ</mark>, RPO giây, RTO phút. **RDS + DMS** chạy sẵn là <mark>warm standby, đắt hơn</mark> |
+| Vertical vs Horizontal scaling | **Vertical**: <mark>máy mạnh hơn</mark>. **Horizontal**: <mark>thêm máy</mark> |
+| Cross-zone LB vs path routing | **Cross-zone**: <mark>chia đều tải giữa các AZ</mark>. **Path routing**: <mark>chia theo URL</mark> |
+| Compute vs Storage Optimized | **Compute (C)**: <mark>CPU cao</mark>. **Storage Optimized (I, D, H)**: <mark>local storage, sequential I/O</mark> |
+| Step Scaling vs Kinesis UpdateShardCount | **Kinesis** <mark>scale bằng shard</mark>, không dùng scaling policy của EC2 |
+| GZIP vs Parquet | **Parquet/ORC**: <mark>columnar</mark>, Athena <mark>quét ít dữ liệu hơn</mark>. **GZIP** <mark>chỉ nén</mark> |

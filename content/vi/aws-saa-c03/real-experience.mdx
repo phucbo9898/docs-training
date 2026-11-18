@@ -1,0 +1,48 @@
+---
+title: "Kinh nghiệm thực tế"
+slug: "real-experience"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 9
+type: lesson
+summary: "Hành trình ôn của một thành viên đã thi đậu: điểm đề luyện 35–50% vẫn đậu, 5 cách ôn hiệu quả, 3 lỗi lặp lại nhiều nhất và 5 mẹo trong phòng thi."
+---
+
+Phần này ghi lại hành trình ôn của một thành viên trong team đã thi đậu, để mọi người có kỳ vọng đúng và tránh các lỗi tương tự.
+
+## Điểm đề luyện không cần cao mới đậu
+
+<Callout type="info" title="Kỳ vọng đúng về điểm exam mode">
+Điểm các đề luyện của thành viên này dao động từ 35% đến 50% ở chế độ thi thử, nhưng vẫn đậu đề thật. Đề luyện thường được cho là khó hơn đề thật một chút. Quan trọng hơn điểm số là **xu hướng tăng** và việc **sửa được các lỗi lặp lại**.
+</Callout>
+
+## Những cách ôn hiệu quả nhất
+
+1. **Gộp keyword theo domain, không theo đề.** Ghi theo từng đề thì danh sách dài và trùng lặp. Gộp theo domain thì ngắn lại và thấy ngay chỗ yếu.
+2. **Ghi keyword dạng "thấy trong đề → chọn dịch vụ"** thay vì ghi định nghĩa.
+3. **Học bằng câu hỏi phân loại.** Nhiều lỗi xảy ra theo kiểu "lần trước chọn A sai, lần này chọn B, nhưng đề lần này lại cần A". Chỉ khi có tiêu chí phân biệt rõ (trang [Câu hỏi phân loại nhanh](/vi/aws-saa-c03/classification-questions)) thì mới hết dao động.
+4. **Luyện cả tình huống ngược.** Sau khi sai một câu, hãy tìm thêm tình huống mà chính đáp án "bẫy" lại là đáp án đúng. Làm đúng được cả hai chiều mới là hiểu thật.
+5. **Làm lại câu sai đến khi không còn câu nào**, rồi mới sang đề mới.
+
+## Những lỗi lặp lại nhiều nhất
+
+<Callout type="warning" title="Ba lỗi hay gặp">
+
+- Chọn phương án **mạnh hơn cho chắc** (multi-region khi chỉ cần Multi-AZ, Warm standby khi RTO cho phép vài giờ, 6 instance mỗi AZ khi 3 là đủ). Đề thi thưởng cho phương án **vừa đủ**.
+- **Bỏ sót một con số hoặc điều kiện** trong đề: RPO 1 phút nhưng chọn snapshot hằng giờ, job chạy 20 phút nhưng chọn Lambda.
+- **Chọn theo keyword vừa học gần đây** mà không đọc điều kiện của câu hiện tại.
+
+</Callout>
+
+## Mẹo trong phòng thi
+
+<Callout type="tip" title="Trong phòng thi">
+
+1. **Đọc câu hỏi cuối và các điều kiện trước**, ghi nhanh ra nháp (_20 phút, RPO 1 phút, compliance, LEAST overhead…_), rồi mới đọc tình huống.
+2. **Đối chiếu đáp án với từng điều kiện.** Vi phạm một điều kiện là loại.
+3. **Câu "Select TWO/THREE":** các đáp án phải bổ sung cho nhau, không chọn hai đáp án làm cùng một việc.
+4. **Gặp hai đáp án đều hợp lý:** chọn cái khớp nhiều điều kiện hơn và ít thành phần thừa hơn; có _LEAST overhead_ thì ưu tiên dịch vụ managed.
+5. **Dùng hết thời gian.** 130 phút cho 65 câu đủ để đọc kỹ và quay lại các câu đã đánh dấu. Đừng nộp sớm.
+
+</Callout>

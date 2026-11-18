@@ -173,12 +173,12 @@
     },
     "aws": {
       "title": "AWS SAA-C03 Review",
-      "description": "Keywords, common traps and numbers to memorize, compiled from 4 Solutions Architect – Associate practice exams.",
+      "description": "Keywords, common traps and numbers to memorize, compiled from 6 Solutions Architect – Associate practice exams.",
       "meta": "{pages} review pages",
       "phases": [
         {
           "label": "SAA-C03",
-          "title": "Review sheet, exams 1–4"
+          "title": "Keywords & traps – 6 exams"
         }
       ]
     }

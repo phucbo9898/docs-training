@@ -1,0 +1,37 @@
+---
+title: "Câu hỏi phân loại nhanh"
+slug: "classification-questions"
+module: "aws-saa-c03"
+track: "aws"
+phase: 1
+order: 2
+type: lesson
+summary: "20 cặp dịch vụ dễ nhầm, mỗi cặp một câu hỏi phân loại để chốt đáp án: file hay block, at rest hay in transit, đệm hay điều phối, license hay capacity…"
+---
+
+Khi gặp cặp dịch vụ dễ nhầm, đừng chọn theo keyword đầu tiên nhìn thấy. Tự hỏi đúng **một câu phân loại**, câu trả lời sẽ chỉ ra đáp án.
+
+## Bảng câu hỏi phân loại
+
+| Cặp dễ nhầm | Câu hỏi phân loại | Trả lời → Chọn |
+| --- | --- | --- |
+| EFS vs EBS io2 Multi-Attach | Cần <mark>file</mark> hay <mark>block</mark>? | File, nhiều AZ, hàng trăm instance → **EFS** · Block, cùng AZ, vài instance, IOPS cao → **io2 Multi-Attach** |
+| Encryption | Dữ liệu <mark>nằm yên</mark> hay <mark>đang di chuyển</mark>? | At rest → **KMS** (instance có sẵn: snapshot → copy mã hóa → restore) · In transit → **SSL/TLS**, `rds.force_ssl` |
+| SCP vs Permissions boundary | Giới hạn <mark>cả account</mark> hay <mark>một số user/role</mark>? | Cả account, kể cả root → **SCP** · Một số user/role, admin vẫn đủ quyền → **Permissions boundary** |
+| Pilot light vs Warm standby | Ở region DR, app server đang <mark>tắt</mark> hay <mark>bật</mark>? | Tắt, chỉ có DB replicate → **Pilot light** · Bật, bản thu nhỏ → **Warm standby** |
+| Chiến lược DR | <mark>RTO</mark> đề cho phép là <mark>bao lâu</mark>? | Vài giờ → **Backup & Restore** · Hàng chục phút → **Pilot light** · Vài phút → **Warm standby** · Gần 0 → **Active-active**. Dừng ở dòng **đầu tiên** đạt yêu cầu |
+| SQS vs Firehose | Dữ liệu đi tới <mark>tầng xử lý</mark> hay <mark>nơi lưu trữ</mark>? | Worker lấy job ra xử lý → **SQS** · Đổ vào S3, Redshift, OpenSearch → **Firehose** |
+| SQS vs SNS → nhiều SQS | Mỗi message cần <mark>một</mark> hay <mark>nhiều</mark> service xử lý? | Một (chia việc) → **một SQS** · Mỗi service một bản → **SNS fan-out** |
+| SQS vs Step Functions | Cần <mark>đệm</mark> hay cần <mark>điều phối</mark>? | Đệm request, decouple → **SQS** · Nhiều bước, retry, chờ duyệt → **Step Functions** |
+| CloudFront origin group vs Route 53 failover | Người dùng đi vào qua <mark>cửa nào</mark>? | Qua CloudFront → **origin group** · Thẳng tới endpoint → **Route 53 failover** |
+| One Zone-IA vs Standard-IA | <mark>Mất AZ</mark> có chấp nhận được không? | Được (tạo lại được, bản phụ) → **One Zone-IA** · Không (bản duy nhất, compliance) → **Standard-IA** |
+| Standard RI vs Savings Plans | Đề có nhắc <mark>thay đổi</mark> gì không? | Không đổi gì → **Standard RI** · Đổi size/OS trong family → **EC2 Instance SP** · Đổi family/region, có Fargate/Lambda → **Compute SP** |
+| Dedicated Hosts vs Capacity Reservations | Đề nói về <mark>license</mark> hay <mark>capacity</mark>? | License, socket, core → **Dedicated Hosts** · Giữ chỗ theo AZ → **Capacity Reservations** |
+| Placement group | Cần instance <mark>sát nhau</mark> hay <mark>tách rời</mark>? | Sát nhau, độ trễ thấp → **Cluster** · Mỗi cái một phần cứng, ít instance → **Spread** · Hệ phân tán lớn → **Partition** |
+| ALB vs NLB vs GWLB | Cần đọc <mark>URL/tên miền</mark>, cần <mark>static IP/UDP</mark>, hay cần <mark>firewall</mark>? | URL, host → **ALB** · Static IP, TCP/UDP → **NLB** · Firewall appliance → **GWLB** |
+| Aurora vs Redshift | <mark>Giao dịch</mark> hay <mark>phân tích</mark>? | Transactions, ACID (OLTP) → **Aurora/RDS** · Analytics, BI (OLAP) → **Redshift** |
+| Lambda vs Fargate | Job chạy <mark>bao lâu</mark>? | Dưới 15 phút → **Lambda** · Dài hơn, vẫn serverless → **Fargate** |
+| Function URL vs API Gateway | Cần <mark>API keys, usage plans, throttling</mark> không? | Không, chỉ là webhook → **Function URL** · Có → **API Gateway** |
+| Transfer Acceleration vs CRR | Chậm lúc <mark>upload</mark> hay cần bản sao <mark>sau khi lưu</mark>? | Upload đường xa → **Transfer Acceleration + multipart** · Bản sao ở region khác → **CRR** |
+| Memcached vs Redis | Cần <mark>persistence, replication, sorted sets</mark> không? | Không, multithreaded đơn giản → **Memcached** · Có → **Redis** |
+| Secrets Manager vs Parameter Store vs IAM DB Auth | Cần <mark>auto rotation</mark>, cần <mark>rẻ</mark>, hay cần <mark>token</mark>? | Rotation → **Secrets Manager** · Rẻ, không rotation → **Parameter Store** · Token 15 phút từ IAM → **IAM DB Auth** |

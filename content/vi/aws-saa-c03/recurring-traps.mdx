@@ -6,10 +6,10 @@ track: "aws"
 phase: 1
 order: 1
 type: lesson
-summary: "8 bẫy hay dính nhất gộp từ 4 đề, 3 tình huống hay gặp và 2 lỗi vẫn lặp lại ở Đề 4."
+summary: "23 bẫy hay dính nhất gộp từ 6 đề luyện, 3 tình huống nhận ra ngay và 2 lỗi rất hay lặp lại kể cả khi đã ôn."
 ---
 
-Gộp từ cả 4 đề, sắp theo mức độ hay dính.
+Gộp từ cả 6 đề, sắp theo mức độ hay dính.
 
 <Callout type="info" title="Trước khi chốt đáp án">
 Tự hỏi lại 8 câu dưới đây.
@@ -36,11 +36,29 @@ Tự hỏi lại 8 câu dưới đây.
 
 </Callout>
 
-## Hai lỗi vẫn lặp lại ở Đề 4
+## Hai lỗi rất hay lặp lại, kể cả khi đã ôn
 
 <Callout type="danger" title="Đã ôn nhưng vẫn sai">
 
-- **Multi-AZ không phải để scale đọc** (sai 4 câu). "read-heavy, reporting, offload read" → Read Replica hoặc cache. Multi-AZ chỉ để failover, standby không đọc được.
-- **Bài toán số instance theo AZ** (sai 3 câu). Luôn xét trường hợp xấu nhất: **tổng − AZ lớn nhất ≥ N**.
+- **Multi-AZ không phải để scale đọc.** "read-heavy, reporting, offload read" → Read Replica hoặc cache. Multi-AZ chỉ để failover, standby không đọc được.
+- **Bài toán số instance theo AZ.** Luôn xét trường hợp xấu nhất: **tổng − AZ lớn nhất ≥ N**.
 
 </Callout>
+
+## Bẫy tinh vi hơn
+
+9. **Chi tiết cấu hình thắng keyword chung.** Đề nói HPC nhưng Windows hoặc t3a → ENA, không EFA. HPC nhưng SMB/NTFS/AD → FSx for Windows, không Lustre. Wavelength → EC2 node group, không Fargate. Aurora _single instance_ → không có replica để flip CNAME.
+10. **Đáp án đúng kiến thức nhưng sai tình huống.** Global Accelerator không trỏ được tới on-prem (on-prem → Route 53 Weighted). Secrets Manager xoay vòng password, không tạo token 15 phút (token → IAM DB Auth).
+11. **Mặc định đã có, không cần làm gì.** Log CloudTrail đã mã hóa SSE-S3 sẵn. S3 dưới 3.500 PUT / 5.500 GET mỗi giây mỗi prefix thì không cần đổi tên hay chia prefix. Mã hóa EBS tự lan sang snapshot, volume tạo từ snapshot và traffic instance ↔ volume.
+12. **IAM: Condition nằm trong Allow hay Deny.** Condition IP trong Deny nghĩa là IP đó bị chặn. Explicit Deny luôn thắng.
+13. **Câu chọn hai: hai đáp án phải bổ sung nhau.** Phát hiện + thông báo; peering + route table; scale pod (HPA) + scale node (Karpenter). Không chọn hai đáp án cùng vai trò.
+14. **Thuật ngữ bịa.** "Receiving Timeout" không tồn tại (chỉ có visibility timeout). CloudHSM không có "snapshot" để khôi phục key. SSE dùng AES-256, không phải AES-128.
+15. **Đọc đúng hướng traffic và loại trừ.** Chặn client vào theo quốc gia → WAF geo match, không phải Network Firewall (lọc FQDN outbound). Đề đã nói SG đúng mà instance vẫn unhealthy → kiểm tra health check.
+16. **"Chạy được" nhưng không tối ưu.** Một trong những lỗi phổ biến nhất. Đọc cụm điều kiện (_MOST cost-effective_, _LEAST overhead_, _&lt; 1 second_) **trước** khi đọc đáp án, rồi loại đáp án thừa thành phần.
+17. **Chi tiết "multiple regions" gây nhiễu.** Xác định phạm vi thật của câu hỏi; nhiều khi chỉ cần Multi-AZ trong một region. Multi-AZ luôn cùng region; cross-region → Read Replica hoặc Aurora Global Database.
+18. **Định nghĩa bị đảo ngược.** Vertical = máy mạnh hơn, Horizontal = thêm máy. KMS = managed; CloudHSM = HSM riêng, khách hàng kiểm soát độc quyền.
+19. **In-transit hay at-rest.** SSL/TLS (`rds.force_ssl`) là in-transit; KMS, TDE là at-rest.
+20. **IPv4 hay IPv6.** IPv4 private ra Internet → NAT Gateway; IPv6 chỉ đi ra → Egress-only IGW. Ra dịch vụ AWS (không phải Internet) → VPC endpoint.
+21. **Static hay dynamic.** S3 chỉ phục vụ nội dung tĩnh; nội dung động cần EC2/ALB làm origin.
+22. **Metric không tồn tại.** ALB và target group không có CPU metric; ECS service scale theo CPU/Memory của service.
+23. **Mặc định và thời gian lưu tối thiểu.** Kinesis mặc định chỉ giữ 24 giờ ("default settings" là bẫy). Dữ liệu sống vài giờ → S3 Standard, không IA (tính tối thiểu 30 ngày).

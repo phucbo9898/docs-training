@@ -1,15 +1,15 @@
 ---
-title: "Cost-Optimized (63%)"
+title: "Cost-Optimized"
 slug: "cost-optimized"
 module: "aws-saa-c03"
 track: "aws"
 phase: 1
-order: 6
+order: 7
 type: lesson
-summary: "S3 storage class, Spot/RI/Savings Plans, tránh phí NAT và transfer, công cụ chi phí: Budgets, Cost Explorer, Compute Optimizer, Trusted Advisor."
+summary: "Chọn S3 storage class, kiểu mua EC2 (Spot, RI, Savings Plans, Dedicated Hosts), tránh phí NAT và transfer, và công cụ chi phí: Budgets, Cost Explorer, Compute Optimizer."
 ---
 
-Domain này hỏi: cách rẻ nhất mà vẫn thỏa yêu cầu. Tỉ lệ đúng ở Đề 4: **63%**, ưu tiên ôn số 4.
+Domain này hỏi: cách rẻ nhất mà vẫn thỏa yêu cầu. Chiếm **20%** đề thi.
 
 ## S3 storage class
 
@@ -18,27 +18,33 @@ Domain này hỏi: cách rẻ nhất mà vẫn thỏa yêu cầu. Tỉ lệ đú
 | <mark>Ít truy cập</mark> (khoảng 1 lần/tháng) nhưng <mark>cần lấy ngay</mark> | **Standard-IA** |
 | <mark>Không biết pattern truy cập</mark> | **Intelligent-Tiering** |
 | <mark>Archive</mark> (1 lần/quý trở lên) nhưng <mark>lấy trong mili giây</mark> | **Glacier Instant Retrieval** |
-| Archive, <mark>lấy trong vài phút đến vài giờ</mark> | **Glacier Flexible Retrieval** |
-| <mark>Lưu 7–10 năm</mark>, <mark>rẻ nhất</mark>, chấp nhận <mark>chờ 12–48 giờ</mark> | **Glacier Deep Archive** |
+| Archive, lấy trong <mark>vài phút đến vài giờ</mark> | **Glacier Flexible Retrieval** |
+| Lưu <mark>7–10 năm</mark>, <mark>rẻ nhất</mark>, chấp nhận chờ <mark>12–48 giờ</mark> | **Glacier Deep Archive** |
 | <mark>Lấy dưới 15 phút</mark>, <mark>luôn có capacity</mark> | **Expedited + Provisioned capacity** |
 | <mark>Chuyển lớp</mark> hoặc <mark>tự xóa theo tuổi</mark> | **Lifecycle Transition / Expiration** |
 | <mark>Biết trước</mark> sẽ ít truy cập | **Ghi thẳng vào class rẻ**, không qua lifecycle |
+| <mark>Pattern đã biết</mark> | **Chọn thẳng class phù hợp**, không cần Intelligent-Tiering |
+| Dữ liệu <mark>chỉ sống vài giờ / vài ngày</mark> | **S3 Standard** (IA tính tối thiểu 30 ngày) |
+| <mark>Athena tốn tiền, chậm</mark> | **Chuyển sang Parquet/ORC + partitioning** |
 | Dữ liệu <mark>tạo lại được</mark>, ít truy cập, cần lấy ngay | **One Zone-IA** (rẻ hơn Standard-IA khoảng 20%, chỉ 1 AZ) |
 
 ## Compute và mua hàng
 
 | Thấy trong đề | Chọn |
 | --- | --- |
-| Workload <mark>chịu gián đoạn</mark>, batch, <mark>stateless</mark> | **Spot** |
-| <mark>Chạy ổn định 1–3 năm</mark> | **Reserved Instance / Savings Plans** |
+| Workload <mark>chịu gián đoạn</mark>, batch, stateless | **Spot** |
+| Có cả <mark>workload critical</mark> và <mark>workload chịu gián đoạn</mark> | **Reserved** cho phần critical + **Spot** cho phần còn lại |
+| <mark>Tác vụ vài giây mỗi ngày</mark> | **Lambda** thay vì EC2 chạy 24/7 |
+| Chạy <mark>ổn định 1–3 năm</mark> | **Reserved Instance / Savings Plans** |
 | <mark>Bỏ RI không dùng nữa</mark> | **Bán Standard RI trên Marketplace** (Convertible không bán được) |
-| <mark>License theo socket/core</mark> (<mark>BYOL</mark>) | **Dedicated Hosts** |
+| <mark>License theo socket/core</mark> (BYOL) | **Dedicated Hosts** |
 | Máy dev <mark>chỉ dùng giờ hành chính</mark> | **Tắt ngoài giờ bằng EventBridge Scheduler** |
-| <mark>Vẫn tính phí</mark> khi <mark>không running</mark> | **RI, EBS, EIP không gắn** |
-| <mark>Đa domain trên ALB</mark>, rẻ | **SNI** (CloudFront Dedicated IP rất đắt) |
-| Private subnet → <mark>S3/DynamoDB</mark>, <mark>tránh phí NAT</mark> | **Gateway Endpoint** |
+| <mark>Vẫn tính phí khi không running</mark> | **RI**, **EBS**, **EIP không gắn** |
+| <mark>Đa domain</mark> trên ALB, rẻ | **SNI** (CloudFront Dedicated IP rất đắt) |
+| Private subnet → S3/DynamoDB, <mark>tránh phí NAT</mark> | **Gateway Endpoint** |
 | <mark>Dữ liệu lớn</mark>, <mark>mạng chậm</mark> | **Offline transfer** (Snow family / Data Transfer Terminal) |
 | RDS <mark>dùng không thường xuyên</mark>, rẻ nhất | **Snapshot + terminate**, restore khi cần |
+| DB <mark>dev/test</mark> <mark>không cần HA</mark> | **Bỏ Multi-AZ** cho dev/test |
 | Xử lý dữ liệu S3, <mark>giảm phí transfer</mark> | **EC2 cùng region với bucket** (S3 ↔ EC2 cùng region miễn phí) |
 
 ## Savings Plans và Reserved Instances

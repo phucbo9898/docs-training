@@ -1,15 +1,15 @@
 ---
-title: "Resilient (47%)"
+title: "Resilient"
 slug: "resilient"
 module: "aws-saa-c03"
 track: "aws"
 phase: 1
-order: 4
+order: 5
 type: lesson
-summary: "4 chiến lược DR theo RPO/RTO, Multi-AZ và failover, Route 53, decouple bằng SQS/SNS/EventBridge, backup và replication."
+summary: "4 chiến lược DR theo RPO/RTO, Multi-AZ và Aurora failover, Route 53, decouple bằng SQS/SNS/EventBridge, ASG, backup và replication."
 ---
 
-Domain này hỏi: hệ thống có sống sót khi một phần hỏng không, và có tách rời được các thành phần không. Tỉ lệ đúng ở Đề 4: **47%**, ưu tiên ôn số 2.
+Domain này hỏi: hệ thống có sống sót khi một phần hỏng không, và có tách rời được các thành phần không. Chiếm **26%** đề thi.
 
 ## 4 chiến lược DR
 
@@ -29,33 +29,47 @@ Domain này hỏi: hệ thống có sống sót khi một phần hỏng không, 
 | Scale web app, thêm <mark>elasticity</mark> | **ELB + Auto Scaling Group** trải nhiều AZ (hoặc Route 53 Weighted cho nhiều EC2) |
 | Cần <mark>tối thiểu N instance</mark> khi <mark>1 AZ sập</mark> | **Tổng − AZ lớn nhất ≥ N**; rẻ nhất mỗi AZ = N / (số AZ − 1). Ví dụ 6 instance, 3 AZ → 3-3-3 |
 | RDS phải sống khi <mark>AZ sập</mark>, <mark>failover tự động</mark> | **RDS Multi-AZ** (sync, failover 60–120 giây, đổi CNAME) |
-| Aurora <mark>failover nhanh</mark>, <mark>không đổi endpoint</mark> | Thêm **Aurora Replica** (reader) cùng cluster; app ghi qua Cluster endpoint |
-| DR <mark>cross-region</mark>, <mark>RPO ~1 giây</mark>, RTO &lt; 1 phút | **Aurora Global Database** |
+| Aurora <mark>failover nhanh</mark>, <mark>không đổi endpoint</mark> | **Thêm Aurora Replica (reader) cùng cluster**; app ghi qua Cluster endpoint |
+| Aurora <mark>có replica</mark>, primary lỗi | **Flip CNAME, promote replica** (~30 giây, theo priority tier 0–15) |
+| Aurora <mark>single instance</mark> lỗi | **Tạo instance mới cùng AZ**, best-effort (không có replica để flip) |
+| DR <mark>cross-region</mark>, <mark>RPO ~1 giây</mark>, RTO dưới 1 phút | **Aurora Global Database** |
+| <mark>DR rẻ</mark>, <mark>RPO giây, RTO phút</mark> cho server on-prem/EC2 | **AWS Elastic Disaster Recovery** (pilot light) |
+| <mark>RDS cross-region</mark> | **Read Replica cross-region** (Multi-AZ luôn cùng region) |
 | <mark>NoSQL toàn cầu</mark>, low latency, <mark>nhiều region</mark> | **DynamoDB Global Tables** |
-| NAT Gateway không là <mark>single point of failure</mark> | **1 NAT Gateway mỗi AZ**, private subnet trỏ NAT cùng AZ |
+| NAT Gateway <mark>không là single point of failure</mark> | **1 NAT Gateway mỗi AZ**, private subnet trỏ NAT cùng AZ |
 | <mark>Trang dự phòng</mark> khi app sập | **Route 53 Failover routing → S3 static website** |
-| Chỉ sang region phụ <mark>khi region chính lỗi</mark> | **Route 53 Failover routing** + health check |
-| <mark>Tất cả site cùng chạy</mark> | **Route 53 Active-Active** + health check |
+| Chỉ sang region phụ <mark>khi region chính lỗi</mark> | **Route 53 Failover routing + health check** |
+| <mark>Tất cả site cùng chạy</mark> | **Route 53 Active-Active + health check** |
+| <mark>Chia % traffic</mark>, <mark>canary</mark>, migrate on-prem → AWS | **Route 53 Weighted** hoặc **ALB weighted target groups** |
+| ALB báo <mark>unhealthy</mark> dù <mark>SG đúng</mark> | **Kiểm tra health check** (path, port, protocol) |
 | <mark>Region sập</mark>, <mark>downtime thấp nhất</mark> | **Resource chạy sẵn ở region 2 + Route 53 failover** (restore snapshot mất hàng giờ) |
-| CloudFront lỗi 5xx, <mark>tự chuyển origin</mark> | **CloudFront origin group** (origin failover) |
+| CloudFront <mark>lỗi 5xx</mark>, <mark>tự chuyển origin</mark> | **CloudFront origin group** (origin failover, 2 origin) |
+| HA cho <mark>nội dung động</mark> qua CloudFront | **Origin group gồm 2 EC2/ALB ở khác AZ** (S3 chỉ cho nội dung tĩnh) |
 | <mark>Backup Direct Connect</mark> | **DX thứ 2**, hoặc **Site-to-Site VPN** |
-| <mark>Request bị mất</mark> khi <mark>tải đột biến</mark> | **Đệm bằng SQS**, ASG scale theo backlog |
+| Request <mark>bị mất</mark> khi <mark>tải đột biến</mark> | **Đệm bằng SQS**, ASG scale theo backlog (Step Functions không làm buffer) |
 | <mark>Decouple</mark>, xử lý <mark>bất đồng bộ</mark> | **SQS** (pull) |
 | <mark>Exactly-once</mark>, <mark>đúng thứ tự</mark> | **SQS FIFO** |
-| <mark>Message lỗi lặp lại</mark> làm nghẽn queue | **Dead-letter queue** + maxReceiveCount |
-| 1 event gửi tới nhiều nơi (<mark>fan-out</mark>) | **SNS topic → nhiều SQS**; hoặc **EventBridge** |
+| Message lỗi lặp lại <mark>làm nghẽn queue</mark> | **Dead-letter queue** + maxReceiveCount |
+| Consumer SQS <mark>chết giữa chừng</mark> | Message hiện lại cho consumer khác sau **visibility timeout** |
+| <mark>Ngăn consumer khác nhận cùng message</mark> | **Visibility timeout** |
+| <mark>Empty responses</mark>, giảm chi phí polling | **SQS long polling** |
+| SQS + <mark>SLA thời gian xử lý</mark> | **ASG scale theo** `ApproximateAgeOfOldestMessage` |
+| 1 event gửi tới <mark>nhiều nơi (fan-out)</mark> | **SNS topic → nhiều SQS**; hoặc **EventBridge** |
 | <mark>Lọc message</mark> vào từng queue | **SNS subscription filter policy** |
 | <mark>Ưu tiên premium/free</mark> | **2 SQS queue**, poll queue ưu tiên trước (SQS không có priority) |
 | Bắt <mark>thay đổi item DynamoDB</mark> | **DynamoDB Streams + Lambda** |
 | Bắt <mark>thay đổi dữ liệu Aurora MySQL</mark> | **Aurora native function gọi Lambda** (RDS event subscription chỉ báo sự kiện instance) |
-| Chạy <mark>ECS task</mark> khi có <mark>file mới trên S3</mark> | **EventBridge rule → ECS task** (không cần Lambda) |
-| <mark>Workflow nhiều bước</mark>, retry, <mark>chờ duyệt</mark> | **Step Functions** |
+| Chạy ECS task khi có <mark>file mới trên S3</mark> | **EventBridge rule → ECS task** (không cần Lambda) |
+| Workflow <mark>nhiều bước</mark>, <mark>retry</mark>, <mark>chờ duyệt</mark> | **Step Functions** |
 | Migrate <mark>ActiveMQ/RabbitMQ</mark> | **Amazon MQ** |
 | <mark>Chờ app cài xong</mark> mới tạo resource tiếp (CloudFormation) | **CreationPolicy + cfn-signal** (DependsOn chỉ ép thứ tự) |
-| <mark>Đổi AMI cho ASG</mark> | **Launch template version mới + Instance Refresh** |
-| <mark>ASG scale-in</mark> terminate instance nào | **AZ nhiều instance nhất → launch template cũ nhất → gần giờ billing** |
-| <mark>Session bị mất</mark> khi instance bị terminate | Lưu session ra **ElastiCache** hoặc **DynamoDB** (sticky sessions vẫn mất khi instance chết) |
+| <mark>Đổi AMI</mark> cho ASG | **Launch template version mới + Instance Refresh** |
+| ASG <mark>scale-in terminate instance nào</mark> | **AZ nhiều instance nhất → launch template cũ nhất → gần giờ billing** |
+| Thu log / làm việc <mark>trước khi terminate</mark> | **Lifecycle hook** `Terminating:Wait` + **EventBridge** (_Lifecycle Action_) + **Lambda/SSM** |
+| ASG <mark>flapping</mark>, scale liên tục | **Tăng cooldown** hoặc **nâng threshold** |
+| <mark>Session bị mất</mark> khi instance bị terminate | **Lưu session ra ElastiCache hoặc DynamoDB** (sticky sessions vẫn mất khi instance chết) |
 | <mark>Backup tập trung</mark> nhiều service, <mark>> 35 ngày</mark>, <mark>cross-account</mark> | **AWS Backup** (DLM chỉ cho EBS) |
 | <mark>Chống xóa nhầm</mark> object S3 | **Versioning + MFA Delete** |
+| Log app Elastic Beanstalk <mark>không mất khi instance bị thay</mark> | **Đẩy log lên S3 / CloudWatch Logs** (không chỉ lưu trên EBS) |
 | S3 sống sót khi <mark>region sập</mark> | **Cross-Region Replication** (cần Versioning) |
 | <mark>Redshift DR</mark> khi region sập | **Cross-Region Snapshot Copy** |

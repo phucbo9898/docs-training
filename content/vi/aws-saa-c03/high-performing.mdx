@@ -1,37 +1,42 @@
 ---
-title: "High-Performing (41%)"
+title: "High-Performing"
 slug: "high-performing"
 module: "aws-saa-c03"
 track: "aws"
 phase: 1
-order: 3
+order: 6
 type: lesson
-summary: "Chọn đúng storage, database, mạng, CDN, compute và analytics: EFS vs FSx, Read Replica vs RDS Proxy, CloudFront vs Global Accelerator, Kinesis vs Firehose…"
+summary: "Chọn đúng storage, database, mạng, CDN, compute và analytics: EFS vs FSx, Storage Gateway, Read Replica vs RDS Proxy, CloudFront vs Global Accelerator, Kinesis vs Firehose…"
 ---
 
-Domain này hỏi: chọn đúng loại storage, database, mạng và compute cho tải trọng. Tỉ lệ đúng ở Đề 4: **41%**, ưu tiên ôn số 1 và có nhiều câu nhất.
+Domain này hỏi: chọn đúng loại storage, database, mạng và compute cho tải trọng. Chiếm **24%** đề thi và là domain có nhiều keyword nhất.
 
 ## Storage
 
 | Thấy trong đề | Chọn |
 | --- | --- |
-| Linux, <mark>NFS</mark>, <mark>POSIX</mark>, nhiều EC2 / nhiều AZ cùng mount | **EFS** |
-| <mark>Windows</mark>, <mark>SMB</mark>, Active Directory | **FSx for Windows File Server** |
-| <mark>HPC</mark>, ML, tốc độ rất cao, liên kết S3 | **FSx for Lustre** (hot) + **S3** (cold) |
+| Linux, <mark>NFSv4</mark>, <mark>POSIX</mark>, hàng nghìn EC2 / <mark>nhiều AZ cùng mount</mark> | **EFS** |
+| <mark>Windows</mark>, <mark>SMB</mark>, <mark>NTFS</mark>, Active Directory, DFS (kể cả workload HPC) | **FSx for Windows File Server** |
+| <mark>HPC</mark>, ML, tốc độ rất cao, <mark>liên kết S3</mark>, POSIX | **FSx for Lustre** (hot) + **S3** (cold) |
+| EFS cho <mark>hàng trăm client song song</mark> | **EFS Max I/O + Provisioned Throughput** |
 | <mark>NetApp</mark>, <mark>đa giao thức NFS + SMB + iSCSI</mark>, Windows block Multi-AZ | **FSx for NetApp ONTAP** |
 | <mark>Hybrid NFS/SMB</mark>, cache on-prem, <mark>file thành object S3</mark> | **S3 File Gateway** |
-| <mark>Hybrid iSCSI block</mark> | **Volume Gateway** |
+| <mark>Hybrid iSCSI</mark>, <mark>dữ liệu chính ở S3</mark>, cache local, không mở rộng storage on-prem | **Volume Gateway cached** |
+| <mark>Hybrid iSCSI</mark>, <mark>dữ liệu chính on-prem</mark>, backup lên AWS | **Volume Gateway stored** |
+| <mark>Không có virtualization</mark> on-prem | **Storage Gateway hardware appliance** |
 | Thay <mark>tape backup</mark> | **Tape Gateway** |
-| <mark>Chuyển dữ liệu 1 lần</mark> (online) | **DataSync** (Storage Gateway là hybrid lâu dài) |
+| Chuyển dữ liệu <mark>1 lần (online)</mark> | **DataSync** (Storage Gateway là hybrid lâu dài) |
 | <mark>SFTP/FTP</mark> managed vào S3/EFS | **Transfer Family** |
-| <mark>File > 5 GB</mark> | **Multipart Upload** |
-| <mark>User toàn cầu upload</mark> về 1 bucket xa | **S3 Transfer Acceleration** (+ Multipart) |
+| File <mark>> 5 GB</mark> | **Multipart Upload** |
+| <mark>Download file lớn</mark>, <mark>song song</mark> | **S3 Byte-Range Fetches** |
+| <mark>Request S3 cao</mark> | Mỗi prefix **3.500 PUT / 5.500 GET** mỗi giây; dưới mức này không cần làm gì |
+| User <mark>toàn cầu upload</mark> về 1 bucket xa | **S3 Transfer Acceleration** (+ Multipart) |
 | <mark>Biến đổi dữ liệu khi GET</mark> | **S3 Object Lambda** |
-| <mark>Đổi size/type EBS</mark> <mark>không downtime</mark> | **Elastic Volumes** |
+| Đổi size/type EBS <mark>không downtime</mark> | **Elastic Volumes** |
 | <mark>I/O intensive</mark>, DB lớn, <mark>IOPS rất cao</mark> | **EBS io2 Block Express** (hoặc io1); gp3 tối đa 16.000 IOPS |
-| <mark>Boot volume</mark>, dev/test, <mark>đa dụng</mark> | **EBS gp2/gp3** |
-| Big data, log, <mark>truy cập tuần tự</mark> / ít truy cập, <mark>rẻ nhất</mark> | **st1 / sc1** (HDD, không làm boot volume) |
-| <mark>Nhiều EC2 cùng gắn 1 block volume</mark> | **Multi-Attach**, chỉ io1/io2, cùng 1 AZ (khác AZ → EFS) |
+| <mark>Boot volume</mark>, dev/test, đa dụng | **EBS gp2/gp3** |
+| Big data, log, <mark>truy cập tuần tự</mark> / ít truy cập, rẻ nhất | **st1 / sc1** (HDD, không làm boot volume) |
+| Nhiều EC2 <mark>cùng gắn 1 block volume</mark> | **Multi-Attach**, chỉ io1/io2, cùng 1 AZ (khác AZ → EFS) |
 | <mark>I/O cao nhất</mark>, <mark>dữ liệu tạm</mark> hoặc đã replicate | **Instance store** (mất khi stop/terminate, reboot thì còn) |
 
 ## Database
@@ -39,21 +44,29 @@ Domain này hỏi: chọn đúng loại storage, database, mạng và compute ch
 | Thấy trong đề | Chọn |
 | --- | --- |
 | <mark>Giảm tải đọc</mark> RDS, <mark>reporting</mark>, analytics | **Read Replica** (async) |
-| Aurora <mark>phân phối read</mark> | **Reader endpoint**; ghi → Cluster endpoint |
+| Aurora <mark>phân phối read</mark> | **Reader endpoint**; ghi → **Cluster endpoint** |
 | Aurora <mark>tách production và reporting</mark> | **Custom endpoint** |
-| Aurora <mark>replica không theo kịp</mark> lúc cao điểm | **Aurora Auto Scaling** (tối đa 15 replica) |
-| <mark>Lambda + RDS</mark>, <mark>too many connections</mark> | **RDS Proxy** |
+| Aurora replica <mark>không theo kịp lúc cao điểm</mark> | **Aurora Auto Scaling** (tối đa 15 replica) |
+| Lambda + RDS, <mark>too many connections</mark> | **RDS Proxy** |
 | <mark>Query lặp lại</mark>, cần <mark>dưới 1 mili giây</mark> | **ElastiCache** |
-| <mark>DynamoDB</mark> đọc nhiều, <mark>microsecond</mark> | **DAX** |
+| DynamoDB đọc nhiều, <mark>microsecond</mark> | **DAX** |
 | DynamoDB <mark>hot partition</mark> | **Partition key high-cardinality**, thêm suffix ngẫu nhiên |
 | DynamoDB <mark>traffic không đoán trước</mark>, nhiều lúc nhàn rỗi | **On-demand capacity mode** |
 | <mark>Schema thay đổi</mark>, scale lớn, <mark>key-value</mark> | **DynamoDB** |
+| <mark>OLTP</mark>, <mark>ACID</mark>, dữ liệu lớn và tăng trưởng | **Aurora** (tới 128 TiB) |
+| <mark>OLAP</mark>, <mark>BI</mark>, columnar | **Redshift** |
+| <mark>Graph</mark>, quan hệ phức tạp | **Neptune** |
+| <mark>Copy DB nhanh</mark> sang test/staging | **Aurora cloning** (copy-on-write) |
+| <mark>Tua ngược DB</mark> về thời điểm trước, <mark>không restore</mark> | **Aurora Backtrack** |
+| Session store, cache đơn giản, <mark>multithreaded</mark> | **ElastiCache for Memcached** |
+| <mark>Persistence</mark>, <mark>replication</mark>, <mark>leaderboard</mark> | **ElastiCache for Redis** |
+| <mark>Millisecond</mark>, <mark>IoT</mark>, key-value | **DynamoDB** |
 | <mark>MongoDB</mark>, không đổi code | **DocumentDB** |
-| <mark>GraphQL</mark>, mobile real-time | **AppSync** |
+| <mark>GraphQL</mark>, mobile real-time, đọc/ghi nhiều nguồn | **AppSync** (pipeline resolvers) |
 | RDS metric <mark>theo process/thread</mark> | **Enhanced Monitoring** |
 | <mark>Query nào gây tải</mark> RDS | **Performance Insights** |
 | RDS <mark>hết dung lượng</mark> | **Storage Autoscaling** |
-| <mark>SQL Server → Aurora PostgreSQL</mark>, ít sửa code | **Babelfish** (+ SCT cho schema, DMS cho dữ liệu) |
+| <mark>SQL Server → Aurora PostgreSQL</mark>, <mark>ít sửa code</mark> | **Babelfish** (+ SCT cho schema, DMS cho dữ liệu) |
 
 ## Mạng, CDN và compute
 
@@ -61,42 +74,68 @@ Domain này hỏi: chọn đúng loại storage, database, mạng và compute ch
 | --- | --- |
 | <mark>Static content toàn cầu</mark>, <mark>có cache</mark>, HTTP | **CloudFront** |
 | <mark>Static IP</mark>, <mark>TCP/UDP</mark>, không cache, failover nhanh | **Global Accelerator** |
-| Xử lý dữ liệu gần người dùng, <mark>at the edge</mark> | **Lambda@Edge** (sửa header nhẹ → CloudFront Functions) |
-| <mark>Path/host routing</mark> | **ALB**; static IP, layer 4, UDP → NLB; firewall appliance → GWLB |
-| <mark>Private subnet → S3/DynamoDB</mark>, rẻ nhất | **Gateway Endpoint** (miễn phí) |
+| <mark>5G edge</mark>, single-digit ms cho mobile | **AWS Wavelength** (EKS: EC2 node group, Fargate không chạy ở Wavelength) |
+| <mark>Zone apex / root domain</mark> → ALB, CloudFront | **Route 53 Alias A record** |
+| Xử lý dữ liệu gần người dùng, <mark>at the edge</mark> | **Lambda@Edge** (sửa header nhẹ → **CloudFront Functions**) |
+| <mark>Path/host routing</mark> | **ALB** path / host conditions; static IP, layer 4, UDP → **NLB**; firewall appliance → **GWLB** |
+| <mark>Chia đều tải giữa các AZ</mark> | **Cross-zone load balancing** |
+| Instance <mark>không truy cập được từ Internet</mark> | **Kiểm tra route** `0.0.0.0/0 → IGW` |
+| Nối VPC <mark>nhiều region</mark> + <mark>IPS</mark> | **Transit Gateway + Network Firewall** |
+| <mark>Nối các site on-prem với nhau</mark> qua DX | **Direct Connect SiteLink** |
+| <mark>Quản lý, theo dõi địa chỉ IP</mark> | **VPC IPAM** |
+| Private subnet → <mark>S3/DynamoDB</mark>, <mark>rẻ nhất</mark> | **Gateway Endpoint** (miễn phí) |
 | Nhiều VPC cần <mark>transitive</mark>, + on-prem | **Transit Gateway** |
-| <mark>Hàng trăm VPC + VPN</mark>, single gateway, <mark>inter-region</mark> | **Transit Gateway + TGW peering** (CloudHub chỉ nối các site on-prem) |
+| <mark>Hàng trăm VPC</mark> + VPN, <mark>single gateway</mark>, <mark>inter-region</mark> | **Transit Gateway + TGW peering** (CloudHub chỉ nối các site on-prem) |
 | <mark>Chỉ mở 1 dịch vụ</mark> cho VPC khác | **PrivateLink** |
 | <mark>1 Direct Connect cho nhiều VPC/account</mark> | **DX Gateway + Transit Gateway** |
-| <mark>Container serverless</mark> | **Fargate**; Kubernetes serverless → EKS on Fargate |
-| <mark>Traffic burst vài giây</mark>, bình thường ít | **API Gateway + Lambda** |
-| <mark>Bảo vệ backend khỏi spike</mark> | **API Gateway throttling + caching** |
-| Ra <mark>API version mới</mark>, <mark>tăng dần traffic</mark> | **API Gateway canary release** |
-| <mark>HPC</mark>, MPI, <mark>độ trễ thấp giữa node</mark> | **Cluster placement group + EFA** |
-| <mark>Enhanced Networking</mark>, <mark>SR-IOV</mark> | **ENA** (ENI chỉ là card mạng ảo cơ bản) |
+| Kết nối <mark>dedicated</mark>, ổn định, <mark>không qua Internet</mark> | **Direct Connect** |
+| <mark>Tăng throughput VPN</mark> | **Transit Gateway + ECMP** (BGP) |
+| Nối <mark>2 VPC private</mark>, kể cả khác region | **VPC peering + route table cả hai phía** |
+| On-prem truy cập S3 qua DX bằng <mark>private IP</mark> | **Interface endpoint (PrivateLink) cho S3** |
+| <mark>Container serverless</mark> | **Fargate**; Kubernetes serverless → **EKS on Fargate** |
+| Batch job song song, <mark>nhiều vCPU/RAM</mark>, <mark>job queue</mark> | **AWS Batch** |
+| <mark>Tác vụ ngắn</mark>, dữ liệu nhỏ, <mark>chạy thưa</mark> | **Lambda** (không dùng EC2 chạy 24/7) |
+| Cấu hình EC2 <mark>không cần SSH/RDP</mark> | **SSM Run Command** |
+| <mark>Virtual desktop</mark> | **WorkSpaces** |
+| <mark>Traffic burst vài giây</mark>, bình thường ít / REST API cost-effective | **API Gateway + Lambda** |
+| <mark>Webhook đơn giản</mark> cho Lambda, least overhead | **Lambda Function URL** |
+| Đưa <mark>Docker app lên nhanh</mark>, AWS lo hạ tầng | **Elastic Beanstalk** |
+| <mark>ECS service scaling</mark> / <mark>scale EC2 cho ECS cluster</mark> | Theo **CPU/Memory của service** / **Capacity Provider** |
+| Bảo vệ backend <mark>khỏi spike</mark> | **API Gateway throttling + caching** |
+| Ra API version mới, <mark>tăng dần traffic</mark> | **API Gateway canary release** |
+| <mark>HPC</mark>, <mark>MPI</mark>, độ trễ thấp giữa node | **Cluster placement group + EFA** |
+| <mark>Enhanced Networking</mark>, <mark>SR-IOV</mark>, PPS cao | **ENA** (ENI chỉ là card mạng ảo cơ bản) |
+| <mark>Local storage</mark>, <mark>sequential I/O</mark> | **Storage Optimized instance** (I, D, H) |
+| Cluster placement group <mark>thiếu capacity</mark> | **Stop rồi start lại toàn bộ instance** |
+| <mark>Giữ chỗ capacity theo AZ</mark> | **On-Demand Capacity Reservations** |
 | <mark>Khởi động nhanh</mark>, <mark>giữ RAM</mark> | **Hibernation** (bật lúc launch) |
 | Tải <mark>theo giờ biết trước</mark> | **Scheduled scaling** |
 | Tải <mark>theo chu kỳ</mark>, khởi động lâu, <mark>launch trước</mark> | **Predictive Scaling** |
-| <mark>Giữ ổn định một metric</mark> | **Target tracking scaling** |
-| <mark>EKS scale node</mark> / <mark>scale pod</mark> | **Cluster Autoscaler** (Karpenter) / **HPA** |
-| Launch EC2 <mark>lỗi sau N instance</mark> | **Quota vCPU theo region** → xin tăng (InsufficientCapacity → đổi AZ) |
-| ASG scale theo <mark>memory, disk</mark> | **CloudWatch agent** đẩy metric → scaling policy |
-| <mark>Lift-and-shift VM</mark>, downtime thấp / <mark>chỉ khảo sát on-prem</mark> | **AWS MGN** / **Application Discovery Service** |
-| Lấy <mark>IP, instance ID, AZ</mark> từ trong instance | **Instance metadata 169.254.169.254** (user-data là script bootstrap) |
+| <mark>Giữ ổn định một metric ở X%</mark> | **Target tracking scaling** |
+| <mark>Burst traffic</mark>, scale theo <mark>mức vượt ngưỡng</mark>, instance boot chậm | **Step scaling + warm-up** |
+| <mark>EKS scale node</mark> / <mark>scale pod</mark> | **Karpenter** (least overhead) / **HPA + Metrics Server** |
+| <mark>Launch EC2 lỗi sau N instance</mark> | **Quota vCPU theo region → xin tăng** (InsufficientCapacity → đổi AZ) |
+| ASG scale theo <mark>memory, disk</mark> | **CloudWatch agent đẩy metric → scaling policy** |
+| <mark>Lift-and-shift VM</mark>, downtime thấp / <mark>chỉ khảo sát</mark> on-prem | **AWS MGN** / **Application Discovery Service** |
+| Lấy <mark>IP, instance ID, AZ</mark> từ trong instance | **Instance metadata** 169.254.169.254 (user-data là script bootstrap) |
 
 ## Analytics, streaming, AI
 
 | Thấy trong đề | Chọn |
 | --- | --- |
-| Streaming tùy biến, <mark>enhanced fan-out</mark>, <mark>real-time clickstream</mark> | **Kinesis Data Streams** (+ Lambda) |
+| Streaming tùy biến, <mark>real-time + replay</mark>, <mark>nhiều consumer</mark> | **Kinesis Data Streams** (+ Lambda) |
 | <mark>Đổ stream vào S3/OpenSearch</mark>, <mark>không code</mark> | **Data Firehose** |
+| Kinesis chậm, <mark>cần thêm throughput</mark> | **Tăng shard** (`UpdateShardCount`) |
+| <mark>SMS hai chiều</mark> | **AWS End User Messaging SMS** |
 | Đang dùng <mark>Kafka</mark> | **MSK** |
 | <mark>ETL serverless</mark>, <mark>CSV → Parquet</mark> | **Glue** (chạy lại không trùng → Job Bookmark) |
 | Big data <mark>Spark/Hadoop</mark> | **EMR** |
 | <mark>SQL trên S3</mark>, serverless, <mark>ad-hoc</mark> | **Athena** (không dùng cho real-time stream) |
+| OpenSearch + <mark>trực quan hóa</mark>, least overhead | **OpenSearch Dashboards** |
 | <mark>Data warehouse</mark>, BI, SQL | **Redshift** |
-| <mark>Query dữ liệu S3 cùng bảng Redshift</mark>, không nạp vào | **Redshift Spectrum** |
+| Query dữ liệu S3 cùng bảng Redshift, <mark>không nạp vào</mark> | **Redshift Spectrum** |
+| <mark>Lưu kết quả</mark> xử lý stream | **S3**, **Redshift**, **DynamoDB**, **OpenSearch** (không phải EMR) |
 | Data lake nhiều account, <mark>quyền theo cột/hàng</mark> | **Lake Formation** |
 | <mark>Âm thanh → chữ</mark> / <mark>chữ → giọng</mark> / <mark>dịch</mark> / <mark>cảm xúc</mark> | **Transcribe** / **Polly** / **Translate** / **Comprehend** |
 | <mark>Ảnh, video</mark> / <mark>camera stream</mark> / <mark>tìm tài liệu</mark> | **Rekognition** / **Kinesis Video Streams** / **Kendra** |
-| <mark>OCR tài liệu</mark> + <mark>nhận diện PHI y tế</mark> | **Textract** + **Comprehend Medical** |
+| <mark>OCR tài liệu</mark> + nhận diện <mark>PHI y tế</mark> | **Textract + Comprehend Medical** |

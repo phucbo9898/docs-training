@@ -1,21 +1,24 @@
 ---
-title: "Secure (61%)"
+title: "Secure"
 slug: "secure"
 module: "aws-saa-c03"
 track: "aws"
 phase: 1
-order: 5
+order: 4
 type: lesson
-summary: "IAM và quản trị nhiều account, mã hóa và secret (KMS, SSE, Secrets Manager, ACM), Security Group vs NACL, WAF, Shield, CloudFront và S3 access."
+summary: "IAM và quản trị nhiều account, mã hóa và secret (KMS, CloudHSM, SSE, Secrets Manager, ACM), Security Group vs NACL, WAF, Shield, CloudFront và S3 access."
 ---
 
-Domain này hỏi: ai được làm gì, dữ liệu được mã hóa thế nào và ứng dụng được bảo vệ ra sao. Tỉ lệ đúng ở Đề 4: **61%**, ưu tiên ôn số 3.
+Domain này hỏi: ai được làm gì, dữ liệu được mã hóa thế nào và ứng dụng được bảo vệ ra sao. Chiếm **30%** đề thi.
 
 ## Identity và quản trị nhiều account
 
 | Thấy trong đề | Chọn |
 | --- | --- |
 | <mark>EC2/Lambda/ECS</mark> gọi AWS | **IAM Role** (không dùng access key) |
+| Người dùng gọi API bằng <mark>CLI/SDK</mark> | **Access keys + permissions** (cần cả xác thực lẫn phân quyền) |
+| <mark>Least privilege</mark> | **Action cụ thể + ARN cụ thể**, không wildcard |
+| <mark>Tách môi trường</mark>, <mark>quản lý tập trung</mark> | **Organizations + cross-account role** |
 | Nhiều user <mark>cùng quyền</mark> | **IAM Group + policy** (Role không có thành viên) |
 | <mark>Cross-account tạm thời</mark> | **STS AssumeRole** |
 | Nhân viên <mark>SSO</mark> vào <mark>nhiều account</mark> | **IAM Identity Center** + permission sets (+ AD Connector nếu có AD) |
@@ -24,10 +27,17 @@ Domain này hỏi: ai được làm gì, dữ liệu được mã hóa thế nà
 | Directory <mark>đơn giản, rẻ</mark>, <mark>không có AD sẵn</mark> | **Simple AD** |
 | <mark>End-user</mark> đăng nhập app | **Cognito** |
 | Mỗi user chỉ vào <mark>folder S3 riêng</mark> | **Policy variable** `${aws:username}` |
+| Phân quyền <mark>UAT vs Production</mark> trong <mark>cùng account</mark> | **Tag + IAM condition (ABAC)** |
+| <mark>Condition IP</mark> nằm trong <mark>Deny</mark> | IP đó **bị chặn**; explicit Deny luôn thắng |
+| IAM users/roles → <mark>quyền Kubernetes</mark> | **EKS access entries + access policies** |
+| <mark>AD on-prem có sẵn</mark>, <mark>chỉ cần proxy</mark> | **AD Connector** |
 | <mark>Bắt buộc MFA</mark> | Điều kiện `aws:MultiFactorAuthPresent` |
-| Đăng nhập RDS bằng <mark>token thay password</mark> | **IAM DB Authentication** |
+| Đăng nhập RDS bằng <mark>token thay password</mark> | **IAM DB Authentication** (MySQL, MariaDB, PostgreSQL; không hỗ trợ SQL Server) |
 | <mark>"unable to"</mark>, chặn cả <mark>root user</mark> của account thành viên | **SCP** (không cấp quyền, không ảnh hưởng management account) |
 | Phát hiện resource <mark>sai cấu hình</mark>, <mark>thiếu tag</mark> | **AWS Config rule** |
+| <mark>Audit ai gọi API gì</mark> | **CloudTrail** (log đã SSE-S3 sẵn) |
+| Audit <mark>đọc/ghi từng object S3</mark> | **CloudTrail Data Events** |
+| Giám sát <mark>service quota</mark> | **Service Quotas Automatic Management + User Notifications** |
 | Dựng nhiều account có sẵn <mark>guardrail</mark> | **Control Tower** |
 | <mark>Chia sẻ</mark> TGW, subnet <mark>giữa account</mark> | **AWS RAM** |
 | Tải <mark>báo cáo compliance</mark> (SOC, PCI) | **AWS Artifact** |
@@ -40,9 +50,16 @@ Domain này hỏi: ai được làm gì, dữ liệu được mã hóa thế nà
 | <mark>SSE header</mark> | `x-amz-server-side-encryption`; có chữ customer → **SSE-C** |
 | Mã hóa S3 có <mark>audit việc dùng key</mark> | **SSE-KMS** (header `aws:kms`). SSE-S3 header `AES256` |
 | <mark>Toàn quyền key</mark>, <mark>xóa key material ngay</mark> | **KMS custom key store trên CloudHSM** |
+| <mark>Dedicated HSM</mark>, <mark>mất key là mất hẳn</mark> | **CloudHSM** (AWS không truy cập và không khôi phục được key) |
+| <mark>Mã hóa EBS</mark> | **KMS**; tự lan sang snapshot, volume từ snapshot, traffic instance ↔ volume |
 | <mark>Mã hóa EBS có sẵn</mark> | **Snapshot → copy có mã hóa → tạo volume mới** |
 | <mark>Ép HTTPS</mark> vào S3 | **Bucket policy** `aws:SecureTransport` |
-| Secret cần <mark>auto rotation</mark> | **Secrets Manager**; không cần, rẻ → Parameter Store SecureString |
+| <mark>Bắt buộc SSL</mark> tới RDS (<mark>in-transit</mark>) | `rds.force_ssl` + **root CA** |
+| <mark>Tự động mã hóa mọi EBS mới</mark> | **EBS Encryption by Default** (thiết lập theo region) |
+| <mark>Account khác upload</mark>, chủ bucket cần <mark>toàn quyền</mark> | `bucket-owner-full-control` / **Object Ownership bucket owner enforced** |
+| <mark>Nhiều account</mark> truy cập <mark>một bucket</mark> | **Bucket policy** |
+| <mark>ACM sắp hết hạn</mark> | `DaysToExpiry` / **ACM event → EventBridge → SNS** |
+| Secret cần <mark>auto rotation</mark> | **Secrets Manager**; không cần, rẻ → **Parameter Store SecureString** |
 | Ẩn <mark>credentials trong env var Lambda</mark> | **Customer managed KMS key + encryption helpers** |
 | Mã hóa <mark>Kubernetes Secrets</mark> | **EKS secrets encryption với KMS** |
 | <mark>Redis</mark> yêu cầu <mark>password</mark> | **Redis AUTH** + transit encryption |
@@ -54,14 +71,17 @@ Domain này hỏi: ai được làm gì, dữ liệu được mã hóa thế nà
 
 | Thấy trong đề | Chọn |
 | --- | --- |
-| <mark>SQL injection</mark>, <mark>XSS</mark> | **WAF** gắn ALB/CloudFront; nhiều account → Firewall Manager |
+| <mark>SQL injection</mark>, <mark>XSS</mark> | **WAF** gắn ALB/CloudFront; nhiều account → **Firewall Manager** |
+| <mark>Chặn theo quốc gia</mark>, <mark>cho phép vài IP</mark> | **WAF**: IP set Allow (priority cao) + geo match Block |
+| <mark>DNS spoofing</mark> | **DNSSEC** (HTTPS không giải quyết) |
 | Request xấu, <mark>IP đổi liên tục</mark> | **WAF rate-based rule** |
 | <mark>DDoS</mark> | **CloudFront + Shield (Advanced) + WAF** |
-| Lọc traffic <mark>cấp VPC</mark>, <mark>FQDN</mark> | **Network Firewall** |
-| Phát hiện <mark>threat</mark> / <mark>lỗ hổng phần mềm</mark> / <mark>PII trong S3</mark> | **GuardDuty** / **Inspector** / **Macie** |
+| Lọc traffic <mark>cấp VPC</mark>, <mark>FQDN</mark>, <mark>IDS/IPS</mark> | **Network Firewall** |
+| Phát hiện <mark>threat</mark> / <mark>lỗ hổng phần mềm</mark> / <mark>PII trong S3</mark> | **GuardDuty** / **Inspector** / **Macie** (→ EventBridge → SNS để thông báo) |
 | SSH <mark>chỉ từ 1 IP</mark> | **SG inbound** TCP 22 từ `IP/32` |
+| <mark>Chặn nhanh vài IP</mark> cụ thể | **NACL Deny rule** (SG không có Deny) |
 | Chỉ <mark>app tier / ASG</mark> được vào DB | **SG của DB: source = SG ID của app tier** (không có source là instance ID; NACL chỉ dùng CIDR) |
-| <mark>1 instance lỗi</mark>, instance khác OK | **Security Group**; cả subnet lỗi → NACL hoặc route table |
+| <mark>1 instance lỗi</mark>, instance khác OK | **Security Group**; cả subnet lỗi → **NACL** hoặc **route table** |
 | <mark>Security Group vs NACL</mark> | **SG**: instance, stateful, chỉ Allow · **NACL**: subnet, stateless, có Deny, số nhỏ xét trước |
 | <mark>IPv6</mark> <mark>chỉ đi ra</mark> | **Egress-only Internet Gateway** |
 | <mark>Outbound Internet only</mark> cho <mark>private subnet</mark> | **NAT Gateway** ở public subnet + route từ private subnet |
@@ -69,7 +89,7 @@ Domain này hỏi: ai được làm gì, dữ liệu được mã hóa thế nà
 | Chỉ member xem <mark>nhiều file</mark>, <mark>không đổi URL</mark> | **CloudFront Signed Cookies** (1 file → Signed URL) |
 | S3 <mark>chỉ truy cập qua CloudFront</mark> | **OAC** (presigned URL bỏ qua CloudFront) |
 | <mark>Chống hotlink</mark>, <mark>truy cập tạm thời</mark> | Tắt public + **S3 presigned URL** |
-| <mark>Public read</mark> cho mọi object | **Bucket policy** (Principal `*`) hoặc object ACL; CORS không cấp quyền |
+| <mark>Public read</mark> cho mọi object | **Bucket policy** (Principal `*`) hoặc **object ACL**; CORS không cấp quyền |
 | S3 chỉ truy cập <mark>từ 1 VPC</mark> | **Access Point network origin VPC** / `aws:SourceVpc` |
 | Chia sẻ dữ liệu S3, <mark>người tải trả phí</mark> | **Requester Pays** (chặn truy cập ẩn danh) |
 | <mark>Nhiều domain</mark> trên 1 ALB | **SNI** (miễn phí) |

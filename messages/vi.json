@@ -173,12 +173,12 @@
     },
     "aws": {
       "title": "Ôn thi AWS SAA-C03",
-      "description": "Keyword, bẫy hay gặp và con số cần thuộc, tổng hợp từ 4 đề ôn Solutions Architect – Associate.",
+      "description": "Keyword, bẫy hay gặp và con số cần thuộc, tổng hợp từ 6 đề ôn Solutions Architect – Associate.",
       "meta": "{pages} trang ôn",
       "phases": [
         {
           "label": "SAA-C03",
-          "title": "Bảng ôn Đề 1–4"
+          "title": "Keyword và bẫy – 6 đề"
         }
       ]
     }
