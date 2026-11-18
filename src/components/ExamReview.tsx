@@ -3,12 +3,9 @@
 import { useId, useState } from "react";
 import { useTranslations } from "next-intl";
 import { questionStatus, type QuestionStatus } from "@/lib/exams/score";
-import {
-  EXAM_DOMAINS,
-  type Exam,
-  type ExamAnswers,
-  type ExamDomain,
-} from "@/lib/exams/types";
+import { examDomains } from "@/lib/exams/domains";
+import type { Exam, ExamAnswers } from "@/lib/exams/types";
+import { useDomainLabel } from "@/lib/exams/use-domain-label";
 import ExamReviewItem from "./ExamReviewItem";
 
 type ExamReviewProps = {
@@ -28,10 +25,6 @@ const FILTERS: readonly Filter[] = [
   "marked",
 ];
 
-function isDomain(value: string): value is ExamDomain {
-  return EXAM_DOMAINS.some((domain) => domain === value);
-}
-
 /** Màn chữa đề: lọc theo domain và trạng thái, mở/đóng từng câu. */
 export default function ExamReview({
   exam,
@@ -40,8 +33,11 @@ export default function ExamReview({
   onBack,
 }: ExamReviewProps) {
   const t = useTranslations("Exams");
+  const domainLabel = useDomainLabel();
   const domainSelectId = useId();
-  const [domain, setDomain] = useState<ExamDomain | "all">("all");
+  const domains = examDomains(exam.questions);
+  /** Vị trí trong `domains`; dùng chỉ số vì domain có thể là null. */
+  const [domainIndex, setDomainIndex] = useState<number | "all">("all");
   const [filter, setFilter] = useState<Filter>("all");
   const [closed, setClosed] = useState<ReadonlySet<string>>(new Set());
 
@@ -53,7 +49,8 @@ export default function ExamReview({
     marked: markedSet.has(question.id),
   }));
   const inDomain = items.filter(
-    (item) => domain === "all" || item.question.domain === domain,
+    (item) =>
+      domainIndex === "all" || item.question.domain === domains[domainIndex],
   );
 
   function matches(item: (typeof items)[number], value: Filter): boolean {
@@ -105,17 +102,21 @@ export default function ExamReview({
           </label>
           <select
             id={domainSelectId}
-            value={domain}
+            value={String(domainIndex)}
             onChange={(event) => {
-              const value = event.target.value;
-              setDomain(isDomain(value) ? value : "all");
+              const index = Number(event.target.value);
+              setDomainIndex(
+                Number.isInteger(index) && index >= 0 && index < domains.length
+                  ? index
+                  : "all",
+              );
             }}
             className="min-h-11 rounded-lg border border-border bg-bg px-3 text-text"
           >
             <option value="all">{t("review.allDomains")}</option>
-            {EXAM_DOMAINS.map((item) => (
-              <option key={item} value={item}>
-                {t(`domain.${item}`)}
+            {domains.map((item, index) => (
+              <option key={item ?? ""} value={index}>
+                {domainLabel(item)}
               </option>
             ))}
           </select>

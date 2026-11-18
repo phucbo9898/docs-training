@@ -9,13 +9,22 @@ export const EXAM_DOMAINS = [
 
 export type ExamDomain = (typeof EXAM_DOMAINS)[number];
 
+/** Domain có nhãn dịch sẵn trong `messages` (4 domain của đề thật). */
+export function isExamDomain(value: unknown): value is ExamDomain {
+  return EXAM_DOMAINS.some((domain) => domain === value);
+}
+
 export type ExamOption = { id: string; text: string };
 
 /** Phần đề ai làm cũng thấy: câu hỏi và các lựa chọn. */
 type ExamQuestionBase = {
   /** Duy nhất trong đề, dạng "bo-1-3-07". */
   id: string;
-  domain: ExamDomain;
+  /**
+   * Bộ 1 dùng `ExamDomain`; Bộ 2 dùng tên danh mục dịch vụ AWS, vd
+   * "AWS Compute". `null`: câu chưa phân loại.
+   */
+  domain: string | null;
   /** Tiếng Anh, giống đề thật. */
   prompt: string;
   options: ExamOption[];
@@ -29,10 +38,10 @@ type ExamAnswerKey = {
   correct: string[];
   /** Tiếng Việt, mấu chốt của câu. */
   explanation: string;
-  /** Giải thích cho từng lựa chọn, key là option id. */
+  /** Giải thích cho từng lựa chọn, key là option id. Có thể là "" (không có). */
   optionExplanations: Record<string, string>;
   hint?: string;
-  /** Slug trang ôn trong /aws-saa-c03/. */
+  /** Slug trang ôn trong /aws-saa-c03/. "" là không có trang ôn. */
   reviewPage?: string;
 };
 

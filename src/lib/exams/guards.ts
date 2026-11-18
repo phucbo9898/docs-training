@@ -1,7 +1,5 @@
 import {
-  EXAM_DOMAINS,
   type ExamAnswers,
-  type ExamDomain,
   type ExamIndex,
   type ExamIndexEntry,
   type ExamOption,
@@ -28,10 +26,6 @@ function isPositiveInt(value: unknown): value is number {
   return typeof value === "number" && Number.isInteger(value) && value > 0;
 }
 
-function isDomain(value: unknown): value is ExamDomain {
-  return EXAM_DOMAINS.some((domain) => domain === value);
-}
-
 function isOption(value: unknown): value is ExamOption {
   return isRecord(value) && isString(value.id) && isString(value.text);
 }
@@ -49,11 +43,13 @@ function questionErrors(value: unknown, at: string): Errors {
     if (!isString(q[key]))
       errors.push(`${at}.${key}: thiếu hoặc không phải chuỗi`);
   }
-  if (!isDomain(q.domain)) errors.push(`${at}.domain: không hợp lệ`);
+  if (q.domain !== null && !isString(q.domain)) {
+    errors.push(`${at}.domain: phải là chuỗi hoặc null`);
+  }
   if (q.hint !== undefined && !isString(q.hint)) {
     errors.push(`${at}.hint: phải là chuỗi`);
   }
-  if (q.reviewPage !== undefined && !isString(q.reviewPage)) {
+  if (q.reviewPage !== undefined && typeof q.reviewPage !== "string") {
     errors.push(`${at}.reviewPage: phải là chuỗi`);
   }
 
@@ -86,7 +82,8 @@ function questionErrors(value: unknown, at: string): Errors {
     if (keys.join() !== [...ids].sort().join()) {
       errors.push(`${at}.optionExplanations: key phải khớp id các lựa chọn`);
     }
-    if (!Object.values(explanations).every(isString)) {
+    // Chuỗi rỗng hợp lệ: lựa chọn đó không có giải thích riêng.
+    if (!Object.values(explanations).every((v) => typeof v === "string")) {
       errors.push(`${at}.optionExplanations: giá trị phải là chuỗi`);
     }
   }

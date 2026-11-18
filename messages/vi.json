@@ -218,6 +218,7 @@
       "performance": "Design High-Performing Architectures",
       "cost": "Design Cost-Optimized Architectures"
     },
+    "domainNone": "Chưa phân loại",
     "mockBadge": "Dữ liệu mẫu",
     "answered": "Đã làm {count}/{total}",
     "position": "Câu {number}/{total}",

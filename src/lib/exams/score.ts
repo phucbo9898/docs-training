@@ -1,10 +1,5 @@
-import {
-  EXAM_DOMAINS,
-  type Exam,
-  type ExamAnswers,
-  type ExamDomain,
-  type ExamQuestion,
-} from "./types";
+import { examDomains } from "./domains";
+import type { Exam, ExamAnswers, ExamQuestion } from "./types";
 
 /**
  * Hàm thuần, không đọc file: dùng được ở server (Server Action chấm Exam mode),
@@ -24,10 +19,13 @@ export type ScoreSummary = {
 
 export type ExamScore = ScoreSummary & { passed: boolean };
 
+/** `domain` null: nhóm câu chưa phân loại. */
+export type DomainScore = { domain: string | null; summary: ScoreSummary };
+
 /** Điểm cả đề và theo domain: màn kết quả cần cả hai. */
 export type ExamGrade = {
   score: ExamScore;
-  byDomain: Partial<Record<ExamDomain, ScoreSummary>>;
+  byDomain: DomainScore[];
 };
 
 /** Câu nhiều đáp án chỉ đúng khi chọn khớp toàn bộ tập đáp án, không thừa không thiếu. */
@@ -72,17 +70,18 @@ export function scoreExam(
   return { ...summary, passed: summary.percent >= exam.passPercent };
 }
 
-/** Điểm theo domain; domain không có câu nào bị bỏ khỏi kết quả. */
+/** Điểm theo domain có trong đề, thứ tự theo `examDomains`. */
 export function scoreByDomain(
   exam: Pick<Exam, "questions">,
   answers: ExamAnswers,
-): Partial<Record<ExamDomain, ScoreSummary>> {
-  const result: Partial<Record<ExamDomain, ScoreSummary>> = {};
-  for (const domain of EXAM_DOMAINS) {
-    const questions = exam.questions.filter((q) => q.domain === domain);
-    if (questions.length > 0) result[domain] = summarize(questions, answers);
-  }
-  return result;
+): DomainScore[] {
+  return examDomains(exam.questions).map((domain) => ({
+    domain,
+    summary: summarize(
+      exam.questions.filter((q) => q.domain === domain),
+      answers,
+    ),
+  }));
 }
 
 export function gradeExam(

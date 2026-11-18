@@ -68,6 +68,8 @@ export default function ExamOptionList({
         const disabled = readOnly || (multi && full && !isSelected);
         const inputId = `${question.id}-${option.id}`;
         const explanationId = `${inputId}-explanation`;
+        // "" là lựa chọn không có giải thích riêng: không hiện khung trống.
+        const explanation = reveal?.optionExplanations[option.id]?.trim() ?? "";
         const tag =
           state === "correctPicked"
             ? t("option.correctPicked")
@@ -103,7 +105,7 @@ export default function ExamOptionList({
                 checked={isSelected}
                 disabled={disabled}
                 onChange={() => onToggle?.(option.id)}
-                aria-describedby={reveal ? explanationId : undefined}
+                aria-describedby={explanation ? explanationId : undefined}
                 className="mt-1.5 size-4 shrink-0 accent-primary"
               />
               <span className="min-w-0 flex-1 text-text">
@@ -116,12 +118,12 @@ export default function ExamOptionList({
                 {option.text}
               </span>
             </label>
-            {reveal ? (
+            {explanation ? (
               <p
                 id={explanationId}
                 className="mt-2 border-t border-border pt-2 pl-7 text-sm text-text-muted"
               >
-                {reveal.optionExplanations[option.id]}
+                {explanation}
               </p>
             ) : null}
           </li>

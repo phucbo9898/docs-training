@@ -11,14 +11,16 @@ type ExamExplanationProps = {
 /** Giải thích chung của câu, kèm link về trang ôn keyword liên quan. */
 export default function ExamExplanation({ question }: ExamExplanationProps) {
   const t = useTranslations("Exams");
+  // reviewPage "" là câu chưa gắn trang ôn.
+  const reviewPage = question.reviewPage?.trim();
 
   return (
     <section className="rounded-lg border border-border bg-bg-subtle p-4">
       <h3 className="font-bold text-text">{t("explanation")}</h3>
       <p className="mt-2 text-text">{question.explanation}</p>
-      {question.reviewPage ? (
+      {reviewPage ? (
         <Link
-          href={`/aws-saa-c03/${question.reviewPage}`}
+          href={`/aws-saa-c03/${reviewPage}`}
           className="mt-3 inline-flex min-h-11 items-center gap-1 font-semibold text-primary-text underline underline-offset-2"
         >
           {t("reviewKeywords")}
