@@ -30,6 +30,7 @@ import type {
 } from "@/lib/exams/types";
 import ExamDialog from "./ExamDialog";
 import ExamFinishPrompt from "./ExamFinishPrompt";
+import ExamQuestionActions from "./ExamQuestionActions";
 import ExamQuestionList from "./ExamQuestionList";
 import ExamQuestionView from "./ExamQuestionView";
 import ExamResult from "./ExamResult";
@@ -67,15 +68,13 @@ function isTextEntry(target: EventTarget | null): boolean {
   return false;
 }
 
-/** Practice mode, đã chọn đủ số đáp án: trả câu đầy đủ để hiện kết quả. */
+/** Practice mode, đã bấm "Kiểm tra đáp án": trả câu đầy đủ để hiện kết quả. */
 function revealedAnswer(
   answerKey: ReadonlyMap<string, ExamQuestion> | null,
   question: ExamQuestionPrompt,
-  selected: readonly string[] | undefined,
+  checked: readonly string[],
 ): ExamQuestion | null {
-  if (!answerKey || (selected?.length ?? 0) < question.selectCount) {
-    return null;
-  }
+  if (!answerKey || !checked.includes(question.id)) return null;
   return answerKey.get(question.id) ?? null;
 }
 
@@ -150,7 +149,8 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
     (target: ExamQuestionPrompt, optionId: string) => {
       setProgress((prev) => {
         const picked = prev.answers[target.id] ?? [];
-        if (revealedAnswer(answerKey, target, picked)) return prev;
+        // Đã kiểm tra đáp án thì khóa câu.
+        if (prev.checked.includes(target.id)) return prev;
         let next: string[];
         if (target.selectCount === 1) {
           next = [optionId];
@@ -164,8 +164,17 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
         return { ...prev, answers: { ...prev.answers, [target.id]: next } };
       });
     },
-    [answerKey],
+    [],
   );
+
+  const checkAnswer = useCallback((target: ExamQuestionPrompt) => {
+    setProgress((prev) => {
+      const picked = prev.answers[target.id] ?? [];
+      if (picked.length < target.selectCount) return prev;
+      if (prev.checked.includes(target.id)) return prev;
+      return { ...prev, checked: [...prev.checked, target.id] };
+    });
+  }, []);
 
   const toggleMark = useCallback((id: string) => {
     setProgress((prev) => ({
@@ -309,7 +318,7 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
     (q: ExamQuestionPrompt): ExamItemStatus => {
       const picked = progress.answers[q.id];
       if (!picked || picked.length === 0) return "unanswered";
-      const answer = revealedAnswer(answerKey, q, picked);
+      const answer = revealedAnswer(answerKey, q, progress.checked);
       if (answer) {
         return questionStatus(answer, picked) === "correct"
           ? "correct"
@@ -317,7 +326,7 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
       }
       return "answered";
     },
-    [answerKey, progress.answers],
+    [answerKey, progress.answers, progress.checked],
   );
 
   if (phase !== "doing" && finished) {
@@ -353,7 +362,7 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
 
   if (!question) return null;
   const unanswered = total - answeredCount;
-  const reveal = revealedAnswer(answerKey, question, selected);
+  const reveal = revealedAnswer(answerKey, question, progress.checked);
   const hint = reveal ? undefined : answerKey?.get(question.id)?.hint;
 
   // Còn câu bỏ trống thì hỏi lại trước khi nộp.
@@ -446,7 +455,7 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
       <div className="mt-6 lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-8">
         <div className="min-w-0 space-y-6">
           <ExamToolbar
-            number={current + 1}
+            number={question.number}
             total={total}
             marked={marked.has(question.id)}
             onPrev={() => goTo(current - 1)}
@@ -456,12 +465,22 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
           <ExamQuestionView
             key={question.id}
             question={question}
-            number={current + 1}
+            number={question.number}
             selected={selected}
             onToggle={(optionId) => toggleOption(question, optionId)}
             reveal={reveal}
             hint={hint}
             headingRef={headingRef}
+          />
+          <ExamQuestionActions
+            mode={mode}
+            selectedCount={selected.length}
+            selectCount={question.selectCount}
+            checked={reveal !== null}
+            isLast={current === total - 1}
+            onSkip={() => goTo(current + 1, true)}
+            onCheck={() => checkAnswer(question)}
+            onNext={() => goTo(current + 1, true)}
           />
           {mode === "practice" &&
           (unanswered === 0 || current === total - 1) ? (

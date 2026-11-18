@@ -238,6 +238,12 @@
       "last": "This is the last question; {count, plural, one {# question is} other {# questions are}} still unanswered. Submit to see your score, per-domain results and answer review.",
       "action": "Submit and see results"
     },
+    "actions": {
+      "skip": "Skip question",
+      "check": "Check answer",
+      "next": "Next question",
+      "selectMore": "Pick {count} more {count, plural, one {answer} other {answers}} to check."
+    },
     "shortcuts": "Shortcuts: ← / → to change question, 1–5 to pick an answer.",
     "timeLeft": "About {minutes} minutes left",
     "showHint": "Hint",

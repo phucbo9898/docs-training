@@ -238,6 +238,12 @@
       "last": "Đây là câu cuối, còn {count} câu chưa làm. Nộp bài để xem điểm, kết quả theo domain và chữa đề.",
       "action": "Nộp bài và xem kết quả"
     },
+    "actions": {
+      "skip": "Bỏ qua",
+      "check": "Kiểm tra đáp án",
+      "next": "Câu tiếp",
+      "selectMore": "Chọn thêm {count} đáp án để kiểm tra."
+    },
     "shortcuts": "Phím tắt: ← / → chuyển câu, 1–5 chọn đáp án.",
     "timeLeft": "Còn khoảng {minutes} phút",
     "showHint": "Gợi ý",
