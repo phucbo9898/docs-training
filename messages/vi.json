@@ -321,6 +321,54 @@
       "discard": "Bỏ bài này"
     }
   },
+  "History": {
+    "title": "Lịch sử làm bài",
+    "intro": "Các lần nộp bài của bạn, mới nhất trước.",
+    "link": "Lịch sử làm bài",
+    "filterLabel": "Lọc theo chế độ",
+    "filter": {
+      "all": "Tất cả",
+      "practice": "Practice",
+      "exam": "Exam"
+    },
+    "stats": {
+      "heading": "Thống kê ({mode})",
+      "count": "Số lần làm",
+      "average": "Điểm trung bình",
+      "best": "Điểm cao nhất",
+      "percent": "{value}%",
+      "none": "—"
+    },
+    "table": {
+      "caption": "Danh sách lần làm bài",
+      "exam": "Đề",
+      "mode": "Chế độ",
+      "score": "Điểm",
+      "duration": "Thời gian",
+      "date": "Ngày làm",
+      "actions": "Chi tiết",
+      "scoreValue": "{score}/{total} ({percent}%)",
+      "minutes": "{minutes} phút",
+      "noDuration": "—",
+      "detail": "Xem",
+      "detailLabel": "Xem chi tiết lần làm {title} lúc {date}"
+    },
+    "empty": "Chưa có lần làm nào.",
+    "pager": {
+      "label": "Phân trang",
+      "prev": "Trang trước",
+      "next": "Trang sau",
+      "page": "Trang {page}"
+    },
+    "needSignIn": "Phiên đăng nhập này được tạo trước khi có tính năng lưu kết quả. Hãy đăng nhập lại để xem lịch sử.",
+    "signIn": "Đăng nhập lại",
+    "loadError": "Không tải được lịch sử làm bài. Vui lòng thử lại sau.",
+    "detail": {
+      "back": "Quay lại lịch sử",
+      "summary": "Kết quả: {score}/{total} câu đúng ({percent}%)",
+      "examMissing": "Đề này không còn trong dữ liệu nên không hiển thị được từng câu."
+    }
+  },
   "Auth": {
     "title": "Đăng nhập",
     "intro": "Tab Luyện đề AWS chỉ dành cho thành viên được cấp quyền. Hãy đăng nhập bằng tài khoản Google đã được đăng ký.",

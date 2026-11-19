@@ -10,6 +10,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   return {
     locale,
+    // Cố định để ngày giờ (lịch sử làm bài render ở server) không theo giờ UTC
+    // của máy chủ Vercel.
+    timeZone: "Asia/Ho_Chi_Minh",
     messages: (await import(`../../messages/${locale}.json`)).default,
   };
 });

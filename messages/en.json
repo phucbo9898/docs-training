@@ -321,6 +321,54 @@
       "discard": "Discard this attempt"
     }
   },
+  "History": {
+    "title": "Attempt history",
+    "intro": "Your submitted attempts, newest first.",
+    "link": "Attempt history",
+    "filterLabel": "Filter by mode",
+    "filter": {
+      "all": "All",
+      "practice": "Practice",
+      "exam": "Exam"
+    },
+    "stats": {
+      "heading": "Statistics ({mode})",
+      "count": "Attempts",
+      "average": "Average score",
+      "best": "Best score",
+      "percent": "{value}%",
+      "none": "—"
+    },
+    "table": {
+      "caption": "List of attempts",
+      "exam": "Exam",
+      "mode": "Mode",
+      "score": "Score",
+      "duration": "Time",
+      "date": "Date",
+      "actions": "Details",
+      "scoreValue": "{score}/{total} ({percent}%)",
+      "minutes": "{minutes} min",
+      "noDuration": "—",
+      "detail": "View",
+      "detailLabel": "View attempt {title} at {date}"
+    },
+    "empty": "No attempts yet.",
+    "pager": {
+      "label": "Pagination",
+      "prev": "Previous page",
+      "next": "Next page",
+      "page": "Page {page}"
+    },
+    "needSignIn": "This session was created before results could be saved. Please sign in again to see your history.",
+    "signIn": "Sign in again",
+    "loadError": "Could not load your history. Please try again later.",
+    "detail": {
+      "back": "Back to history",
+      "summary": "Result: {score}/{total} correct ({percent}%)",
+      "examMissing": "This exam is no longer available, so individual questions cannot be shown."
+    }
+  },
   "Auth": {
     "title": "Sign in",
     "intro": "The AWS practice exams tab is for approved members only. Sign in with your registered Google account.",

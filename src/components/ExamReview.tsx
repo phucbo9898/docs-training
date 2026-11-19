@@ -12,7 +12,8 @@ type ExamReviewProps = {
   exam: Exam;
   answers: ExamAnswers;
   marked: string[];
-  onBack: () => void;
+  /** Không truyền: ẩn nút quay lại (trang chi tiết lịch sử có link riêng). */
+  onBack?: () => void;
 };
 
 type Filter = "all" | QuestionStatus | "marked";
@@ -80,14 +81,16 @@ export default function ExamReview({
 
   return (
     <div className="space-y-6">
-      <button
-        type="button"
-        onClick={onBack}
-        className="inline-flex min-h-11 items-center gap-1 font-semibold text-primary-text hover:underline"
-      >
-        <span aria-hidden="true">←</span>
-        {t("review.back")}
-      </button>
+      {onBack ? (
+        <button
+          type="button"
+          onClick={onBack}
+          className="inline-flex min-h-11 items-center gap-1 font-semibold text-primary-text hover:underline"
+        >
+          <span aria-hidden="true">←</span>
+          {t("review.back")}
+        </button>
+      ) : null}
       <h1 className="text-2xl font-bold leading-tight text-text md:text-3xl">
         {t("review.heading", { title: exam.title })}
       </h1>
