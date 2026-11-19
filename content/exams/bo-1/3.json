@@ -1049,7 +1049,7 @@
       "number": 29,
       "baseId": "custom-4394974-29",
       "domain": "secure",
-      "prompt": "A travel company has a suite of web applications hosted in an Auto Scaling group of On-Demand EC2 instances behind an Application Load Balancer that handles traffic from various web domains such as i-love-manila.com, i-love-boracay.com, i-love-cebu.com and many others. To improve security and lessen the overall cost, you are instructed to secure the system by allowing multiple domains to serve SSL traffic without the need to reauthenticate and reprovision your certificate everytime you add a new domain. This migration from HTTP to HTTPS will help improve their SEO and Google search ranking.\n\nWhich of the following is the most cost-effective solution to meet the above requirement?",
+      "prompt": "A travel company has a suite of web applications hosted in an Auto Scaling group of On-Demand EC2 instances behind an Application Load Balancer that handles traffic from various web domains such as i-love-hiking.com, i-love-diving.com, i-love-coffee.com and many others. To improve security and lessen the overall cost, you are instructed to secure the system by allowing multiple domains to serve SSL traffic without the need to reauthenticate and reprovision your certificate everytime you add a new domain. This migration from HTTP to HTTPS will help improve their SEO and Google search ranking.\n\nWhich of the following is the most cost-effective solution to meet the above requirement?",
       "options": [
         {
           "id": "a",

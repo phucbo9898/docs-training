@@ -724,7 +724,7 @@
       "number": 20,
       "baseId": "custom-4394980-20",
       "domain": "resilient",
-      "prompt": "A new DevOps engineer has created a CloudFormation template for a web application and she raised a <code>pull request</code> in GIT for you to check and review. After checking the template, you immediately told her that the template will not work. Which of the following is the reason why this CloudFormation template will fail to deploy the stack?\n\n{\n \"AWSTemplateFormatVersion\":\"2010-09-09\",\n \"Parameters\":{\n   \"VPCId\":{\n     \"Type\":\"String\",\n     \"Description\":\"manila\"\n },\n \"SubnetId\":{\n   \"Type\":\"String\",\n   \"Description\":\"subnet-b46032ec\"\n }\n},\n\"Outputs\":{\n \"InstanceId\":{\n  \"Value\":{\n   \"Ref\":\"manilaInstance\"\n  },\n  \"Description\":\"Instance Id\"\n  }\n }\n}",
+      "prompt": "A new DevOps engineer has created a CloudFormation template for a web application and she raised a <code>pull request</code> in GIT for you to check and review. After checking the template, you immediately told her that the template will not work. Which of the following is the reason why this CloudFormation template will fail to deploy the stack?\n\n{\n \"AWSTemplateFormatVersion\":\"2010-09-09\",\n \"Parameters\":{\n   \"VPCId\":{\n     \"Type\":\"String\",\n     \"Description\":\"VPC ID\"\n },\n \"SubnetId\":{\n   \"Type\":\"String\",\n   \"Description\":\"subnet-b46032ec\"\n }\n},\n\"Outputs\":{\n \"InstanceId\":{\n  \"Value\":{\n   \"Ref\":\"MyInstance\"\n  },\n  \"Description\":\"Instance Id\"\n  }\n }\n}",
       "options": [
         {
           "id": "a",

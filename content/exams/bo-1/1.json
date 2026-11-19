@@ -1769,27 +1769,27 @@
       "number": 49,
       "baseId": "custom-4394970-49",
       "domain": "secure",
-      "prompt": "A newly hired Solutions Architect is assigned to manage a set of CloudFormation templates that are used in the company's cloud architecture in AWS. The Architect accessed the templates and tried to analyze the configured IAM policy for an S3 bucket.\n\n{ \n \"Version\": \"2012-10-17\", \n \"Statement\": [ \n  { \n   \"Effect\": \"Allow\", \n   \"Action\": [ \n    \"s3:Get*\", \n    \"s3:List*\" \n   ], \n   \"Resource\": \"*\" \n  }, \n  { \n   \"Effect\": \"Allow\", \n   \"Action\": \"s3:PutObject\", \n   \"Resource\": \"arn:aws:s3:::boracay/*\" \n  } \n ] \n}\n\nWhat does the above IAM policy allow? (Select THREE.)",
+      "prompt": "A newly hired Solutions Architect is assigned to manage a set of CloudFormation templates that are used in the company's cloud architecture in AWS. The Architect accessed the templates and tried to analyze the configured IAM policy for an S3 bucket.\n\n{ \n \"Version\": \"2012-10-17\", \n \"Statement\": [ \n  { \n   \"Effect\": \"Allow\", \n   \"Action\": [ \n    \"s3:Get*\", \n    \"s3:List*\" \n   ], \n   \"Resource\": \"*\" \n  }, \n  { \n   \"Effect\": \"Allow\", \n   \"Action\": \"s3:PutObject\", \n   \"Resource\": \"arn:aws:s3:::examplebucket/*\" \n  } \n ] \n}\n\nWhat does the above IAM policy allow? (Select THREE.)",
       "options": [
         {
           "id": "a",
-          "text": "An IAM user with this IAM policy is allowed to read objects from the boracay S3 bucket."
+          "text": "An IAM user with this IAM policy is allowed to read objects from the examplebucket S3 bucket."
         },
         {
           "id": "b",
-          "text": "An IAM user with this IAM policy is allowed to change access rights for the boracay S3 bucket."
+          "text": "An IAM user with this IAM policy is allowed to change access rights for the examplebucket S3 bucket."
         },
         {
           "id": "c",
-          "text": "An IAM user with this IAM policy is allowed to write objects into the boracay S3 bucket."
+          "text": "An IAM user with this IAM policy is allowed to write objects into the examplebucket S3 bucket."
         },
         {
           "id": "d",
-          "text": "An IAM user with this IAM policy is allowed to read objects in the boracay S3 bucket but not allowed to list the objects in the bucket."
+          "text": "An IAM user with this IAM policy is allowed to read objects in the examplebucket S3 bucket but not allowed to list the objects in the bucket."
         },
         {
           "id": "e",
-          "text": "An IAM user with this IAM policy is allowed to read and delete objects from the boracay S3 bucket."
+          "text": "An IAM user with this IAM policy is allowed to read and delete objects from the examplebucket S3 bucket."
         },
         {
           "id": "f",
@@ -1801,14 +1801,14 @@
         "c",
         "f"
       ],
-      "explanation": "You manage access in AWS by creating policies and attaching them to IAM identities (users, groups of users, or roles) or AWS resources. A policy is an object in AWS that, when associated with an identity or resource, defines their permissions. AWS evaluates these policies when an IAM principal (user or role) makes a request. Permissions in the policies determine whether the request is allowed or denied. Most policies are stored in AWS as JSON documents. AWS supports six types of policies: identity-based policies, resource-based policies, permissions boundaries, AWS Organizations SCPs, ACLs, and session policies.\n\nIAM policies define permissions for action regardless of the method that you use to perform the operation. For example, if a policy allows the GetUser action, then a user with that policy can get user information from the AWS Management Console, the AWS CLI, or the AWS API. When you create an IAM user, you can choose to allow console or programmatic access. If console access is allowed, the IAM user can sign in to the console using a user name and password. Or if programmatic access is allowed, the user can use access keys to work with the CLI or API.\n\nBased on the provided IAM policy, the user is only allowed to get, write, and list all of the objects for the boracay s3 bucket. The s3:PutObject basically means that you can submit a PUT object request to the S3 bucket to store data.",
+      "explanation": "You manage access in AWS by creating policies and attaching them to IAM identities (users, groups of users, or roles) or AWS resources. A policy is an object in AWS that, when associated with an identity or resource, defines their permissions. AWS evaluates these policies when an IAM principal (user or role) makes a request. Permissions in the policies determine whether the request is allowed or denied. Most policies are stored in AWS as JSON documents. AWS supports six types of policies: identity-based policies, resource-based policies, permissions boundaries, AWS Organizations SCPs, ACLs, and session policies.\n\nIAM policies define permissions for action regardless of the method that you use to perform the operation. For example, if a policy allows the GetUser action, then a user with that policy can get user information from the AWS Management Console, the AWS CLI, or the AWS API. When you create an IAM user, you can choose to allow console or programmatic access. If console access is allowed, the IAM user can sign in to the console using a user name and password. Or if programmatic access is allowed, the user can use access keys to work with the CLI or API.\n\nBased on the provided IAM policy, the user is only allowed to get, write, and list all of the objects for the examplebucket s3 bucket. The s3:PutObject basically means that you can submit a PUT object request to the S3 bucket to store data.",
       "optionExplanations": {
-        "a": "Hence, the correct answers are: - An IAM user with this IAM policy is allowed to read objects from all S3 buckets owned by the account. - An IAM user with this IAM policy is allowed to write objects into the boracay S3 bucket. - An IAM user with this IAM policy is allowed to read objects from the boracay S3 bucket.",
-        "b": "The option that says: An IAM user with this IAM policy is allowed to change access rights for the boracay S3 bucket is incorrect because the template does not have any statements which allow the user to change access rights in the bucket.",
-        "c": "Hence, the correct answers are: - An IAM user with this IAM policy is allowed to read objects from all S3 buckets owned by the account. - An IAM user with this IAM policy is allowed to write objects into the boracay S3 bucket. - An IAM user with this IAM policy is allowed to read objects from the boracay S3 bucket.",
-        "d": "The option that says: An IAM user with this IAM policy is allowed to read objects in the boracay S3 bucket but not allowed to list the objects in the bucket is incorrect because it can clearly be seen in the template that there is a s3:List* which permits the user to list objects.",
-        "e": "The option that says: An IAM user with this IAM policy is allowed to read and delete objects from the boracay S3 bucket is incorrect. Although you can read objects from the bucket, you cannot delete any objects.",
-        "f": "Hence, the correct answers are: - An IAM user with this IAM policy is allowed to read objects from all S3 buckets owned by the account. - An IAM user with this IAM policy is allowed to write objects into the boracay S3 bucket. - An IAM user with this IAM policy is allowed to read objects from the boracay S3 bucket."
+        "a": "Hence, the correct answers are: - An IAM user with this IAM policy is allowed to read objects from all S3 buckets owned by the account. - An IAM user with this IAM policy is allowed to write objects into the examplebucket S3 bucket. - An IAM user with this IAM policy is allowed to read objects from the examplebucket S3 bucket.",
+        "b": "The option that says: An IAM user with this IAM policy is allowed to change access rights for the examplebucket S3 bucket is incorrect because the template does not have any statements which allow the user to change access rights in the bucket.",
+        "c": "Hence, the correct answers are: - An IAM user with this IAM policy is allowed to read objects from all S3 buckets owned by the account. - An IAM user with this IAM policy is allowed to write objects into the examplebucket S3 bucket. - An IAM user with this IAM policy is allowed to read objects from the examplebucket S3 bucket.",
+        "d": "The option that says: An IAM user with this IAM policy is allowed to read objects in the examplebucket S3 bucket but not allowed to list the objects in the bucket is incorrect because it can clearly be seen in the template that there is a s3:List* which permits the user to list objects.",
+        "e": "The option that says: An IAM user with this IAM policy is allowed to read and delete objects from the examplebucket S3 bucket is incorrect. Although you can read objects from the bucket, you cannot delete any objects.",
+        "f": "Hence, the correct answers are: - An IAM user with this IAM policy is allowed to read objects from all S3 buckets owned by the account. - An IAM user with this IAM policy is allowed to write objects into the examplebucket S3 bucket. - An IAM user with this IAM policy is allowed to read objects from the examplebucket S3 bucket."
       },
       "reviewPage": "secure"
     },
