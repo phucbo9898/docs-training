@@ -24,8 +24,9 @@ export default async function LoginPanel({
     `/${locale}/aws-exams`,
   );
 
-  // Đã có quyền thì không cần đăng nhập lại.
-  if (await getExamUser()) redirect(callbackUrl);
+  // Đã có quyền thì không cần đăng nhập lại. Phiên cũ chưa có id thì vẫn hiện
+  // nút đăng nhập (được đưa tới đây khi nộp bài), không redirect vòng lại.
+  if ((await getExamUser())?.id) redirect(callbackUrl);
 
   const t = await getTranslations("Auth");
   const error = first(query.error);

@@ -24,5 +24,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (profile?.email_verified !== true) return false;
       return isAllowedEmail(profile.email);
     },
+    jwt({ token, account }) {
+      // Chỉ có `account` lúc vừa đăng nhập. `token.sub` mặc định là UUID ngẫu
+      // nhiên mỗi lần đăng nhập (không có adapter), nên lưu Google `sub` riêng.
+      if (account?.provider === "google") token.uid = account.providerAccountId;
+      return token;
+    },
+    session({ session, token }) {
+      // Phiên cũ (trước khi có `uid`) không có id: cần đăng nhập lại để lưu bài.
+      if (typeof token.uid === "string") session.user.id = token.uid;
+      return session;
+    },
   },
 });

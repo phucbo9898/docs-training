@@ -2,7 +2,15 @@ import "server-only";
 import { redirect } from "next/navigation";
 import { auth, isAllowedEmail } from "@/auth";
 
-export type ExamUser = { email: string; name: string | null };
+export type ExamUser = {
+  email: string;
+  name: string | null;
+  /**
+   * Google `sub`, dùng làm khóa lưu kết quả. `null` với phiên tạo trước khi có
+   * id: vẫn làm bài được, nhưng phải đăng nhập lại mới lưu/xem lịch sử.
+   */
+  id: string | null;
+};
 
 /**
  * Người dùng hiện tại nếu có phiên hợp lệ và email vẫn còn trong danh sách
@@ -12,7 +20,11 @@ export async function getExamUser(): Promise<ExamUser | null> {
   const session = await auth();
   const email = session?.user?.email;
   if (!email || !isAllowedEmail(email)) return null;
-  return { email, name: session.user?.name ?? null };
+  return {
+    email,
+    name: session.user?.name ?? null,
+    id: session.user?.id || null,
+  };
 }
 
 /** Kiểm tra lần hai sau proxy; không có quyền thì về trang đăng nhập. */
