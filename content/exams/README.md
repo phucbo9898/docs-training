@@ -1,19 +1,17 @@
 # Dữ liệu luyện đề AWS SAA-C03
 
-Câu hỏi là câu hỏi gốc do team tự soạn, bám theo keyword và bẫy rút ra từ 6 đề luyện. Không chứa câu hỏi của bên thứ ba.
-
-**Trạng thái: dữ liệu mẫu (`mock: true`).** 12 đề được dựng từ kho 123 câu gốc, nên một câu có thể xuất hiện ở nhiều đề (thứ tự câu và thứ tự lựa chọn được xáo khác nhau). Trong cùng một đề không có câu trùng. Khi có câu hỏi mới, chỉ cần thay file JSON và đổi `mock` thành `false`.
+**Trạng thái: dữ liệu thật (`mock: false`).** 2 bộ × 6 đề, tổng 780 câu, không có câu trùng giữa các đề. Tên domain, bucket, bảng, tài khoản trong câu hỏi đã được đổi sang tên trung tính (`example.com`, `examplebucket`, `ExampleTable`…). Khi thêm câu mới, giữ quy ước này.
 
 ## Cấu trúc
 
-```
+```text
 content/exams/
   index.json        # danh sách bộ và đề (form chọn đề, sidebar, generateStaticParams)
   bo-1/1.json … 6.json
   bo-2/1.json … 6.json
 ```
 
-Mỗi đề 65 câu, 130 phút, tỉ lệ domain theo đề thật: Secure 20, Resilient 17, High-Performing 16, Cost 12. Mỗi đề có 8 câu chọn nhiều đáp án (Select TWO).
+Mỗi đề 65 câu, 130 phút. Mỗi đề có khoảng 5–16 câu chọn nhiều đáp án (chủ yếu Select TWO, vài câu Select THREE); tỉ lệ domain khác nhau giữa các đề.
 
 ## Kiểu dữ liệu
 
@@ -24,13 +22,13 @@ type ExamOption = { id: string; text: string };
 
 type ExamQuestion = {
   id: string;                 // duy nhất trong đề, dạng "bo-1-3-07"
-  baseId: string;             // id câu gốc trong kho, dùng để nhận biết câu trùng giữa các đề
+  baseId: string;             // id câu trong kho, dạng "pool-bo-1-3-07"; dùng để nhận biết câu trùng giữa các đề
   domain: ExamDomain | string | null; // Bộ 1: ExamDomain (2 câu null = chưa phân loại);
                               // Bộ 2: tên danh mục dịch vụ AWS, vd "AWS Compute"
   prompt: string;             // tiếng Anh, giống đề thật
-  options: ExamOption[];      // 4 lựa chọn; câu Select TWO có 5
-  correct: string[];          // 1 id, hoặc 2 id với câu Select TWO
-  explanation: string;        // tiếng Việt, mấu chốt của câu
+  options: ExamOption[];      // 4 lựa chọn; Select TWO có 5, Select THREE có 6
+  correct: string[];          // 1 id, hoặc 2–3 id với câu Select TWO/THREE
+  explanation: string;        // tiếng Anh, giải thích đáp án
   optionExplanations: Record<string, string>; // giải thích cho từng lựa chọn, key là option id; "" = không có
   hint?: string;
   reviewPage?: string;        // slug trang ôn trong /aws-saa-c03/; "" = không có
@@ -57,6 +55,6 @@ type ExamIndex = {
 
 ## Thay bằng câu hỏi mới
 
-1. Ghi đè `bo-<x>/<n>.json` theo kiểu `Exam`, đặt `mock: false`.
+1. Ghi đè `bo-<x>/<n>.json` theo kiểu `Exam`, đặt `mock: false`. Không giữ tên riêng (domain, bucket, tên người, địa danh) của nguồn đề.
 2. Cập nhật `index.json` nếu đổi số câu hoặc thời gian.
 3. Chạy `npm run build`. File sai định dạng sẽ làm build lỗi.
