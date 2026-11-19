@@ -382,7 +382,7 @@
       "notAllowed": "Email này chưa được cấp quyền vào tab Luyện đề. Hãy dùng tài khoản khác hoặc liên hệ người quản lý.",
       "generic": "Đăng nhập không thành công. Vui lòng thử lại."
     },
-    "signedInAs": "Đang đăng nhập: {email}",
+    "signedInAs": "Đang đăng nhập: {name}",
     "signOut": "Đăng xuất"
   },
   "NotFound": {

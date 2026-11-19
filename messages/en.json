@@ -382,7 +382,7 @@
       "notAllowed": "This email is not allowed to access the practice exams. Use another account or contact the maintainer.",
       "generic": "Sign-in failed. Please try again."
     },
-    "signedInAs": "Signed in as {email}",
+    "signedInAs": "Signed in as {name}",
     "signOut": "Sign out"
   },
   "NotFound": {

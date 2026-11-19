@@ -27,7 +27,7 @@ export default async function ExamsAccountBar({
         {tHistory("link")}
       </Link>
       <span className="min-w-0 truncate text-text-muted">
-        {t("signedInAs", { email: user.email })}
+        {t("signedInAs", { name: user.name ?? user.email ?? "" })}
       </span>
       <form action={signOutFromExams.bind(null, locale)}>
         <button
