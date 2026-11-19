@@ -319,6 +319,10 @@
       "body": "Time ran out while you were away. You answered {count}/{total} questions.",
       "submit": "Submit answered questions",
       "discard": "Discard this attempt"
+    },
+    "saveError": {
+      "signInRequired": "Your attempt was graded but not saved to your history because your session is outdated. Sign out and sign in again so future attempts are saved.",
+      "failed": "Your attempt was graded but could not be saved to your history due to a server error."
     }
   },
   "History": {

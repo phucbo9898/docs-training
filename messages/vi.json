@@ -319,6 +319,10 @@
       "body": "Thời gian làm bài đã hết khi bạn rời trang. Bạn đã làm {count}/{total} câu.",
       "submit": "Nộp với các câu đã làm",
       "discard": "Bỏ bài này"
+    },
+    "saveError": {
+      "signInRequired": "Đã chấm bài nhưng kết quả chưa được lưu vào lịch sử vì phiên đăng nhập cũ. Hãy đăng xuất rồi đăng nhập lại để các lần sau được lưu.",
+      "failed": "Đã chấm bài nhưng chưa lưu được kết quả vào lịch sử do lỗi máy chủ."
     }
   },
   "History": {

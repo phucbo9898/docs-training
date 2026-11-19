@@ -12,28 +12,36 @@ import { getExam } from "./load";
 import { gradeExam, type ExamGrade } from "./score";
 import type { Exam } from "./types";
 
+/**
+ * Vì sao không lưu được: `signInRequired` là phiên cũ chưa có user id,
+ * `failed` là lỗi DB (vd chưa cấu hình `DATABASE_URL`).
+ */
+export type SaveError = "signInRequired" | "failed";
+
 export type SubmitExamResult =
   | {
       ok: true;
-      attemptId: number;
+      /** `null`: đã chấm nhưng không lưu được, xem `saveError`. */
+      attemptId: number | null;
+      saveError: SaveError | null;
       score: number;
       total: number;
       grade: ExamGrade;
       /** Exam mode: đề đầy đủ để chữa đề. Practice mode đã có sẵn nên `null`. */
       exam: Exam | null;
     }
-  | { ok: false; error: "unauthorized" | "notFound" | "invalid" | "failed" };
+  | { ok: false; error: "unauthorized" | "notFound" | "invalid" };
 
 /**
  * Nộp bài (cả hai chế độ): chấm ở server theo đáp án trong file đề, ghi DB
- * đúng một lần, trả điểm và id lần làm. Server Action là endpoint POST công
+ * đúng một lần, trả điểm và id lần làm. Lưu là phụ: lưu lỗi vẫn trả kết quả
+ * chấm để nộp bài không bị chặn. Server Action là endpoint POST công
  * khai: tự kiểm tra phiên, không dựa vào proxy, không nhận user id hay điểm từ
  * client.
  */
 export async function submitExam(input: unknown): Promise<SubmitExamResult> {
   const user = await getExamUser();
-  // Phiên cũ chưa có id: coi như chưa đăng nhập để người dùng đăng nhập lại.
-  if (!user?.id) return { ok: false, error: "unauthorized" };
+  if (!user) return { ok: false, error: "unauthorized" };
 
   const parsed = submissionSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: "invalid" };
@@ -46,31 +54,40 @@ export async function submitExam(input: unknown): Promise<SubmitExamResult> {
   if (!answers) return { ok: false, error: "invalid" };
 
   const grade = gradeExam(exam, answers);
-  try {
-    const attemptId = await insertAttempt({
-      userId: user.id,
-      examId: toExamId(exam.source, exam.number),
-      mode,
-      score: grade.score.correct,
-      total: grade.score.total,
-      answers,
-      durationS: attemptDuration(
+  let attemptId: number | null = null;
+  let saveError: SaveError | null = null;
+  if (!user.id) {
+    // Phiên cũ chưa có id: vẫn chấm, chỉ không lưu được.
+    saveError = "signInRequired";
+  } else {
+    try {
+      attemptId = await insertAttempt({
+        userId: user.id,
+        examId: toExamId(exam.source, exam.number),
         mode,
-        startedAt,
-        Date.now(),
-        exam.durationMinutes,
-      ),
-    });
-    return {
-      ok: true,
-      attemptId,
-      score: grade.score.correct,
-      total: grade.score.total,
-      grade,
-      exam: mode === "exam" ? exam : null,
-    };
-  } catch (error) {
-    console.error("submitExam: không lưu được kết quả", error);
-    return { ok: false, error: "failed" };
+        score: grade.score.correct,
+        total: grade.score.total,
+        answers,
+        durationS: attemptDuration(
+          mode,
+          startedAt,
+          Date.now(),
+          exam.durationMinutes,
+        ),
+      });
+    } catch (error) {
+      console.error("submitExam: không lưu được kết quả", error);
+      saveError = "failed";
+    }
   }
+
+  return {
+    ok: true,
+    attemptId,
+    saveError,
+    score: grade.score.correct,
+    total: grade.score.total,
+    grade,
+    exam: mode === "exam" ? exam : null,
+  };
 }

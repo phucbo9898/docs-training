@@ -12,8 +12,8 @@ import {
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { submitExam } from "@/lib/exams/actions";
-import { questionStatus, type ExamGrade } from "@/lib/exams/score";
+import { submitExam, type SaveError } from "@/lib/exams/actions";
+import { gradeExam, questionStatus, type ExamGrade } from "@/lib/exams/score";
 import {
   clearProgress,
   loadProgress,
@@ -48,6 +48,8 @@ type Finished = ExamProgress & {
   finishedAt: number;
   exam: Exam;
   grade: ExamGrade;
+  /** Đã chấm nhưng chưa lưu được vào lịch sử (không chặn việc xem kết quả). */
+  saveError: SaveError | null;
 };
 
 type SubmitError = "unauthorized" | "failed";
@@ -196,7 +198,12 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
   }, []);
 
   const finish = useCallback(
-    (snapshot: ExamProgress, fullExam: Exam, grade: ExamGrade) => {
+    (
+      snapshot: ExamProgress,
+      fullExam: Exam,
+      grade: ExamGrade,
+      saveError: SaveError | null,
+    ) => {
       // Chỉ xóa bài làm dở khi đã chấm xong: nộp lỗi thì vẫn làm tiếp được.
       clearProgress(key);
       setFinished({
@@ -204,6 +211,7 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
         finishedAt: Date.now(),
         exam: fullExam,
         grade,
+        saveError,
       });
       setPhase("result");
       window.scrollTo({ top: 0 });
@@ -219,7 +227,21 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
     setSubmitError(null);
     const snapshot = progress;
 
-    // Cả hai chế độ đều nộp lên server: chấm lại theo đề và lưu kết quả một lần.
+    // Practice mode đã có đáp án: server lỗi thì vẫn chấm tại chỗ như trước,
+    // chỉ là không lưu được vào lịch sử.
+    const gradeLocally = (saveError: SaveError) => {
+      if (!practiceExam) return false;
+      finish(
+        snapshot,
+        practiceExam,
+        gradeExam(practiceExam, snapshot.answers),
+        saveError,
+      );
+      return true;
+    };
+
+    // Nộp lên server để chấm lại theo đề và lưu kết quả một lần. Lưu lỗi
+    // không chặn nộp bài: server vẫn trả điểm, kèm `saveError`.
     submittingRef.current = true;
     startSubmit(async () => {
       try {
@@ -233,15 +255,16 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
         const fullExam = result.ok ? (practiceExam ?? result.exam) : null;
         if (result.ok && fullExam) {
           keepOnLeaveRef.current = false;
-          finish(snapshot, fullExam, result.grade);
+          finish(snapshot, fullExam, result.grade, result.saveError);
         } else if (!result.ok && result.error === "unauthorized") {
+          if (gradeLocally("signInRequired")) return;
           keepOnLeaveRef.current = true;
           setSubmitError("unauthorized");
-        } else {
+        } else if (!gradeLocally("failed")) {
           setSubmitError("failed");
         }
       } catch {
-        setSubmitError("failed");
+        if (!gradeLocally("failed")) setSubmitError("failed");
       } finally {
         submittingRef.current = false;
       }
@@ -349,6 +372,14 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
   if (phase !== "doing" && finished) {
     return (
       <div className="page-fade mx-auto w-full max-w-6xl px-4 py-8 md:px-8">
+        {finished.saveError ? (
+          <p
+            role="status"
+            className="mb-6 rounded-lg border border-warning bg-warning/10 p-4 text-text"
+          >
+            {t(`saveError.${finished.saveError}`)}
+          </p>
+        ) : null}
         {phase === "result" ? (
           <ExamResult
             exam={finished.exam}
