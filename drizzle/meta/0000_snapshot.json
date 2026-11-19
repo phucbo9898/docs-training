@@ -1,5 +1,5 @@
 {
-  "id": "bbe1d2ee-4eca-4f63-840b-fe5fb3e925a8",
+  "id": "deb5720c-e8dc-4343-b127-0c9206790f7d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -66,6 +66,27 @@
         }
       },
       "indexes": {
+        "attempts_user_created_idx": {
+          "name": "attempts_user_created_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "attempts_user_exam_created_idx": {
           "name": "attempts_user_exam_created_idx",
           "columns": [

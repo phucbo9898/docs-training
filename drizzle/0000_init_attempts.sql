@@ -11,4 +11,5 @@ CREATE TABLE "attempts" (
 	CONSTRAINT "attempts_mode_check" CHECK ("attempts"."mode" in ('practice', 'exam'))
 );
 --> statement-breakpoint
+CREATE INDEX "attempts_user_created_idx" ON "attempts" USING btree ("user_id","created_at" DESC NULLS LAST);--> statement-breakpoint
 CREATE INDEX "attempts_user_exam_created_idx" ON "attempts" USING btree ("user_id","exam_id","created_at" DESC NULLS LAST);

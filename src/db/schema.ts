@@ -35,6 +35,9 @@ export const attempts = pgTable(
       .defaultNow(),
   },
   (table) => [
+    // Trang lịch sử (lọc theo user, có thể thêm mode) và thống kê.
+    index("attempts_user_created_idx").on(table.userId, table.createdAt.desc()),
+    // Theo từng đề: chống nộp trùng trong action, lịch sử theo đề sau này.
     index("attempts_user_exam_created_idx").on(
       table.userId,
       table.examId,
