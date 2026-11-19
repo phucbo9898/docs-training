@@ -1,7 +1,7 @@
 {
   "source": "bo-2",
   "number": 3,
-  "title": "AWS Certified Solutions Architect Associate Practice Exams – Đề 3",
+  "title": "AWS SAA-C03 – Đề 3",
   "durationMinutes": 130,
   "passPercent": 72,
   "mock": false,
@@ -9,7 +9,7 @@
     {
       "id": "bo-2-3-01",
       "number": 1,
-      "baseId": "custom-4493440-01",
+      "baseId": "pool-bo-2-3-01",
       "domain": "AWS Compute",
       "prompt": "A retail company runs an on-premises application that uses Java Spring Boot on Windows servers. The application is resource-intensive and handles customer-facing operations. The company wants to modernize the application by migrating it to a containerized environment running on AWS. The new solution must automatically scale based on Amazon CloudWatch metrics and minimize operational overhead for managing infrastructure.\n\nWhich solution will meet these requirements with the LEAST operational overhead?",
       "options": [
@@ -45,7 +45,7 @@
     {
       "id": "bo-2-3-02",
       "number": 2,
-      "baseId": "custom-4493440-02",
+      "baseId": "pool-bo-2-3-02",
       "domain": "AWS Database",
       "prompt": "A company runs its critical payment processing application on an Amazon Aurora MySQL cluster in the ap-southeast-1 Region. As part of its disaster recovery (DR) strategy, the company has selected the ap-northeast-1 Region for failover capabilities.\n\nThe company requires a recovery point objective (RPO) of less than 5 minutes and a recovery time objective (RTO) of no more than 15 minutes. The company also wants to minimize operational overhead and ensure failover happens with minimal downtime and configuration.\n\nWhich solution will meet these requirements with the MOST operational efficiency?",
       "options": [
@@ -81,7 +81,7 @@
     {
       "id": "bo-2-3-03",
       "number": 3,
-      "baseId": "custom-4493440-03",
+      "baseId": "pool-bo-2-3-03",
       "domain": "AWS Storage",
       "prompt": "A company requires a high-performance file system that can be mounted on Amazon EC2 Windows instances and Amazon EC2 Linux instances. Applications running on the EC2 instances perform separate processing of the same files and the solution must provide a file system that can be mounted by all instances simultaneously.\n\nWhich solution meets these requirements?",
       "options": [
@@ -117,7 +117,7 @@
     {
       "id": "bo-2-3-04",
       "number": 4,
-      "baseId": "custom-4493440-04",
+      "baseId": "pool-bo-2-3-04",
       "domain": "AWS Database",
       "prompt": "A gaming company collects real-time data and stores it in an on-premises database system. The company are migrating to AWS and need better performance for the database. A solutions architect has been asked to recommend an in-memory database that supports data replication.\n\nWhich database should a solutions architect recommend?",
       "options": [
@@ -153,7 +153,7 @@
     {
       "id": "bo-2-3-05",
       "number": 5,
-      "baseId": "custom-4493440-05",
+      "baseId": "pool-bo-2-3-05",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "A company has deployed an API in a VPC behind an internal Network Load Balancer (NLB). An application that consumes the API as a client is deployed in a second account in private subnets.\n\nWhich architectural configurations will allow the API to be consumed without using the public Internet? (Select TWO.)",
       "options": [
@@ -195,7 +195,7 @@
     {
       "id": "bo-2-3-06",
       "number": 6,
-      "baseId": "custom-4493440-06",
+      "baseId": "pool-bo-2-3-06",
       "domain": "AWS Storage",
       "prompt": "A research organization is planning to migrate its simulation analysis platform to AWS. The platform stores simulation results and logs on an on-premises NFS server. The platform's codebase is legacy and cannot be modified to use any protocol other than NFS to store and retrieve data. The organization needs a storage solution on AWS that supports NFS and is highly available and scalable.\n\nWhich storage solution should a solutions architect recommend for use after the migration?",
       "options": [
@@ -231,7 +231,7 @@
     {
       "id": "bo-2-3-07",
       "number": 7,
-      "baseId": "custom-4493440-07",
+      "baseId": "pool-bo-2-3-07",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "An online education company is launching a new e-learning platform on AWS. The platform will run on Amazon EC2 instances deployed across multiple Availability Zones in multiple AWS Regions. Students worldwide will access the platform through the internet to stream educational content. The company wants to ensure that each student is directed to the EC2 instances in the Region that is geographically closest to their location. The solution must provide high availability and efficient traffic routing.\n\nWhich solution will meet these requirements?",
       "options": [
@@ -267,7 +267,7 @@
     {
       "id": "bo-2-3-08",
       "number": 8,
-      "baseId": "custom-4493440-08",
+      "baseId": "pool-bo-2-3-08",
       "domain": "AWS Storage",
       "prompt": "A financial services company runs a credit evaluation system in a private subnet behind an Application Load Balancer (ALB) in a VPC. The VPC includes a NAT gateway and an internet gateway. The system analyzes customer credit data and uploads the results to Amazon S3 for reporting.\n\nThe company has strict regulatory requirements stating that all data traffic must remain within AWS’s private network and must not traverse the public internet. Additionally, the company wants to implement a cost-effective solution while ensuring compliance.\n\nWhich solution will meet these requirements MOST cost-effectively?",
       "options": [
@@ -303,7 +303,7 @@
     {
       "id": "bo-2-3-09",
       "number": 9,
-      "baseId": "custom-4493440-09",
+      "baseId": "pool-bo-2-3-09",
       "domain": "AWS Security, Identity, & Compliance",
       "prompt": "A research institute uses an Amazon Elastic Kubernetes Service (Amazon EKS) cluster to run machine learning workloads. The institute must ensure that Kubernetes service accounts within the EKS cluster have secure, fine-grained access to specific AWS resources for model training and data processing. The solution must use IAM roles for service accounts (IRSA) to meet these requirements.\n\nWhich combination of solutions will meet these requirements? (Select TWO.)",
       "options": [
@@ -345,7 +345,7 @@
     {
       "id": "bo-2-3-10",
       "number": 10,
-      "baseId": "custom-4493440-10",
+      "baseId": "pool-bo-2-3-10",
       "domain": "AWS Compute",
       "prompt": "A company’s staff connect from home office locations to administer applications using bastion hosts in a single AWS Region. The company requires a resilient bastion host architecture that requires minimal ongoing operational overhead.\n\nHow can a Solutions Architect best meet these requirements?",
       "options": [
@@ -381,7 +381,7 @@
     {
       "id": "bo-2-3-11",
       "number": 11,
-      "baseId": "custom-4493440-11",
+      "baseId": "pool-bo-2-3-11",
       "domain": "AWS Management & Governance",
       "prompt": "A security officer requires that access to company financial reports is logged. The reports are stored in an Amazon S3 bucket. Additionally, any modifications to the log files must be detected.\n\nWhich actions should a solutions architect take?",
       "options": [
@@ -417,7 +417,7 @@
     {
       "id": "bo-2-3-12",
       "number": 12,
-      "baseId": "custom-4493440-12",
+      "baseId": "pool-bo-2-3-12",
       "domain": "AWS Storage",
       "prompt": "A company requires a fully managed replacement for an on-premises storage service. The company’s employees often work remotely from various locations. The solution should also be easily accessible to systems connected to the on-premises environment.\n\nWhich solution meets these requirements?",
       "options": [
@@ -453,7 +453,7 @@
     {
       "id": "bo-2-3-13",
       "number": 13,
-      "baseId": "custom-4493440-13",
+      "baseId": "pool-bo-2-3-13",
       "domain": "AWS Storage",
       "prompt": "A company needs to implement a new data retention policy for regulatory compliance. As part of this policy, sensitive documents that are stored in an Amazon S3 bucket must be protected from deletion or modification for a fixed period of time.\n\nWhich solution will meet these requirements?",
       "options": [
@@ -489,7 +489,7 @@
     {
       "id": "bo-2-3-14",
       "number": 14,
-      "baseId": "custom-4493440-14",
+      "baseId": "pool-bo-2-3-14",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "An application consists of a web tier in a public subnet and a MySQL cluster hosted on Amazon EC2 instances in a private subnet. The MySQL instances must retrieve product data from a third-party provider over the internet. A Solutions Architect must determine a strategy to enable this access with maximum security and minimum operational overhead.\n\nWhat should the Solutions Architect do to meet these requirements?",
       "options": [
@@ -525,7 +525,7 @@
     {
       "id": "bo-2-3-15",
       "number": 15,
-      "baseId": "custom-4493440-15",
+      "baseId": "pool-bo-2-3-15",
       "domain": "AWS Security, Identity, & Compliance",
       "prompt": "A healthcare startup is building a cloud-based patient management system on AWS. The system processes sensitive health data and uses Amazon RDS for the database, Amazon S3 for storing medical reports, and AWS Lambda for processing event-driven workflows triggered by S3 Event Notifications.\n\nThe startup uses AWS IAM Identity Center to manage user authentication. The development, testing, and operations teams need secure access to RDS and S3 while ensuring compliance with healthcare regulations that mandate least privilege access and centralized access control.\n\nWhich solution meets these requirements with the LEAST operational overhead?",
       "options": [
@@ -561,7 +561,7 @@
     {
       "id": "bo-2-3-16",
       "number": 16,
-      "baseId": "custom-4493440-16",
+      "baseId": "pool-bo-2-3-16",
       "domain": "AWS Compute",
       "prompt": "A company has deployed an application that consists of several microservices running on Amazon EC2 instances behind an Amazon API Gateway API. A Solutions Architect is concerned that the microservices are not designed to elastically scale when large increases in demand occur.\n\nWhich solution addresses this concern?",
       "options": [
@@ -597,7 +597,7 @@
     {
       "id": "bo-2-3-17",
       "number": 17,
-      "baseId": "custom-4493440-17",
+      "baseId": "pool-bo-2-3-17",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "A company has created an application that stores sales performance data in an Amazon DynamoDB table. A web application is being created to display the data. A Solutions Architect must design the web application using managed services that require minimal operational maintenance.\n\nWhich architectures meet these requirements? (Select TWO.)",
       "options": [
@@ -639,7 +639,7 @@
     {
       "id": "bo-2-3-18",
       "number": 18,
-      "baseId": "custom-4493440-18",
+      "baseId": "pool-bo-2-3-18",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "A Solutions Architect is designing a solution for an application that requires very low latency between the client and the backend. The application uses the UDP protocol, and the backend is hosted on Amazon EC2 instances. The solution must be highly available across multiple Regions and users around the world should be directed to the most appropriate Region based on performance.\n\nHow can the Solutions Architect meet these requirements?",
       "options": [
@@ -675,7 +675,7 @@
     {
       "id": "bo-2-3-19",
       "number": 19,
-      "baseId": "custom-4493440-19",
+      "baseId": "pool-bo-2-3-19",
       "domain": "AWS Security, Identity, & Compliance",
       "prompt": "A government agency is moving its document management system to AWS. The application will store classified documents in Amazon S3. The agency must encrypt the documents before storing them in S3 to ensure compliance with strict data security regulations.\n\nWhich solution will meet these requirements?",
       "options": [
@@ -711,7 +711,7 @@
     {
       "id": "bo-2-3-20",
       "number": 20,
-      "baseId": "custom-4493440-20",
+      "baseId": "pool-bo-2-3-20",
       "domain": "AWS Migration & Transfer",
       "prompt": "A logistics company needs to replicate ongoing data changes from an on-premises Microsoft SQL Server database to Amazon RDS for SQL Server. The volume of data to replicate varies throughout the day due to periodic spikes in activity. The company plans to use AWS Database Migration Service (AWS DMS) for this task. The solution must dynamically allocate capacity based on workload demand while keeping operational overhead low.\n\nWhich solution will meet these requirements?",
       "options": [
@@ -747,7 +747,7 @@
     {
       "id": "bo-2-3-21",
       "number": 21,
-      "baseId": "custom-4493440-21",
+      "baseId": "pool-bo-2-3-21",
       "domain": "AWS Storage",
       "prompt": "An educational content provider has accumulated several terabytes of learning resources in an Amazon S3 bucket located in a specific AWS Region. A partner organization, based in a different AWS Region, has been granted access to the S3 bucket to retrieve the resources for integration into its own platform. The content provider wants to minimize its data transfer costs when the partner organization accesses the S3 bucket.\n\nWhich solution will meet these requirements?",
       "options": [
@@ -783,7 +783,7 @@
     {
       "id": "bo-2-3-22",
       "number": 22,
-      "baseId": "custom-4493440-22",
+      "baseId": "pool-bo-2-3-22",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "A streaming service company runs its video recommendation engine on an Amazon EC2 Auto Scaling group behind an Application Load Balancer (ALB) in a single AWS Region. The service generates personalized recommendations based on user activity and serves dynamic content to millions of users worldwide.\n\nThe company needs a cost-optimized solution to improve performance and scalability while ensuring that users across the globe experience low latency when accessing personalized recommendations.\n\nWhich solution will meet these requirements?",
       "options": [
@@ -819,7 +819,7 @@
     {
       "id": "bo-2-3-23",
       "number": 23,
-      "baseId": "custom-4493440-23",
+      "baseId": "pool-bo-2-3-23",
       "domain": "AWS Database",
       "prompt": "An online store uses an Amazon Aurora database. The database is deployed as a Multi-AZ deployment. Recently, metrics have shown that database read requests are high and causing performance issues which result in latency for write requests.\n\nWhat should the solutions architect do to separate the read requests from the write requests?",
       "options": [
@@ -855,7 +855,7 @@
     {
       "id": "bo-2-3-24",
       "number": 24,
-      "baseId": "custom-4493440-24",
+      "baseId": "pool-bo-2-3-24",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "A company hosts statistical data in an Amazon S3 bucket that users around the world download from their website using a URL that resolves to a domain name. The company needs to provide low latency access to users and plans to use Amazon Route 53 for hosting DNS records.\n\nWhich solution meets these requirements?",
       "options": [
@@ -891,7 +891,7 @@
     {
       "id": "bo-2-3-25",
       "number": 25,
-      "baseId": "custom-4493440-25",
+      "baseId": "pool-bo-2-3-25",
       "domain": "AWS Database",
       "prompt": "A company runs a business-critical application in the us-east-1 Region. The application uses an Amazon Aurora MySQL database cluster which is 2 TB in size. A Solutions Architect needs to determine a disaster recovery strategy for failover to the us-west-2 Region. The strategy must provide a recovery time objective (RTO) of 10 minutes and a recovery point objective (RPO) of 5 minutes.\n\nWhich strategy will meet these requirements?",
       "options": [
@@ -927,7 +927,7 @@
     {
       "id": "bo-2-3-26",
       "number": 26,
-      "baseId": "custom-4493440-26",
+      "baseId": "pool-bo-2-3-26",
       "domain": "AWS Storage",
       "prompt": "A Solutions Architect works for a company looking to centralize its Machine Learning Operations. Currently they have a large amount of existing cloud storage to store their operational data which is used for machine learning analysis. There is some data which exists within an Amazon RDS MySQL database, and they need a solution which can easily retrieve data from the database.\n\nWhich service can be used to build a centralized data repository to be used for Machine Learning purposes?",
       "options": [
@@ -963,7 +963,7 @@
     {
       "id": "bo-2-3-27",
       "number": 27,
-      "baseId": "custom-4493440-27",
+      "baseId": "pool-bo-2-3-27",
       "domain": "AWS Security, Identity, & Compliance",
       "prompt": "A Solutions Architect created the following policy and associated to an AWS IAM group containing several administrative users:\n\n{\n\n   \"Version\": \"2012-10-17\",\n\n    \"Statement\": [\n\n    {\n\n            \"Effect\": \"Allow\",\n\n            \"Action\": \"ec2:TerminateInstances\",\n\n            \"Resource\": \"*\",\n\n            \"Condition\": {\n\n                     \"IpAddress\": {\n\n                          \"aws:SourceIp\": \"10.1.2.0/24\"\n\n                   }\n\n             }\n\n    },\n\n   {\n\n                    \"Effect\": \"Deny\",\n\n                    \"Action\": \"ec2:*\",\n\n                     \"Resource\": \"*\",\n\n                     \"Condition\": {\n\n                           \"StringNotEquals\": {\n\n                                       \"ec2:Region\": \"us-east-1\"\n\n                            }\n\n                      }\n\n                 }\n\n           ]\n\n   }\n\nWhat is the effect of this policy?",
       "options": [
@@ -999,7 +999,7 @@
     {
       "id": "bo-2-3-28",
       "number": 28,
-      "baseId": "custom-4493440-28",
+      "baseId": "pool-bo-2-3-28",
       "domain": "AWS Storage",
       "prompt": "A company needs to migrate a large quantity of data from an on-premises environment to Amazon S3. The company is connected via an AWS Direct Connect (DX) connection. The company requires a fully managed solution that will keep the data private and automate and accelerate the replication of the data to AWS storage services.\n\nWhich solution should a Solutions Architect recommend?",
       "options": [
@@ -1035,7 +1035,7 @@
     {
       "id": "bo-2-3-29",
       "number": 29,
-      "baseId": "custom-4493440-29",
+      "baseId": "pool-bo-2-3-29",
       "domain": "AWS Security, Identity, & Compliance",
       "prompt": "A solutions architect is designing a microservices architecture. AWS Lambda will store data in an Amazon DynamoDB table named Orders. The solutions architect needs to apply an IAM policy to the Lambda function’s execution role to allow it to put, update, and delete items in the Orders table. No other actions should be allowed.\n\nWhich of the following code snippets should be included in the IAM policy to fulfill this requirement whilst providing the LEAST privileged access?",
       "options": [
@@ -1071,7 +1071,7 @@
     {
       "id": "bo-2-3-30",
       "number": 30,
-      "baseId": "custom-4493440-30",
+      "baseId": "pool-bo-2-3-30",
       "domain": "AWS Compute",
       "prompt": "A company wants to use Amazon Elastic Container Service (Amazon ECS) to run its containerized application in a hybrid environment. The company needs to ensure that the application can scale across both on-premises and AWS environments. It also requires a load balancer to handle HTTP traffic for the new containers that will run in the AWS Cloud.\n\nWhich combination of actions will meet these requirements? (Select TWO.)",
       "options": [
@@ -1113,7 +1113,7 @@
     {
       "id": "bo-2-3-31",
       "number": 31,
-      "baseId": "custom-4493440-31",
+      "baseId": "pool-bo-2-3-31",
       "domain": "AWS Storage",
       "prompt": "An application runs on Amazon EC2 Linux instances. The application generates log files which are written using standard API calls. A storage solution is required that can be used to store the files indefinitely and must allow concurrent access to all files.\n\nWhich storage service meets these requirements and is the MOST cost-effective?",
       "options": [
@@ -1149,7 +1149,7 @@
     {
       "id": "bo-2-3-32",
       "number": 32,
-      "baseId": "custom-4493440-32",
+      "baseId": "pool-bo-2-3-32",
       "domain": "AWS Storage",
       "prompt": "A Solutions Architect has been tasked with migrating 30 TB of data from an on-premises data center within 20 days. The company has an internet connection that is limited to 25 Mbps and the data transfer cannot use more than 50% of the connection speed.\n\nWhat should a Solutions Architect do to meet these requirements?",
       "options": [
@@ -1185,7 +1185,7 @@
     {
       "id": "bo-2-3-33",
       "number": 33,
-      "baseId": "custom-4493440-33",
+      "baseId": "pool-bo-2-3-33",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "A company has created a disaster recovery solution for an application that runs behind an Application Load Balancer (ALB). The DR solution consists of a second copy of the application running behind a second ALB in another Region. The Solutions Architect requires a method of automatically updating the DNS record to point to the ALB in the second Region.\n\nWhat action should the Solutions Architect take?",
       "options": [
@@ -1221,7 +1221,7 @@
     {
       "id": "bo-2-3-34",
       "number": 34,
-      "baseId": "custom-4493440-34",
+      "baseId": "pool-bo-2-3-34",
       "domain": "AWS Storage",
       "prompt": "A scientific research organization runs an on-premises simulation application that processes large datasets. The organization has migrated all simulation data to Amazon S3 to reduce costs. The simulation application requires low-latency storage access for seamless performance during processing tasks.\n\nThe organization needs to design a storage solution that minimizes costs while maintaining the performance requirements of the application.\n\nWhich storage solution will meet these requirements in the MOST cost-effective way?",
       "options": [
@@ -1257,7 +1257,7 @@
     {
       "id": "bo-2-3-35",
       "number": 35,
-      "baseId": "custom-4493440-35",
+      "baseId": "pool-bo-2-3-35",
       "domain": "AWS Management & Governance",
       "prompt": "A financial services company manages its web application on Amazon EC2 instances. The EC2 instances are registered in an IP address-type target group behind an Application Load Balancer (ALB). The company uses AWS Systems Manager for patching and routine maintenance of the instances.\n\nTo meet security compliance requirements, the company must ensure that EC2 instances are temporarily removed from service during patching to prevent serving traffic. During a recent patching attempt, the company experienced application errors and traffic disruptions.\n\nWhich combination of solutions will resolve these issues? (Select TWO.)",
       "options": [
@@ -1299,7 +1299,7 @@
     {
       "id": "bo-2-3-36",
       "number": 36,
-      "baseId": "custom-4493440-36",
+      "baseId": "pool-bo-2-3-36",
       "domain": "AWS Compute",
       "prompt": "An application runs on a fleet of Amazon EC2 instances in an Amazon EC2 Auto Scaling group behind an Elastic Load Balancer. The operations team has determined that the application performs best when the CPU utilization of the EC2 instances is at or near 60%.\n\nWhich scaling configuration should a Solutions Architect use to optimize the applications performance?",
       "options": [
@@ -1335,7 +1335,7 @@
     {
       "id": "bo-2-3-37",
       "number": 37,
-      "baseId": "custom-4493440-37",
+      "baseId": "pool-bo-2-3-37",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "An organization is extending a secure development environment into AWS. They have already secured the VPC including removing the Internet Gateway and setting up a Direct Connect connection. What else needs to be done to add encryption?",
       "options": [
@@ -1371,7 +1371,7 @@
     {
       "id": "bo-2-3-38",
       "number": 38,
-      "baseId": "custom-4493440-38",
+      "baseId": "pool-bo-2-3-38",
       "domain": "AWS Application Integration",
       "prompt": "An application has multiple components for receiving requests that must be processed and subsequently processing the requests. The company requires a solution for decoupling the application components. The application receives around 10,000 requests per day and requests can take up to 2 days to process. Requests that fail to process must be retained.\n\nWhich solution meets these requirements most efficiently?",
       "options": [
@@ -1407,7 +1407,7 @@
     {
       "id": "bo-2-3-39",
       "number": 39,
-      "baseId": "custom-4493440-39",
+      "baseId": "pool-bo-2-3-39",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "A financial services company needs to set up an Amazon RDS Multi-AZ database to store customer transaction records. The database will serve as the backend for an on-premises financial analysis application. The company requires the on-premises application to connect directly to the RDS database when employees are working from the office.\n\nThe company must ensure the connection is established securely and efficiently.\n\nWhich solution provides the required connectivity MOST securely?",
       "options": [
@@ -1443,7 +1443,7 @@
     {
       "id": "bo-2-3-40",
       "number": 40,
-      "baseId": "custom-4493440-40",
+      "baseId": "pool-bo-2-3-40",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "A company is deploying a solution for sharing media files around the world using Amazon CloudFront with an Amazon S3 origin configured as a static website. The company requires that all traffic for the website must be inspected by AWS WAF.\n\nWhich solution meets these requirements?",
       "options": [
@@ -1479,7 +1479,7 @@
     {
       "id": "bo-2-3-41",
       "number": 41,
-      "baseId": "custom-4493440-41",
+      "baseId": "pool-bo-2-3-41",
       "domain": "AWS Compute",
       "prompt": "A company operates a production environment on Amazon EC2 instances. The instances are required to run continuously from Tuesday to Sunday without interruptions. On Mondays, the instances are needed for only 8 hours, and they also cannot tolerate interruptions. The company wants to implement a cost-effective solution to optimize EC2 usage while meeting these requirements.\n\nWhich solution will provide the MOST cost-effective results?",
       "options": [
@@ -1515,7 +1515,7 @@
     {
       "id": "bo-2-3-42",
       "number": 42,
-      "baseId": "custom-4493440-42",
+      "baseId": "pool-bo-2-3-42",
       "domain": "AWS Storage",
       "prompt": "A company has on-premises file servers that include both Windows SMB and Linux NFS protocols. The company plans to migrate to AWS and consolidate these file servers into a managed cloud solution. The chosen solution must support both NFS and SMB access, provide protocol sharing, and offer redundancy at the Availability Zone level.\n\nWhich solution will meet these requirements?",
       "options": [
@@ -1551,7 +1551,7 @@
     {
       "id": "bo-2-3-43",
       "number": 43,
-      "baseId": "custom-4493440-43",
+      "baseId": "pool-bo-2-3-43",
       "domain": "AWS Compute",
       "prompt": "A company is migrating its legacy customer support applications from an on-premises data center to AWS. Each application runs on a dedicated virtual machine and relies on proprietary software that cannot be modified. The applications must remain highly available and continue to operate in the event of a single Availability Zone failure. The company wants to minimize changes to its architecture and operational overhead.\n\nWhich solution will meet these requirements?",
       "options": [
@@ -1587,7 +1587,7 @@
     {
       "id": "bo-2-3-44",
       "number": 44,
-      "baseId": "custom-4493440-44",
+      "baseId": "pool-bo-2-3-44",
       "domain": "AWS Storage",
       "prompt": "A company recently performed a lift and shift migration of its on-premises Oracle database workload to run on an Amazon EC2 memory-optimized Linux instance. The EC2 Linux instance uses a 1 TB Provisioned IOPS SSD (io1) EBS volume with 64,000 IOPS. The database storage performance after the migration is slower than the performance of the on-premises database.\n\nWhich solution will improve storage performance?",
       "options": [
@@ -1623,7 +1623,7 @@
     {
       "id": "bo-2-3-45",
       "number": 45,
-      "baseId": "custom-4493440-45",
+      "baseId": "pool-bo-2-3-45",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "A research organization runs its photo analysis application on AWS. The application processes images uploaded by field scientists and stores them temporarily on an Amazon EC2 instance's locally attached Amazon Elastic Block Store (Amazon EBS) volume. Every evening, the processed images are uploaded to an Amazon S3 bucket for long-term storage.\n\nThe solutions architect has discovered that the images are being uploaded to S3 through the public internet. The organization wants to ensure that the upload traffic to Amazon S3 remains private and does not use the public internet.\n\nWhich solution will meet these requirements?",
       "options": [
@@ -1659,7 +1659,7 @@
     {
       "id": "bo-2-3-46",
       "number": 46,
-      "baseId": "custom-4493440-46",
+      "baseId": "pool-bo-2-3-46",
       "domain": "AWS Compute",
       "prompt": "A Solutions Architect working for a large financial institution is building an application to manage their customers financial information and their sensitive personal information. The Solutions Architect requires that the storage layer can store immutable data out of the box, with the ability to encrypt the data at rest and requires that the storage layer provides ACID properties. They also want to use a containerized solution to manage the compute layer.\n\nWhich solution will meet these requirements with the LEAST amount of operational overhead?",
       "options": [
@@ -1695,7 +1695,7 @@
     {
       "id": "bo-2-3-47",
       "number": 47,
-      "baseId": "custom-4493440-47",
+      "baseId": "pool-bo-2-3-47",
       "domain": "AWS Management & Governance",
       "prompt": "An Architect needs to find a way to automatically and repeatably create many member accounts within an AWS Organization. The accounts also need to be moved into an OU and have VPCs and subnets created.\n\nWhat is the best way to achieve this?",
       "options": [
@@ -1731,7 +1731,7 @@
     {
       "id": "bo-2-3-48",
       "number": 48,
-      "baseId": "custom-4493440-48",
+      "baseId": "pool-bo-2-3-48",
       "domain": "AWS Application Integration",
       "prompt": "A web app allows users to upload images for viewing online. The compute layer that processes the images is behind an Auto Scaling group. The processing layer should be decoupled from the front end and the ASG needs to dynamically adjust based on the number of images being uploaded.\n\nHow can this be achieved?",
       "options": [
@@ -1767,7 +1767,7 @@
     {
       "id": "bo-2-3-49",
       "number": 49,
-      "baseId": "custom-4493440-49",
+      "baseId": "pool-bo-2-3-49",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "A company has a Production VPC and a Pre-Production VPC. The Production VPC uses VPNs through a customer gateway to connect to a single device in an on-premises data center. The Pre-Production VPC uses a virtual private gateway attached to two AWS Direct Connect (DX) connections. Both VPCs are connected using a single VPC peering connection.\n\nHow can a Solutions Architect improve this architecture to remove any single point of failure?",
       "options": [
@@ -1803,7 +1803,7 @@
     {
       "id": "bo-2-3-50",
       "number": 50,
-      "baseId": "custom-4493440-50",
+      "baseId": "pool-bo-2-3-50",
       "domain": "AWS Storage",
       "prompt": "A Solutions Architect must design a solution to allow many Amazon EC2 instances across multiple subnets to access a shared data store. The data must be accessed by all instances simultaneously and access should use the NFS protocol. The solution must also be highly scalable and easy to implement.\n\nWhich solution best meets these requirements?",
       "options": [
@@ -1839,7 +1839,7 @@
     {
       "id": "bo-2-3-51",
       "number": 51,
-      "baseId": "custom-4493440-51",
+      "baseId": "pool-bo-2-3-51",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "An application is deployed on multiple AWS regions and accessed from around the world. The application exposes static public IP addresses. Some users are experiencing poor performance when accessing the application over the Internet.\n\nWhat should a solutions architect recommend to reduce internet latency?",
       "options": [
@@ -1875,7 +1875,7 @@
     {
       "id": "bo-2-3-52",
       "number": 52,
-      "baseId": "custom-4493440-52",
+      "baseId": "pool-bo-2-3-52",
       "domain": "AWS Management & Governance",
       "prompt": "A company manages several applications that run in different AWS accounts within an AWS Organizations setup. The company has outsourced the management of certain applications to external contractors. The contractors require secure access to the AWS Management Console and operating system access to Amazon Linux-based Amazon EC2 instances in private subnets for troubleshooting. The company must ensure all activities are logged and minimize the risk of unauthorized access.\n\nWhich solution will meet these requirements MOST securely?",
       "options": [
@@ -1911,7 +1911,7 @@
     {
       "id": "bo-2-3-53",
       "number": 53,
-      "baseId": "custom-4493440-53",
+      "baseId": "pool-bo-2-3-53",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "A company has experienced malicious traffic from some suspicious IP addresses. The security team discovered the requests are from different IP addresses under the same CIDR range.\n\nWhat should a solutions architect recommend to the team?",
       "options": [
@@ -1947,7 +1947,7 @@
     {
       "id": "bo-2-3-54",
       "number": 54,
-      "baseId": "custom-4493440-54",
+      "baseId": "pool-bo-2-3-54",
       "domain": "AWS Storage",
       "prompt": "A Financial Services company currently stores data in Amazon S3. Each bucket contains items which have different access patterns. The Chief Financial officer of the organization wants to reduce costs, as they have noticed a sharp increase in their S3 bill. The Chief Financial Officer wants to reduce the S3 spend as quickly as possible.\n\nWhat is the quickest way to reduce the S3 spend with the LEAST operational overhead?",
       "options": [
@@ -1983,7 +1983,7 @@
     {
       "id": "bo-2-3-55",
       "number": 55,
-      "baseId": "custom-4493440-55",
+      "baseId": "pool-bo-2-3-55",
       "domain": "AWS Storage",
       "prompt": "An application runs on-premises and produces data that must be stored in a locally accessible file system that servers can mount using the NFS protocol. The data must be subsequently analyzed by Amazon EC2 instances in the AWS Cloud.\n\nHow can these requirements be met?",
       "options": [
@@ -2019,7 +2019,7 @@
     {
       "id": "bo-2-3-56",
       "number": 56,
-      "baseId": "custom-4493440-56",
+      "baseId": "pool-bo-2-3-56",
       "domain": "AWS Compute",
       "prompt": "A gaming company recently launched a multiplayer gaming platform for its users. The platform runs on multiple Amazon EC2 instances across two Availability Zones. Players use TCP to communicate with the platform in real time. The platform must be highly available and automatically scale as the number of players increases, while remaining cost-effective.\n\nWhich combination of steps will meet these requirements MOST cost-effectively? (Select TWO.)",
       "options": [
@@ -2061,7 +2061,7 @@
     {
       "id": "bo-2-3-57",
       "number": 57,
-      "baseId": "custom-4493440-57",
+      "baseId": "pool-bo-2-3-57",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "A shared services VPC is being setup for use by several AWS accounts. An application needs to be securely shared from the shared services VPC. The solution should not allow consumers to connect to other instances in the VPC.\n\nHow can this be setup with the least administrative effort? (Select TWO.)",
       "options": [
@@ -2103,7 +2103,7 @@
     {
       "id": "bo-2-3-58",
       "number": 58,
-      "baseId": "custom-4493440-58",
+      "baseId": "pool-bo-2-3-58",
       "domain": "AWS Compute",
       "prompt": "A company runs a containerized application on an Amazon Elastic Kubernetes Service (EKS) using a microservices architecture. The company requires a solution to collect, aggregate, and summarize metrics and logs. The solution should provide a centralized dashboard for viewing information including CPU and memory utilization for EKS namespaces, services, and pods.\n\nWhich solution meets these requirements?",
       "options": [
@@ -2139,7 +2139,7 @@
     {
       "id": "bo-2-3-59",
       "number": 59,
-      "baseId": "custom-4493440-59",
+      "baseId": "pool-bo-2-3-59",
       "domain": "AWS Compute",
       "prompt": "A video editing company processes high-resolution footage for its clients. Each video file is several terabytes in size and needs to undergo intensive editing, such as applying filters and color grading, before delivery. Processing each video takes up to 25 minutes.\n\nThe company needs a solution that can scale to handle increased demand during peak periods while remaining cost-effective. The processed videos must be accessible for a minimum of 90 days.\n\nWhich solution will meet these requirements?",
       "options": [
@@ -2175,7 +2175,7 @@
     {
       "id": "bo-2-3-60",
       "number": 60,
-      "baseId": "custom-4493440-60",
+      "baseId": "pool-bo-2-3-60",
       "domain": "AWS Storage",
       "prompt": "A high-performance file system is required for a financial modelling application. The data set will be stored on Amazon S3 and the storage solution must have seamless integration so objects can be accessed as files.\n\nWhich storage solution should be used?",
       "options": [
@@ -2211,7 +2211,7 @@
     {
       "id": "bo-2-3-61",
       "number": 61,
-      "baseId": "custom-4493440-61",
+      "baseId": "pool-bo-2-3-61",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "A media company is building a video content distribution platform on AWS. The platform uses an REST API hosted on Amazon API Gateway to serve metadata about the videos, such as titles and descriptions. The metadata is confidential and must be accessible only from a specific set of trusted IP addresses belonging to the company’s office network.\n\nWhich solution will meet these requirements?",
       "options": [
@@ -2247,7 +2247,7 @@
     {
       "id": "bo-2-3-62",
       "number": 62,
-      "baseId": "custom-4493440-62",
+      "baseId": "pool-bo-2-3-62",
       "domain": "AWS Application Integration",
       "prompt": "A company is deploying an application that produces data that must be processed in the order it is received. The company requires a solution for decoupling the event data from the processing layer. The solution must minimize operational overhead.\n\nHow can a Solutions Architect meet these requirements?",
       "options": [
@@ -2283,7 +2283,7 @@
     {
       "id": "bo-2-3-63",
       "number": 63,
-      "baseId": "custom-4493440-63",
+      "baseId": "pool-bo-2-3-63",
       "domain": "AWS Management & Governance",
       "prompt": "A security team wants to limit access to specific services or actions in all of the team's AWS accounts. All accounts belong to a large organization in AWS Organizations. The solution must be scalable and there must be a single point where permissions can be maintained.\n\nWhat should a solutions architect do to accomplish this?",
       "options": [
@@ -2319,7 +2319,7 @@
     {
       "id": "bo-2-3-64",
       "number": 64,
-      "baseId": "custom-4493440-64",
+      "baseId": "pool-bo-2-3-64",
       "domain": "AWS Security, Identity, & Compliance",
       "prompt": "A media streaming company stores user activity logs in an Amazon S3 bucket. The logs are accessed frequently for real-time analytics and reporting. The company enforces strict encryption requirements for data stored in S3 and currently uses AWS Key Management Service (AWS KMS) for encryption.\n\nThe company wants to reduce costs related to encrypting objects in the S3 bucket while maintaining compliance with its encryption requirements and minimizing the number of AWS KMS calls.\n\nWhich solution will meet these requirements?",
       "options": [
@@ -2355,7 +2355,7 @@
     {
       "id": "bo-2-3-65",
       "number": 65,
-      "baseId": "custom-4493440-65",
+      "baseId": "pool-bo-2-3-65",
       "domain": "AWS Networking & Content Delivery",
       "prompt": "A company has created a duplicate of its environment in another AWS Region. The application is running in warm standby mode. There is an Application Load Balancer (ALB) in front of the application. Currently, failover is manual and requires updating a DNS alias record to point to the secondary ALB.\n\nHow can a solutions architect automate the failover process?",
       "options": [
