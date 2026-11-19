@@ -1,20 +1,16 @@
-/** Hàm thuần, không đọc biến môi trường trực tiếp: dùng được trong test. */
+/** Hàm thuần, không đọc file cấu hình trực tiếp: dùng được trong test. */
 
 function normalize(value: string): string {
   return value.trim().toLowerCase();
 }
 
-function parseList(value: string | undefined): string[] {
-  return (value ?? "").split(",").map(normalize).filter(Boolean);
-}
-
 /**
- * Email được vào tab Luyện đề khi nằm trong `allowedEmails` (phân tách bằng
- * dấu phẩy) hoặc thuộc đúng `allowedDomain`. Không cấu hình gì thì từ chối tất cả.
+ * Email được vào tab Luyện đề khi nằm trong `allowedEmails` hoặc thuộc đúng
+ * `allowedDomain`. Không cấu hình gì thì từ chối tất cả.
  */
 export function isEmailAllowed(
   email: string | null | undefined,
-  allowedEmails: string | undefined,
+  allowedEmails: readonly string[],
   allowedDomain: string | undefined,
 ): boolean {
   if (!email) return false;
@@ -22,7 +18,7 @@ export function isEmailAllowed(
   const at = address.lastIndexOf("@");
   if (at <= 0 || at === address.length - 1) return false;
 
-  if (parseList(allowedEmails).includes(address)) return true;
+  if (allowedEmails.map(normalize).includes(address)) return true;
 
   // So khớp nguyên phần sau "@": "evil-example.com" hay "x.example.com" không
   // được tính là "example.com".

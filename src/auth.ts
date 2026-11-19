@@ -1,14 +1,14 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
+import allowlist from "@/config/allowed-emails.json";
 import { isEmailAllowed } from "@/lib/auth/allowlist";
 
-/** Đọc mỗi lần gọi để đổi danh sách trên Vercel là có hiệu lực sau redeploy. */
+/**
+ * Danh sách nằm trong `src/config/allowed-emails.json` (không dùng biến môi
+ * trường): sửa file, commit và deploy lại là có hiệu lực.
+ */
 export function isAllowedEmail(email: string | null | undefined): boolean {
-  return isEmailAllowed(
-    email,
-    process.env.ALLOWED_EMAILS,
-    process.env.ALLOWED_DOMAIN,
-  );
+  return isEmailAllowed(email, allowlist.emails, allowlist.domain);
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
