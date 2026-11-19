@@ -89,23 +89,23 @@
       "number": 3,
       "baseId": "custom-4394976-03",
       "domain": "secure",
-      "prompt": "A company has a regional API Gateway in the us-east-2 region that serves as a proxy to a backend service. Clients connect to the service using the invoke URL of the API stage. To improve usability, the company wants to associate a custom domain name (api.tutorialsdojo.com) with the API. Moreover, the domain name must support HTTPS to ensure secure connections. The company has an existing hosted zone for its domain on Amazon Route 53.\n\nWhich of the following would be the next step to achieve the company's objective?",
+      "prompt": "A company has a regional API Gateway in the us-east-2 region that serves as a proxy to a backend service. Clients connect to the service using the invoke URL of the API stage. To improve usability, the company wants to associate a custom domain name (api.example.com) with the API. Moreover, the domain name must support HTTPS to ensure secure connections. The company has an existing hosted zone for its domain on Amazon Route 53.\n\nWhich of the following would be the next step to achieve the company's objective?",
       "options": [
         {
           "id": "a",
-          "text": "Use the AWS Certificate Manager Private Certificate Authority (ACM PCA) to generate a private certificate for api.tutorialsdojo.com. Override the invoke URL using stage variables."
+          "text": "Use the AWS Certificate Manager Private Certificate Authority (ACM PCA) to generate a private certificate for api.example.com. Override the invoke URL using stage variables."
         },
         {
           "id": "b",
-          "text": "Import an existing public certificate for api.tutorialsdojo.com into AWS Certificate Manager (ACM) in the us-east-2. In Route 53, create a CNAME record for api.tutorialsdojo.com that points to the invoke URL of the API Gateway stage."
+          "text": "Import an existing public certificate for api.example.com into AWS Certificate Manager (ACM) in the us-east-2. In Route 53, create a CNAME record for api.example.com that points to the invoke URL of the API Gateway stage."
         },
         {
           "id": "c",
-          "text": "Request a public certificate in the us-east-2 region for api.tutorialsdojo.com using AWS Certificate Manager (ACM). Create a regional API Gateway domain name and associate it with api.tutorialsdojo.com and the ACM certificate. In Route 53, create an alias record for api.tutorialsdojo.com that points to the API Gateway domain name."
+          "text": "Request a public certificate in the us-east-2 region for api.example.com using AWS Certificate Manager (ACM). Create a regional API Gateway domain name and associate it with api.example.com and the ACM certificate. In Route 53, create an alias record for api.example.com that points to the API Gateway domain name."
         },
         {
           "id": "d",
-          "text": "Request a public certificate in the us-east-1 region for api.tutorialsdojo.com using AWS Certificate Manager (ACM). Create a regional API Gateway domain name and associate it with api.tutorialsdojo.com and the ACM certificate. In Route 53, create an alias record for api.tutorialsdojo.com that points to the API Gateway domain name."
+          "text": "Request a public certificate in the us-east-1 region for api.example.com using AWS Certificate Manager (ACM). Create a regional API Gateway domain name and associate it with api.example.com and the ACM certificate. In Route 53, create an alias record for api.example.com that points to the API Gateway domain name."
         }
       ],
       "correct": [
@@ -113,10 +113,10 @@
       ],
       "explanation": "In API Gateway, A Regional API is an API deployed to a specified Region and intended to serve clients, such as EC2 instances, in the same AWS Region. API requests are targeted directly to the Region-specific API Gateway API without going through any CloudFront distribution. For in-Region requests, a Regional endpoint bypasses the unnecessary round trip to a CloudFront distribution.\n\nWhen using a regional API, any custom domain name you choose is exclusive to the specific region where the API is deployed. If you deploy the same regional API in multiple regions, it can have the same custom domain name across all regions. Also, you must request or import the SSL certificate in the same Region as your API.\n\nTo meet the requirement in the scenario, you must first request a public certificate for your custom domain from the AWS Certificate Manager (ACM) in the same region as your API Gateway. This certificate will secure HTTPS connections to your API. Then, you configure a regional API Gateway domain name, and associate it with your custom domain and the ACM certificate. Finally, you create an alias record in Route 53, which maps your custom domain to the API Gateway's domain name. With this setup, client requests to your custom domain will be securely routed to the correct API Gateway.",
       "optionExplanations": {
-        "a": "The option that says: Use the AWS Certificate Manager Private Certificate Authority (ACM PCA) to generate a private certificate for api.tutorialsdojo.com. Override the invoke URL using stage variables is incorrect. Private certificates are used within an internal network. A public certificate is required to enable secure connections from the public internet to the API. Also, overriding the invoke URL using stage variables is not relevant to the scenario.",
-        "b": "The option that says: Import an existing public certificate for api.tutorialsdojo.com into AWS Certificate Manager (ACM) in the us-east-2. In Route 53, create a CNAME record for api.tutorialsdojo.com that points to the invoke URL of the API Gateway stage is incorrect. This won't work. To use a custom domain name with Amazon API Gateway, you should use API Gateway's Custom Domain Names feature. This will allow you to specify your desired domain name, map it to your API, and correctly configure an SSL/TLS certificate.",
-        "c": "Hence the correct answer is: Request a public certificate in the us-east-2 region for api.tutorialsdojo.com using AWS Certificate Manager (ACM). Create a regional API Gateway domain name and associate it with api.tutorialsdojo.com and the ACM certificate. In Route 53, create an alias record for api.tutorialsdojo.com that points to the API Gateway domain name.",
-        "d": "The option that says: Request a public certificate in the us-east-1 region for api.tutorialsdojo.com using AWS Certificate Manager (ACM). Create a regional API Gateway domain name and associate it with api.tutorialsdojo.com and the ACM certificate. In Route 53, create an alias record for api.tutorialsdojo.com that points to the API Gateway domain name is incorrect because it suggests configuring the Regional API Gateway endpoint in the wrong region. For a regional API Gateway, the certificate must be requested/imported in the same region as your API."
+        "a": "The option that says: Use the AWS Certificate Manager Private Certificate Authority (ACM PCA) to generate a private certificate for api.example.com. Override the invoke URL using stage variables is incorrect. Private certificates are used within an internal network. A public certificate is required to enable secure connections from the public internet to the API. Also, overriding the invoke URL using stage variables is not relevant to the scenario.",
+        "b": "The option that says: Import an existing public certificate for api.example.com into AWS Certificate Manager (ACM) in the us-east-2. In Route 53, create a CNAME record for api.example.com that points to the invoke URL of the API Gateway stage is incorrect. This won't work. To use a custom domain name with Amazon API Gateway, you should use API Gateway's Custom Domain Names feature. This will allow you to specify your desired domain name, map it to your API, and correctly configure an SSL/TLS certificate.",
+        "c": "Hence the correct answer is: Request a public certificate in the us-east-2 region for api.example.com using AWS Certificate Manager (ACM). Create a regional API Gateway domain name and associate it with api.example.com and the ACM certificate. In Route 53, create an alias record for api.example.com that points to the API Gateway domain name.",
+        "d": "The option that says: Request a public certificate in the us-east-1 region for api.example.com using AWS Certificate Manager (ACM). Create a regional API Gateway domain name and associate it with api.example.com and the ACM certificate. In Route 53, create an alias record for api.example.com that points to the API Gateway domain name is incorrect because it suggests configuring the Regional API Gateway endpoint in the wrong region. For a regional API Gateway, the certificate must be requested/imported in the same region as your API."
       },
       "reviewPage": "secure"
     },
@@ -981,7 +981,7 @@
       "correct": [
         "b"
       ],
-      "explanation": "Amazon DynamoDB is integrated with AWS Lambda so that you can create triggers—pieces of code that automatically respond to events in DynamoDB Streams. With triggers, you can build applications that react to data modifications in DynamoDB tables.\n\nIf you enable DynamoDB Streams on a table, you can associate the stream ARN with a Lambda function that you write. Immediately after an item in the table is modified, a new record appears in the table's stream. AWS Lambda polls the stream and invokes your Lambda function synchronously when it detects new stream records.\n\nYou can create a Lambda function which can perform a specific action that you specify, such as sending a notification or initiating a workflow. For instance, you can set up a Lambda function to simply copy each stream record to persistent storage, such as EFS or S3, to create a permanent audit trail of write activity in your table.\n\nSuppose you have a mobile gaming app that writes to a TutorialsDojoCourses table. Whenever the TopCourse attribute of the TutorialsDojoScores table is updated, a corresponding stream record is written to the table's stream. This event could then trigger a Lambda function that posts a congratulatory message on a social media network. (The function would simply ignore any stream records that are not updated to TutorialsDojoCourses or that do not modify the TopCourse attribute.)",
+      "explanation": "Amazon DynamoDB is integrated with AWS Lambda so that you can create triggers—pieces of code that automatically respond to events in DynamoDB Streams. With triggers, you can build applications that react to data modifications in DynamoDB tables.\n\nIf you enable DynamoDB Streams on a table, you can associate the stream ARN with a Lambda function that you write. Immediately after an item in the table is modified, a new record appears in the table's stream. AWS Lambda polls the stream and invokes your Lambda function synchronously when it detects new stream records.\n\nYou can create a Lambda function which can perform a specific action that you specify, such as sending a notification or initiating a workflow. For instance, you can set up a Lambda function to simply copy each stream record to persistent storage, such as EFS or S3, to create a permanent audit trail of write activity in your table.\n\nSuppose you have a mobile gaming app that writes to a GameScores table. Whenever the TopScore attribute of the GameScores table is updated, a corresponding stream record is written to the table's stream. This event could then trigger a Lambda function that posts a congratulatory message on a social media network. (The function would simply ignore any stream records that are not updated to GameScores or that do not modify the TopScore attribute.)",
       "optionExplanations": {
         "a": "Invoking the Lambda functions using SNS each time that the ECS Cluster successfully processed financial data is incorrect because you don't need to create an SNS topic just to invoke Lambda functions. You can enable DynamoDB streams instead to meet the requirement with less configuration.",
         "b": "Hence, enabling DynamoDB Streams to capture table activity and automatically trigger the Lambda function is the correct answer because the requirement can be met with minimal configuration change using DynamoDB streams, which can automatically trigger Lambda functions whenever there is a new entry.",
@@ -1031,7 +1031,7 @@
       "number": 29,
       "baseId": "custom-4394976-29",
       "domain": "cost",
-      "prompt": "A few easily reproducible files must be stored in AWS without concerns about storage capacity. During the first month, all files will be accessed frequently, but after that period, access will become infrequent. Older files will only be accessed by developers, and no specific retrieval time requirement is defined. However, files under a specific <code>tdojo-finance</code> prefix in the Amazon S3 bucket will be used for post-processing that requires millisecond retrieval time.\n\nGiven these conditions, which of the following options would be the most cost-effective solution for the storage requirements?",
+      "prompt": "A few easily reproducible files must be stored in AWS without concerns about storage capacity. During the first month, all files will be accessed frequently, but after that period, access will become infrequent. Older files will only be accessed by developers, and no specific retrieval time requirement is defined. However, files under a specific <code>finance-reports</code> prefix in the Amazon S3 bucket will be used for post-processing that requires millisecond retrieval time.\n\nGiven these conditions, which of the following options would be the most cost-effective solution for the storage requirements?",
       "options": [
         {
           "id": "a",
@@ -1039,7 +1039,7 @@
         },
         {
           "id": "b",
-          "text": "Store the files in S3, then after a month, change the storage class of the tdojo-finance prefix to S3 One Zone-Infrequent Access (One-Zone IA), while the remaining go to Glacier using a lifecycle policy."
+          "text": "Store the files in S3, then after a month, change the storage class of the finance-reports prefix to S3 One Zone-Infrequent Access (One-Zone IA), while the remaining go to Glacier using a lifecycle policy."
         },
         {
           "id": "c",
@@ -1047,18 +1047,18 @@
         },
         {
           "id": "d",
-          "text": "Store the files in S3, then after a month, change the storage class of the tdojo-finance prefix to S3 Standard-Infrequent Access (Standard-IA) while the remaining go to Glacier using a lifecycle policy"
+          "text": "Store the files in S3, then after a month, change the storage class of the finance-reports prefix to S3 Standard-Infrequent Access (Standard-IA) while the remaining go to Glacier using a lifecycle policy"
         }
       ],
       "correct": [
         "b"
       ],
-      "explanation": "Initially, the files will be accessed frequently, and S3 is a durable and highly available storage solution for that. After a month has passed, the files won't be accessed frequently anymore, so it is a good idea to use lifecycle policies to move them to a storage class that has a lower cost for storing them.\n\nSince the files are easily reproducible and some of them need to be retrieved quickly based on a specific prefix filter (tdojo-finance), S3-One Zone IA would be a good choice for storing them. The other files that do not contain such a prefix would then be moved to Glacier for low-cost archival. This setup would also be the most cost-effective for the client.",
+      "explanation": "Initially, the files will be accessed frequently, and S3 is a durable and highly available storage solution for that. After a month has passed, the files won't be accessed frequently anymore, so it is a good idea to use lifecycle policies to move them to a storage class that has a lower cost for storing them.\n\nSince the files are easily reproducible and some of them need to be retrieved quickly based on a specific prefix filter (finance-reports), S3-One Zone IA would be a good choice for storing them. The other files that do not contain such a prefix would then be moved to Glacier for low-cost archival. This setup would also be the most cost-effective for the client.",
       "optionExplanations": {
         "a": "The option that says: Store the files in S3, then after a month, change the storage class of the bucket to S3 Standard-Infrequent Access (Standard-IA) using a lifecycle policy. is incorrect. Although it is valid to move the files to S3 Standard-IA, this solution still costs more compared with using a combination of S3 One Zone-IA and Glacier.",
-        "b": "Hence, the correct answer is: Store the files in S3, then after a month, change the storage class of the tdojo-finance prefix to S3 One Zone-Infrequent Access (One-Zone IA), while the remaining go to Glacier using a lifecycle policy.",
+        "b": "Hence, the correct answer is: Store the files in S3, then after a month, change the storage class of the finance-reports prefix to S3 One Zone-Infrequent Access (One-Zone IA), while the remaining go to Glacier using a lifecycle policy.",
         "c": "The option that says: Store the files in S3, then after a month, change the storage class of the bucket to S3 Intelligent-Tiering using a lifecycle policy is incorrect because S3 Intelligent-Tiering is typically more appropriate when object access patterns are unknown or unpredictable. In this scenario, the access pattern is already clear: frequent access during the first month, then infrequent access afterward. Because of that, directly transitioning the objects to a more suitable lower-cost storage class after one month is simply more cost-effective than using Intelligent-Tiering.",
-        "d": "The option that says: Store the files in S3, then after a month, change the storage class of the tdojo-finance prefix to S3 Standard-Infrequent Access (Standard-IA) while the remaining go to Glacier using a lifecycle policy is incorrect. Even though S3-IA costs less than the S3 Standard storage class, it is still more expensive than S3-One Zone IA. Remember that the files are easily reproducible, so you can safely move the data to S3-One Zone IA, and in case there is an outage, you can just generate the missing data again."
+        "d": "The option that says: Store the files in S3, then after a month, change the storage class of the finance-reports prefix to S3 Standard-Infrequent Access (Standard-IA) while the remaining go to Glacier using a lifecycle policy is incorrect. Even though S3-IA costs less than the S3 Standard storage class, it is still more expensive than S3-One Zone IA. Remember that the files are easily reproducible, so you can safely move the data to S3-One Zone IA, and in case there is an outage, you can just generate the missing data again."
       },
       "reviewPage": "cost-optimized"
     },
@@ -2033,7 +2033,7 @@
       "number": 56,
       "baseId": "custom-4394976-56",
       "domain": "secure",
-      "prompt": "A company is using the AWS Directory Service to integrate its on-premises Microsoft Active Directory (AD) domain with its Amazon EC2 instances via an AD connector. The IAM identities, which are members of an AD group, have the following identity‑based policy attached to allow Directory Service access:\n\n \n{ \n   \"Version\":\"2012-10-17\", \n   \"Statement\":[ \n      {\n         \"Sid\":\"DirectoryTutorialsDojo1234\", \n         \"Effect\":\"Allow\", \n         \"Action\":[\n            \"ds:*\"\n         ], \n         \"Resource\":\"arn:aws:ds:us-east-1:987654321012:directory/d-1234567890\"\n      }, \n    {\n} \n\nWhich of the following BEST describes what the above resource policy does?",
+      "prompt": "A company is using the AWS Directory Service to integrate its on-premises Microsoft Active Directory (AD) domain with its Amazon EC2 instances via an AD connector. The IAM identities, which are members of an AD group, have the following identity‑based policy attached to allow Directory Service access:\n\n \n{ \n   \"Version\":\"2012-10-17\", \n   \"Statement\":[ \n      {\n         \"Sid\":\"DirectoryExample1234\", \n         \"Effect\":\"Allow\", \n         \"Action\":[\n            \"ds:*\"\n         ], \n         \"Resource\":\"arn:aws:ds:us-east-1:987654321012:directory/d-1234567890\"\n      }, \n    {\n} \n\nWhich of the following BEST describes what the above resource policy does?",
       "options": [
         {
           "id": "a",
@@ -2045,11 +2045,11 @@
         },
         {
           "id": "c",
-          "text": "Allows all Directory Service ds calls as long as the resource contains the directory ID: DirectoryTutorialsDojo1234"
+          "text": "Allows all Directory Service ds calls as long as the resource contains the directory ID: DirectoryExample1234"
         },
         {
           "id": "d",
-          "text": "Allows all Directory Service ds calls as long as the resource contains the directory name of: DirectoryTutorialsDojo1234"
+          "text": "Allows all Directory Service ds calls as long as the resource contains the directory name of: DirectoryExample1234"
         }
       ],
       "correct": [
@@ -2059,8 +2059,8 @@
       "optionExplanations": {
         "a": "The option that says: Allows all Directory Service (ds) calls as long as the resource contains the directory ID: 987654321012 is incorrect because the numbers: 987654321012 is primarily an Account ID and not the Directory ID.",
         "b": "Hence, the correct answer is: Allows all Directory Service (ds) calls as long as the resource contains the directory ID: d-1234567890.",
-        "c": "The option that says: Allows all Directory Service (ds) calls as long as the resource contains the directory ID: DirectoryTutorialsDojo1234 is incorrect because DirectoryTutorialsDojo1234 is the Statement ID (SID) and not the Directory ID.",
-        "d": "The option that says: Allows all Directory Service (ds) calls as long as the resource contains the directory name of: DirectoryTutorialsDojo1234 is incorrect because DirectoryTutorialsDojo1234 is simply the Statement ID (SID) and not the Directory name."
+        "c": "The option that says: Allows all Directory Service (ds) calls as long as the resource contains the directory ID: DirectoryExample1234 is incorrect because DirectoryExample1234 is the Statement ID (SID) and not the Directory ID.",
+        "d": "The option that says: Allows all Directory Service (ds) calls as long as the resource contains the directory name of: DirectoryExample1234 is incorrect because DirectoryExample1234 is simply the Statement ID (SID) and not the Directory name."
       },
       "reviewPage": "secure"
     },

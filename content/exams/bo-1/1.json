@@ -887,7 +887,7 @@
       "number": 25,
       "baseId": "custom-4394970-25",
       "domain": "secure",
-      "prompt": "A Solutions Architect is hosting a website in an Amazon S3 bucket named tutorialsdojo. The users load the website using the following URL: http://tutorialsdojo.s3-website-us-east-1.amazonaws.com. A new requirement has been introduced to add JavaScript on the webpages to make authenticated HTTP GET requests against the same bucket using the S3 API endpoint (tutorialsdojo.s3.amazonaws.com). However, upon testing, the web browser blocks JavaScript from allowing those requests.\n\nWhich of the following options is the MOST suitable solution to implement for this scenario?",
+      "prompt": "A Solutions Architect is hosting a website in an Amazon S3 bucket named examplebucket. The users load the website using the following URL: http://examplebucket.s3-website-us-east-1.amazonaws.com. A new requirement has been introduced to add JavaScript on the webpages to make authenticated HTTP GET requests against the same bucket using the S3 API endpoint (examplebucket.s3.amazonaws.com). However, upon testing, the web browser blocks JavaScript from allowing those requests.\n\nWhich of the following options is the MOST suitable solution to implement for this scenario?",
       "options": [
         {
           "id": "a",
