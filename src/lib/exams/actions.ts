@@ -1,6 +1,6 @@
 "use server";
 
-import { insertAttempt } from "@/db/attempts";
+import { findRecentAttempt, insertAttempt } from "@/db/attempts";
 import { getExamUser } from "@/lib/auth/session";
 import {
   attemptDuration,
@@ -10,7 +10,7 @@ import {
 } from "./attempt";
 import { getExam } from "./load";
 import { gradeExam, type ExamGrade } from "./score";
-import type { Exam } from "./types";
+import type { Exam, ExamAnswers } from "./types";
 
 /**
  * Vì sao không lưu được: `signInRequired` là phiên cũ chưa có user id,
@@ -27,6 +27,8 @@ export type SubmitExamResult =
       score: number;
       total: number;
       grade: ExamGrade;
+      /** Bài đã chấm (đã bỏ câu trống); là bài lần trước nếu bị coi là nộp trùng. */
+      answers: ExamAnswers;
       /** Exam mode: đề đầy đủ để chữa đề. Practice mode đã có sẵn nên `null`. */
       exam: Exam | null;
     }
@@ -53,41 +55,54 @@ export async function submitExam(input: unknown): Promise<SubmitExamResult> {
   const answers = normalizeAnswers(exam, parsed.data.answers);
   if (!answers) return { ok: false, error: "invalid" };
 
-  const grade = gradeExam(exam, answers);
-  let attemptId: number | null = null;
+  const examId = toExamId(exam.source, exam.number);
+  let saved: { id: number; answers: ExamAnswers } | null = null;
   let saveError: SaveError | null = null;
   if (!user.id) {
     // Phiên cũ chưa có id: vẫn chấm, chỉ không lưu được.
     saveError = "signInRequired";
   } else {
     try {
-      attemptId = await insertAttempt({
-        userId: user.id,
-        examId: toExamId(exam.source, exam.number),
-        mode,
-        score: grade.score.correct,
-        total: grade.score.total,
-        answers,
-        durationS: attemptDuration(
+      // Nộp lại trong vài giây (bấm liên tục, gửi lại request): trả lần đã lưu
+      // thay vì thêm dòng mới.
+      const recent = await findRecentAttempt(user.id, examId, mode);
+      if (recent) {
+        saved = { id: recent.id, answers: recent.answers };
+      } else {
+        const grade = gradeExam(exam, answers);
+        const id = await insertAttempt({
+          userId: user.id,
+          examId,
           mode,
-          startedAt,
-          Date.now(),
-          exam.durationMinutes,
-        ),
-      });
+          score: grade.score.correct,
+          total: grade.score.total,
+          answers,
+          durationS: attemptDuration(
+            mode,
+            startedAt,
+            Date.now(),
+            exam.durationMinutes,
+          ),
+        });
+        saved = { id, answers };
+      }
     } catch (error) {
       console.error("submitExam: không lưu được kết quả", error);
       saveError = "failed";
     }
   }
 
+  // Trả đúng bài đã lưu (có thể là lần trước) để điểm và chữa đề khớp lịch sử.
+  const finalAnswers = saved?.answers ?? answers;
+  const grade = gradeExam(exam, finalAnswers);
   return {
     ok: true,
-    attemptId,
+    attemptId: saved?.id ?? null,
     saveError,
     score: grade.score.correct,
     total: grade.score.total,
     grade,
+    answers: finalAnswers,
     exam: mode === "exam" ? exam : null,
   };
 }

@@ -255,7 +255,12 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
         const fullExam = result.ok ? (practiceExam ?? result.exam) : null;
         if (result.ok && fullExam) {
           keepOnLeaveRef.current = false;
-          finish(snapshot, fullExam, result.grade, result.saveError);
+          finish(
+            { ...snapshot, answers: result.answers },
+            fullExam,
+            result.grade,
+            result.saveError,
+          );
         } else if (!result.ok && result.error === "unauthorized") {
           if (gradeLocally("signInRequired")) return;
           keepOnLeaveRef.current = true;

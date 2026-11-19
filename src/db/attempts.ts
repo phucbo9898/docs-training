@@ -1,5 +1,5 @@
 import "server-only";
-import { and, avg, count, desc, eq, max, sql } from "drizzle-orm";
+import { and, avg, count, desc, eq, gt, max, sql } from "drizzle-orm";
 import type { ExamAnswers, ExamMode } from "@/lib/exams/types";
 import { getDb } from "./index";
 import { attempts } from "./schema";
@@ -25,6 +25,50 @@ export async function insertAttempt(values: NewAttempt): Promise<number> {
     .returning({ id: attempts.id });
   if (!row) throw new Error("attempts: insert không trả về id");
   return row.id;
+}
+
+/** Cửa sổ chống nộp trùng (bấm liên tục, gửi lại request). */
+export const DUPLICATE_WINDOW_S = 5;
+
+export type RecentAttempt = {
+  id: number;
+  score: number;
+  total: number;
+  answers: ExamAnswers;
+};
+
+/**
+ * Lần nộp cùng user + đề + chế độ trong `DUPLICATE_WINDOW_S` giây gần nhất
+ * (theo đồng hồ DB). Dùng index (user_id, exam_id, created_at desc). Chỉ chống
+ * spam nhẹ: hai request chạy song song đúng lúc vẫn có thể cùng insert.
+ */
+export async function findRecentAttempt(
+  userId: string,
+  examId: string,
+  mode: ExamMode,
+): Promise<RecentAttempt | null> {
+  const [row] = await getDb()
+    .select({
+      id: attempts.id,
+      score: attempts.score,
+      total: attempts.total,
+      answers: attempts.answers,
+    })
+    .from(attempts)
+    .where(
+      and(
+        eq(attempts.userId, userId),
+        eq(attempts.examId, examId),
+        eq(attempts.mode, mode),
+        gt(
+          attempts.createdAt,
+          sql`now() - make_interval(secs => ${DUPLICATE_WINDOW_S})`,
+        ),
+      ),
+    )
+    .orderBy(desc(attempts.createdAt))
+    .limit(1);
+  return row ?? null;
 }
 
 /** Dòng ở trang lịch sử: không có `answers` (cột nặng nhất). */
