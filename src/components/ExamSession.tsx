@@ -12,7 +12,7 @@ function subscribe(): () => void {
 }
 
 /**
- * Bài làm dở nằm ở sessionStorage, chỉ đọc được trên trình duyệt: đợi qua
+ * Bài làm dở nằm ở localStorage, chỉ đọc được trên trình duyệt: đợi qua
  * hydration rồi mới dựng state để server và client render giống nhau.
  */
 export default function ExamSession(props: ExamSessionProps) {

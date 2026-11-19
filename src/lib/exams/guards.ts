@@ -1,5 +1,4 @@
 import {
-  type ExamAnswers,
   type ExamIndex,
   type ExamIndexEntry,
   type ExamOption,
@@ -164,26 +163,5 @@ export function isExamIndex(value: unknown): value is ExamIndex {
     Array.isArray(value.sources) &&
     value.sources.length > 0 &&
     value.sources.every(isSource)
-  );
-}
-
-/**
- * Bài làm gửi lên Server Action: dữ liệu từ client nên kiểm tra kỹ. Giới hạn
- * số câu và số lựa chọn để payload bất thường không làm server chấm vô ích.
- */
-export function isExamAnswers(
-  value: unknown,
-  limits: { questions: number; options: number },
-): value is ExamAnswers {
-  if (!isRecord(value)) return false;
-  const entries = Object.entries(value);
-  return (
-    entries.length <= limits.questions &&
-    entries.every(
-      ([, picked]) =>
-        Array.isArray(picked) &&
-        picked.length <= limits.options &&
-        picked.every((id) => typeof id === "string" && id.length <= 64),
-    )
   );
 }

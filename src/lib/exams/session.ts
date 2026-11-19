@@ -1,6 +1,9 @@
 import type { ExamAnswers, ExamMode } from "./types";
 
-/** Bài đang làm dở, lưu ở sessionStorage để refresh không mất. */
+/**
+ * Bài đang làm dở, lưu ở localStorage để refresh (kể cả đóng tab, hay đi đăng
+ * nhập lại lúc nộp) không mất. Xóa khi nộp thành công hoặc bỏ bài.
+ */
 export type ExamProgress = {
   answers: ExamAnswers;
   /** Id các câu đã đánh dấu. */
@@ -13,12 +16,13 @@ export type ExamProgress = {
   current: number;
 };
 
+/** Key theo exam id ("bo-1/3", giống cột `exam_id`) và chế độ. */
 export function progressKey(
   source: string,
   number: number,
   mode: ExamMode,
 ): string {
-  return `exam:${source}:${number}:${mode}`;
+  return `attempt:${source}/${number}:${mode}`;
 }
 
 export function newProgress(): ExamProgress {
@@ -62,7 +66,7 @@ function isProgress(
 /** Đọc bài làm dở; storage bị chặn hoặc dữ liệu hỏng thì coi như chưa có. */
 export function loadProgress(key: string): ExamProgress | null {
   try {
-    const raw = window.sessionStorage.getItem(key);
+    const raw = window.localStorage.getItem(key);
     if (!raw) return null;
     const data: unknown = JSON.parse(raw);
     return isProgress(data) ? { ...data, checked: data.checked ?? [] } : null;
@@ -73,7 +77,7 @@ export function loadProgress(key: string): ExamProgress | null {
 
 export function saveProgress(key: string, progress: ExamProgress): void {
   try {
-    window.sessionStorage.setItem(key, JSON.stringify(progress));
+    window.localStorage.setItem(key, JSON.stringify(progress));
   } catch {
     // Storage đầy hoặc bị chặn: bỏ qua, bài vẫn làm tiếp được trong trang.
   }
@@ -81,7 +85,7 @@ export function saveProgress(key: string, progress: ExamProgress): void {
 
 export function clearProgress(key: string): void {
   try {
-    window.sessionStorage.removeItem(key);
+    window.localStorage.removeItem(key);
   } catch {
     // Như trên.
   }

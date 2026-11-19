@@ -9,6 +9,8 @@ type ExamDialogProps = {
   labelledBy: string;
   /** "center": hộp thoại giữa màn hình; "drawer": trượt từ phải (mobile). */
   variant?: "center" | "drawer";
+  /** `false`: Esc và bấm ra nền không đóng, buộc chọn một nút trong hộp thoại. */
+  dismissible?: boolean;
   children: ReactNode;
 };
 
@@ -21,6 +23,7 @@ export default function ExamDialog({
   onClose,
   labelledBy,
   variant = "center",
+  dismissible = true,
   children,
 }: ExamDialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -37,9 +40,12 @@ export default function ExamDialog({
       ref={ref}
       aria-labelledby={labelledBy}
       onClose={onClose}
+      onCancel={(event) => {
+        if (!dismissible) event.preventDefault();
+      }}
       onClick={(event) => {
         // Bấm ra vùng nền (chính phần tử dialog) thì đóng.
-        if (event.target === event.currentTarget) onClose();
+        if (dismissible && event.target === event.currentTarget) onClose();
       }}
       className={`bg-bg text-text backdrop:bg-text/40 ${
         variant === "drawer"

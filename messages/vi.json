@@ -313,6 +313,12 @@
       "failed": "Nộp bài không thành công. Bài làm vẫn được giữ, hãy thử lại.",
       "unauthorized": "Phiên đăng nhập đã hết hạn. Bài làm vẫn được giữ trên trình duyệt này.",
       "signIn": "Đăng nhập lại"
+    },
+    "timeUp": {
+      "title": "Bài làm dở đã hết giờ",
+      "body": "Thời gian làm bài đã hết khi bạn rời trang. Bạn đã làm {count}/{total} câu.",
+      "submit": "Nộp với các câu đã làm",
+      "discard": "Bỏ bài này"
     }
   },
   "Auth": {

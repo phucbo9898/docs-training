@@ -13,7 +13,7 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { submitExam } from "@/lib/exams/actions";
-import { gradeExam, questionStatus, type ExamGrade } from "@/lib/exams/score";
+import { questionStatus, type ExamGrade } from "@/lib/exams/score";
 import {
   clearProgress,
   loadProgress,
@@ -100,11 +100,20 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
   const [submitting, startSubmit] = useTransition();
   const [submitError, setSubmitError] = useState<SubmitError | null>(null);
   const submittingRef = useRef(false);
+  // Đang đi đăng nhập lại để nộp: rời trang không được bỏ bài làm dở.
+  const keepOnLeaveRef = useRef(false);
   const key = progressKey(exam.source, exam.number, mode);
   const total = questions.length;
 
-  const [progress, setProgress] = useState<ExamProgress>(
+  const durationMs = exam.durationMinutes * MINUTE_MS;
+  const [initial] = useState<ExamProgress>(
     () => loadProgress(key) ?? newProgress(),
+  );
+  const [progress, setProgress] = useState<ExamProgress>(initial);
+  // Exam mode, bài lưu tạm đã quá giờ (đóng tab rồi mở lại): không tự nộp,
+  // không tự xóa; hỏi người dùng nộp phần đã làm hay bỏ bài.
+  const [timeUp, setTimeUp] = useState(
+    () => mode === "exam" && Date.now() >= initial.startedAt + durationMs,
   );
   const [phase, setPhase] = useState<Phase>("doing");
   const [finished, setFinished] = useState<Finished | null>(null);
@@ -115,6 +124,7 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
   const focusHeading = useRef(false);
   const listTitleId = useId();
   const submitTitleId = useId();
+  const timeUpTitleId = useId();
 
   const current = Math.min(progress.current, total - 1);
   const question = questions[current];
@@ -209,25 +219,26 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
     setSubmitError(null);
     const snapshot = progress;
 
-    if (practiceExam) {
-      finish(snapshot, practiceExam, gradeExam(practiceExam, snapshot.answers));
-      return;
-    }
-
+    // Cả hai chế độ đều nộp lên server: chấm lại theo đề và lưu kết quả một lần.
     submittingRef.current = true;
     startSubmit(async () => {
       try {
-        const result = await submitExam(
-          exam.source,
-          exam.number,
-          snapshot.answers,
-        );
-        if (result.ok) {
-          finish(snapshot, result.exam, result.grade);
+        const result = await submitExam({
+          source: exam.source,
+          number: exam.number,
+          mode,
+          answers: snapshot.answers,
+          startedAt: snapshot.startedAt,
+        });
+        const fullExam = result.ok ? (practiceExam ?? result.exam) : null;
+        if (result.ok && fullExam) {
+          keepOnLeaveRef.current = false;
+          finish(snapshot, fullExam, result.grade);
+        } else if (!result.ok && result.error === "unauthorized") {
+          keepOnLeaveRef.current = true;
+          setSubmitError("unauthorized");
         } else {
-          setSubmitError(
-            result.error === "unauthorized" ? "unauthorized" : "failed",
-          );
+          setSubmitError("failed");
         }
       } catch {
         setSubmitError("failed");
@@ -235,11 +246,13 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
         submittingRef.current = false;
       }
     });
-  }, [progress, practiceExam, finish, exam.source, exam.number]);
+  }, [progress, practiceExam, finish, exam.source, exam.number, mode]);
 
   const resetAttempt = useCallback(() => {
     clearProgress(key);
+    keepOnLeaveRef.current = false;
     setSubmitError(null);
+    setTimeUp(false);
     setProgress(newProgress());
     setFinished(null);
     setPhase("doing");
@@ -262,12 +275,16 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
   useEffect(() => {
     if (mode !== "exam") return;
     window.clearTimeout(leaveTimerRef.current);
-    if (leftRef.current) {
+    if (keepOnLeaveRef.current) {
+      // Quay lại sau khi đi đăng nhập: giữ nguyên bài để nộp lại.
+      leftRef.current = false;
+    } else if (leftRef.current) {
       leftRef.current = false;
       resetAttempt();
     }
     return () => {
       leaveTimerRef.current = window.setTimeout(() => {
+        if (keepOnLeaveRef.current) return;
         leftRef.current = true;
         clearProgress(key);
       }, 0);
@@ -405,9 +422,9 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
             </span>
           </div>
         </div>
-        {mode === "exam" ? (
+        {mode === "exam" && !timeUp ? (
           <ExamTimer
-            deadline={progress.startedAt + exam.durationMinutes * MINUTE_MS}
+            deadline={progress.startedAt + durationMs}
             onExpire={submit}
           />
         ) : null}
@@ -531,6 +548,30 @@ export default function ExamWorkspace(props: ExamWorkspaceProps) {
             </button>
           </div>
           <div className="flex-1 overflow-y-auto p-2">{list}</div>
+        </div>
+      </ExamDialog>
+
+      <ExamDialog
+        open={timeUp && !submitting && submitError === null}
+        onClose={() => {}}
+        labelledBy={timeUpTitleId}
+        dismissible={false}
+      >
+        <div className="space-y-4 p-6">
+          <h2 id={timeUpTitleId} className="text-lg font-bold">
+            {t("timeUp.title")}
+          </h2>
+          <p className="text-text-muted">
+            {t("timeUp.body", { count: answeredCount, total })}
+          </p>
+          <div className="flex flex-wrap justify-end gap-2">
+            <button type="button" onClick={restart} className={buttonSecondary}>
+              {t("timeUp.discard")}
+            </button>
+            <button type="button" onClick={submit} className={buttonPrimary}>
+              {t("timeUp.submit")}
+            </button>
+          </div>
         </div>
       </ExamDialog>
 

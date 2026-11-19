@@ -313,6 +313,12 @@
       "failed": "Could not submit. Your answers are kept, please try again.",
       "unauthorized": "Your session has expired. Your answers are kept in this browser.",
       "signIn": "Sign in again"
+    },
+    "timeUp": {
+      "title": "Your unfinished attempt has run out of time",
+      "body": "Time ran out while you were away. You answered {count}/{total} questions.",
+      "submit": "Submit answered questions",
+      "discard": "Discard this attempt"
     }
   },
   "Auth": {
